@@ -20,7 +20,7 @@ router.post('/hellos', (req, res, next) => {
   }
 });
 
-router.delete('/hellos/:id', (req, res, next) => {
+router.get('/hellos/:id', (req, res, next) => {
   Hello.findOneAndDelete({ _id: req.params.id })
     .then((data) => res.json(data))
     .catch(next);

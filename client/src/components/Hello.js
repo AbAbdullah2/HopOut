@@ -27,9 +27,8 @@ class Hello extends Component {
   };
 
   deleteHello = (id) => {
-    const deleteurl = BASEURL + 'api/hellos/' + id;
     axios
-      .delete(deleteurl)
+      .get(BASEURL + 'api/hellos/' + id)
       .then((res) => {
         if (res.data) {
           this.getHellos();
