@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-class Input extends Component {
+class AddHello extends Component {
   state = {
     text: '',
   };
@@ -11,7 +11,7 @@ class Input extends Component {
 
     if (task.text && task.text.length > 0) {
       axios
-        .post('/api/hellos', task)
+        .post(this.props.BASEURL + 'api/hellos', task)
         .then((res) => {
           if (res.data) {
             this.props.getHellos();
@@ -42,4 +42,4 @@ class Input extends Component {
   }
 }
 
-export default Input;
+export default AddHello;

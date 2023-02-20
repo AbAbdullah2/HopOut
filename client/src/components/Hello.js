@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AddHello from './AddHello';
 
+const BASEURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? '/' : 'https://johndcruz-hello-world.herokuapp.com/';
+
 class Hello extends Component {
   state = {
     hellos: [],
@@ -13,7 +15,7 @@ class Hello extends Component {
 
   getHellos = () => {
     axios
-      .get('/api/hellos')
+      .get(BASEURL + 'api/hellos')
       .then((res) => {
         if (res.data) {
           this.setState({
@@ -26,7 +28,7 @@ class Hello extends Component {
 
   deleteHello = (id) => {
     axios
-      .delete(`/api/hellos/${id}`)
+      .delete(BASEURL + `api/hellos/${id}`)
       .then((res) => {
         if (res.data) {
           this.getHellos();
@@ -52,7 +54,7 @@ class Hello extends Component {
             })
           }
         </ul>
-        <AddHello getHellos={this.getHellos} />
+        <AddHello getHellos={this.getHellos} BASEURL={BASEURL} />
       </div>
     );
   }
