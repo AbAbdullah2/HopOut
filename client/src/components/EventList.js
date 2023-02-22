@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 class EventList extends Component {
   state = {
@@ -49,9 +51,9 @@ class EventList extends Component {
                   <img className='m-2 w-3/12' src={event.image} alt={event.title} />
                   <div className='w-9/12 items-center justify-center text-center m-2 space-y-2'>
                     <p className='text-4xl'>{event.title}</p>
-                    <p>{start.toDateString() + ' ' + start.getHours() + ':' + start.getMinutes() + ' - ' + end.getHours() + ':' + end.getMinutes()}</p>
+                    <p><FontAwesomeIcon icon={solid('calendar')} /> {start.toDateString() + ' ' + start.getHours() + ':' + start.getMinutes() + ' - ' + end.getHours() + ':' + end.getMinutes()}</p>
+                    <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.location}</p>
                     <p>{event.description}</p>
-                    <p>{event.location}</p>
                   </div>
                 </div>
               );
