@@ -1,53 +1,70 @@
 import express from 'express';
 import User from '../models/User';
-import UserDao from "../data/UserDao.js";
-
+import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
 
-
-router.get('/', (req, res, next) => {
-  Hello.find({}, 'text')
-    .then((data) => res.json(data))
-    .catch(next);
-});
-
 router.post('/register', async (req, res, next) => {
-try {
-    const { email, username, password } = req.body;
-    const user = await User.exists({ email: email.toLowerCase() });
+  try {
+    const { email, name, password } = req.body;
+    const user = await UserDao.exists({ email: email.toLowerCase() });
 
-    if (user) {
-      return res.json({
-        msg: 'this email is already in use. please try a different one.',
-        status: 409,
-      });
-    } else {
-      const encryptedPassword = await bcrypt.hash(password, 10);
-      const savedUser = await User.create({
-        email: email.toLowerCase(),
-        name,
-        password: encryptedPassword,
-      });
+    if (user) {
+      return res.json({
+        msg: 'This email is already in use. Please try a different one.',
+        status: 409,
+      });
+    } else {
+      const encryptedPassword = await bcrypt.hash(password, 10);
+      const savedUser = await UserDao.create({
+        email: email.toLowerCase(),
+        name,
+        password: encryptedPassword,
+      });
 
-      return res.json({
-        userDetails: {
-          email: savedUser.email,
-          username: savedUser.username,
-          id: savedUser._id,
-        },
-        status: 200,
-      });
-    }
-  } catch (err) {
-    return res.status(500).send('something went wrong. please try again.');
-  }
+      return res.json({
+        userDetails: {
+          email: savedUser.email,
+          username: savedUser.username,
+          id: savedUser._id,
+        },
+        status: 200,
+      });
+    }
+  } catch (err) {
+    return res.status(500).send('Something went wrong. Please try again.');
+  }
 });
 
-router.get('/hellos/:id', (req, res, next) => {
-  Hello.findOneAndDelete({ _id: req.params.id })
-    .then((data) => res.json(data))
-    .catch(next);
+router.post('/login', async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.json({
+        msg: 'Invalid credentials. Please try again.',
+        status: 409,
+      });
+    }
+
+    if (user && (await bcrypt.compare(password, user.password))) {
+      return res.json({
+        userDetails: {
+          email: user.email,
+          name: user.name,
+          id: user._id,
+        },
+        status: 200,
+      });
+    }
+    return res.json({
+      msg: 'Invalid credentials. Please try again.',
+      status: 400,
+    });
+  } catch (err) {
+    return res.status(500).send('Something went wrong. Please try again.');
+  }
 });
 
 module.exports = router;
