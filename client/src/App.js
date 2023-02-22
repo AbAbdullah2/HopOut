@@ -6,6 +6,7 @@ import {
 
 import Hello from './components/Hello';
 import Login from './pages/Login';
+import CreateAccount from './pages/CreateAccount';
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Routes>
         <Route path="/" element={<Hello />}/>
         <Route path="/login" element={<Login />}/>
+        <Route path="/createaccount" element={<CreateAccount />}/>
         </Routes>
       </div>
     </Router>

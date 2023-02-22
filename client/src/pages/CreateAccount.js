@@ -1,24 +1,22 @@
 import React, { useState } from 'react';
 import { LockClosedIcon } from '@heroicons/react/20/solid'
-import { useNavigate } from 'react-router-dom';
 
-function Login(props) {
-    const navigate = useNavigate();
-
+function CreateAccount(props) {
+    // const { setUserName } = props;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [remember, setRemember] = useState(false);
-    const [toast, setToast] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [toast, setToast] = useState(false);
 
-    const login = (e) => {
-        console.log("login:", e);
-        if (false) {// some sort of bad condition 
+    const create = (e) => {
+        console.log("create:", e);
+        if (email.substring(email.length - 7) !== "jhu.edu" || password !== confirmPassword) {
             setSuccess(false); 
-            setToast(true);
         }
         else setSuccess(true);
-        navigate('/');
+        setToast(true);
     }
 
     return (
@@ -26,13 +24,8 @@ function Login(props) {
         <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="w-full max-w-md space-y-8">
             <div>
-                {/* <img
-                className="mx-auto h-12 w-auto"
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                alt="Hop In"
-                /> */}
                 <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
-                Sign in to your account
+                Create a new HopOut account
                 </h2>
             </div>
             <form className="mt-8 space-y-6" action="#" method="POST">
@@ -49,7 +42,7 @@ function Login(props) {
                     autoComplete="email"
                     required
                     className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                    placeholder="Email address"
+                    placeholder="Email address (must end in @jhu.edu)"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     />
@@ -64,10 +57,26 @@ function Login(props) {
                     type="password"
                     autoComplete="current-password"
                     required
-                    className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    className="relative block w-full appearance-none rounded-none border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password" className="sr-only">
+                    Confirm password
+                    </label>
+                    <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    autoComplete="current-password"
+                    required
+                    className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
+                    placeholder="Confirm password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                 </div>
                 </div>
@@ -98,23 +107,15 @@ function Login(props) {
                 <button
                     type="submit"
                     className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={(e) => login(e)}
+                    onClick={(e) => create(e)}
                 >
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
                     <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                     </span>
-                    Sign in
+                    Create account
                 </button>
                 </div>
             </form>
-            <button
-                className="group relative flex w-full justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={(e) => navigate('/createaccount')}
-            >
-                Create a new account 
-            </button>
-
-
             {toast ?  (
             <div id="toast-default" className="flex justify-center items-center w-full max-w-md p-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-600" role="alert">
                 <div className="ml-3 text-sm font-normal">{success ? "Account created successfuly!" : "Something went wrong. Please try again. Can only create account with email ending in \".jhu.edu\"."}</div>
@@ -130,4 +131,4 @@ function Login(props) {
     );
 }
 
-export default Login;
+export default CreateAccount;
