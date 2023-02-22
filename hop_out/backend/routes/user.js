@@ -39,7 +39,7 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
+    const user = await UserDao.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return res.json({
