@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 
+
 const UserSchema = new mongoose.Schema({
+  // add username later
   name: {
     type: String,
     required: true,
@@ -13,7 +15,7 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  }
+  },
 })
 
 UserSchema.path('email').validate((input) => {

@@ -3,6 +3,21 @@ import User from '../models/User';
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
+const userDao = new UserDao();
+
+router.get('/users', async (req, res, next) => {
+  try {
+    const { name } = req.query;
+    const users = await userDao.readAll({ name });
+    res.json({
+      status: 200,
+      message: `Successfully retrieved ${users.length} users!`,
+      data: users,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post('/register', async (req, res, next) => {
   try {
