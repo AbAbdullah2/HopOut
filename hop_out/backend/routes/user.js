@@ -101,4 +101,23 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+router.delete("/users/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await userDao.delete(id);
+
+    if (!user) {
+      throw new ApiError(404, "Resource not found!");
+    }
+
+    res.json({
+      status: 200,
+      message: `Successfully deleted the following user!`,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
