@@ -8,12 +8,13 @@ const EventSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-      date: {
-        type: String,
+      start: {
+        type: Date,
         required: true,
+        unique: true,
       },
-      time: {
-        type: String,
+      end: {
+        type: Date,
         required: true,
         unique: true,
       },
@@ -25,6 +26,11 @@ const EventSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
+      visibility: {
+        type: String,
+        enum: ["public", "private"],
+        required: true,
+      },
     },
     organizer: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,7 +38,8 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     attendees: Array,
-    tag: Array,
+    categories: Array, //consider making categories an enum type with certain catgeory options (including an 'other' option)
+    invitees: Array,
   },
   {
     timestamps: true,
