@@ -19,6 +19,25 @@ router.get('/users', async (req, res, next) => {
   }
 });
 
+router.get("/users/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await userDao.read(id);
+
+    if (!user) {
+      throw new ApiError(404, "Resource not found!");
+    }
+
+    res.json({
+      status: 200,
+      message: `Successfully retrieved the following user!`,
+      data: user,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/register', async (req, res, next) => {
   try {
     const { email, name, password } = req.body;
