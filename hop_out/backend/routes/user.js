@@ -1,5 +1,5 @@
 import express from 'express';
-import User from '../models/User';
+import { hashPassword, verifyPassword } from "../password.js";
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
@@ -41,7 +41,7 @@ router.get("/users/:id", async (req, res, next) => {
 router.post('/register', async (req, res, next) => {
   try {
     const { email, name, password } = req.body;
-    const user = await UserDao.exists({ email: email.toLowerCase() });
+    const user = await userDao.exists({ email: email.toLowerCase() });
 
     if (user) {
       return res.json({
@@ -49,7 +49,7 @@ router.post('/register', async (req, res, next) => {
         status: 409,
       });
     } else {
-      const encryptedPassword = await bcrypt.hash(password, 10);
+      const encryptedPassword = hashPassword(password);
       const savedUser = await UserDao.create({
         email: email.toLowerCase(),
         name,
@@ -73,7 +73,7 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await UserDao.findOne({ email: email.toLowerCase() });
+    const user = await userDao.findOne({ email: email.toLowerCase() });
 
     if (!user) {
       return res.json({
@@ -82,7 +82,7 @@ router.post('/login', async (req, res, next) => {
       });
     }
 
-    if (user && (await bcrypt.compare(password, user.password))) {
+    if (user && verifyPassword(password, user.password)) {
       return res.json({
         userDetails: {
           email: user.email,

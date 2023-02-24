@@ -1,32 +1,23 @@
 import User from "../models/User";
+import { hashPassword, verifyPassword } from "../password.js";
 import mongoose from "mongoose";
 import ApiError from "../models/ApiError.js";
 import { z } from "zod";
-import bcrypt from "bcryptjs";
 
 const validObjectId = z
   .string()
   .refine((id) => mongoose.isValidObjectId(id), "Invalid ID!");
 const validName = z.string().min(1, "Missing name attribute!");
+const validUsername = z.string().min(1, "Missing username attribute!");
 const validEmail = z.string().email("Invalid Email!");
 const validPassword = z
   .string()
   .min(6, "Password should be at least 6 characters.");
 
-const hashPassword = (password) => {
-  try {
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    return hashedPassword;
-  } catch (err) {
-    throw err;
-  }
-};
-
 class UserDao {
 
   // return the created user
-  async create({ name, email, password }) {
+  async create({ name, email, username, password }) {
     
     //check name is valid
     let result = validName.safeParse(name);
@@ -40,6 +31,23 @@ class UserDao {
         throw new ApiError(400, 'this email is already in use. please try a different one.');
     }
 
+    //check email is valid
+    result = validEmail.safeParse(email);
+    if (!result.success) {
+      throw new ApiError(400, "Invalid Email!");
+    }
+
+    result = await User.exists({ username: username.toLowerCase() });
+    if (result) {
+        throw new ApiError(400, 'this username is already in use. please try a different one.');
+    }
+
+    //check username is valid
+    result = validUsername.safeParse(username);
+    if (!result.success) {
+      throw new ApiError(400, "Invalid Username!");
+    }
+
     //check password is valid
     result = validPassword.safeParse(password);
     if (!result.success) {
@@ -48,7 +56,7 @@ class UserDao {
     password = hashPassword(password);
 
     //create user
-    const user = await User.create({ name, email, password });
+    const user = await User.create({ name, email, username, password });
     return user;
 
   }
