@@ -1,5 +1,5 @@
-import app from "./hop_out/backend/index.js";
-import * as db from "./hop_out/backend/data/db.js";
+import app from "./backend/index.js";
+import * as db from "./backend/data/db.js";
 
 db.connect(process.env.DB);
 const PORT = process.env.PORT || 6000;
