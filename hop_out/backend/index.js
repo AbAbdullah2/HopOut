@@ -1,36 +1,34 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const routes = require('./routes/api');
-require('dotenv').config();
+import express from "express";
+//import eventUrls from "./routes/event.js";
+import userUrls from "./routes/user.js";
+//import api from "./routes/api.js"
+import cors from "cors"
+import helmet from "helmet"
 
 const app = express();
 
-const port = process.env.PORT || 6000;
+app.use(cors());
+app.use(helmet());
+app.use(express.json());
 
-mongoose
-  .connect(process.env.DB, { useNewUrlParser: true })
-  .then(() => console.log(`Database connected successfully`))
-  .catch((err) => console.log(err));
-
-// Since mongoose's Promise is deprecated, we override it with Node's Promise
-mongoose.Promise = global.Promise;
-
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
+app.get("/", (req, res) => {
+  console.log(`${req.method} ${req.path} called...`);
+  res.send("Welcome to the HopOut API!");
 });
 
-app.use(bodyParser.json());
-
-app.use('/api', routes);
+//app.use(eventUrls);
+app.use(userUrls);
 
 app.use((err, req, res, next) => {
-  console.log(err);
+  if (err) {
+    console.log(err);
+    const code = err.status || 500;
+    res.status(code).json({
+      status: code,
+      message: err.message || `Internal Server Error!`,
+    });
+  }
   next();
 });
 
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
-});
+export default app;

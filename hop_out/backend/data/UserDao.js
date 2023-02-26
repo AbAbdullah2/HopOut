@@ -1,5 +1,5 @@
-import User from "../models/User";
-import { hashPassword, verifyPassword } from "../password.js";
+import User from "../models/User.js";
+import { hashPassword, verifyPassword } from "../util/password.js";
 import mongoose from "mongoose";
 import ApiError from "../models/ApiError.js";
 import { z } from "zod";
@@ -160,6 +160,10 @@ class UserDao {
     }
 
     return user;
+  }
+
+  async deleteAll() {
+    await User.deleteMany({});
   }
 }
 

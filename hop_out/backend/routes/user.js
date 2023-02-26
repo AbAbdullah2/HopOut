@@ -1,5 +1,5 @@
 import express from 'express';
-import { hashPassword, verifyPassword } from "../password.js";
+import { hashPassword, verifyPassword } from "../util/password.js";
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
@@ -120,4 +120,4 @@ router.delete("/users/:id", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+export default router;
