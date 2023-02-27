@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { LockClosedIcon } from '@heroicons/react/20/solid'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom';
 
 function Login(props) {
@@ -89,7 +90,7 @@ function Login(props) {
                     onClick={(e) => login(e)}
                 >
                     <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                    <LockClosedIcon className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
+                    <FontAwesomeIcon icon={solid('lock')} className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" aria-hidden="true" />
                     </span>
                     Sign in
                 </button>
