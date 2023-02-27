@@ -16,7 +16,7 @@ export default function Landing() {
         <p className='text-5xl mb-2'>Welcome to</p>
         <span className='font-extrabold italic text-blue-400 mr-1'>H</span><span>opout</span>
         <hr className='mt-6' />
-        <a href='/events'><p className='text-5xl mt-4 hover:text-blue-400'>Enter <FontAwesomeIcon icon={solid('arrow-right')} /></p></a>
+        <a href='/login'><p className='text-5xl mt-4 hover:text-blue-400'>Enter <FontAwesomeIcon icon={solid('arrow-right')} /></p></a>
       </div>
     </div>
   )
