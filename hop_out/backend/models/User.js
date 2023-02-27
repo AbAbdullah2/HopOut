@@ -20,6 +20,22 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  organizing: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true,
+  }],
+  // account for attending vs attended (past vs future) later
+  attending: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true,
+  }],
+  invited: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true,
+  }]
 })
 
 UserSchema.path('email').validate((input) => {
