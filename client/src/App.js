@@ -1,6 +1,9 @@
 import EventList from './components/EventList';
 import Landing from './components/Landing';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from './pages/Login';
+import CreateAccount from './pages/CreateAccount';
+
 
 const App = () => {
   return (
