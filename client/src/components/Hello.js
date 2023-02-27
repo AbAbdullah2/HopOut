@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import AddHello from './AddHello';
 
-const BASEURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? '/' : 'https://johndcruz-hello-world.herokuapp.com/';
+const BASEURL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? '/' : 'https://hopout.herokuapp.com/';
 
 class Hello extends Component {
   state = {
