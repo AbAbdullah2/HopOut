@@ -13,7 +13,8 @@ const App = () => {
           <Route index element={<Landing />} />
           <Route path="events" element={<EventList />} />
           <Route path="create" element={<Landing />} />
-          <Route path="account" element={<Landing />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<CreateAccount />} />
         </Route>
       </Routes>
     </BrowserRouter>
