@@ -3,23 +3,21 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function Header({ currentPage }) {
   return (
-    <div className="w-full bg-slate-300 p-5">
-      <span className='text-4xl font-extrabold italic text-blue-700 mr-1'>H</span><span className='text-4xl text-black'>opout</span>
-      <a href='/'>
-        <button className='text-xl py-2 px-4 rounded-full border-0 font-semibold bg-slate-100 text-slate-800 hover:bg-slate-300'>
-          <FontAwesomeIcon icon={solid('calendar')} className="px-2" /><span className='pl-2'>Event List</span>
-        </button>
+    <div className="w-full bg-stone-800 p-5 text-white flex flex-row flex-nowrap justify-between">
+      <a href='/' className='mx-2'>
+        <span className='text-4xl font-extrabold italic text-blue-400 mr-1'>H</span><span className='text-4xl'>opout</span>
       </a>
-      <a href='/add'>
-        <button className='text-xl py-2 px-4 mx-4 rounded-full border-0 font-semibold bg-slate-100 text-slate-800 hover:bg-slate-300'>
-          <FontAwesomeIcon icon={solid('plus')} className="px-2" /><span className='pl-2'>Add Event</span>
-        </button>
-      </a>
-      <a href='/account'>
-        <button className='text-xl py-2 px-4 mx-4 rounded-full border-0 font-semibold bg-slate-100 text-slate-800 hover:bg-slate-300'>
-          <FontAwesomeIcon icon={solid('user')} className="px-2" /><span className='pl-2'>Account</span>
-        </button>
-      </a>
+      <div className='flex justify-end content-end items-end right-0 text-2xl font-semibold space-x-4 mx-2 mr-4'>
+        <a href='/' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('calendar')} className="px-1" /><span className='pl-1'>Events</span>
+        </a>
+        <a href='/create' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1'>Create</span>
+        </a>
+        <a href='/account' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1'>Account</span>
+        </a>
+      </div>
     </div>
   )
 }

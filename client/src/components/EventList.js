@@ -43,11 +43,10 @@ class EventList extends Component {
     let { events } = this.state;
 
     return (
-      <div className='bg-slate-100 min-h-screen'>
+      <div className='bg-stone-100 min-h-screen'>
         <div className='mx-auto flex flex-col items-center justify-center h-full'>
           <Header />
           <div className='mt-5 w-4/5'>
-            <p className='text-4xl text-center'>Event List</p>
             {
               events.map((event) => {
                 const start = new Date(event.event.start);
