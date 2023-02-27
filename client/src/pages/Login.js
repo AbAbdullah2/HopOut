@@ -81,9 +81,7 @@ function Login(props) {
                     Remember me
                     </label>
                 </div>
-
                 </div>
-
                 <div>
                 <button
                     type="submit"

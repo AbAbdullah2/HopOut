@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { LockClosedIcon } from '@heroicons/react/20/solid'
 
 function CreateAccount(props) {
-    // const { setUserName } = props;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -61,7 +60,6 @@ function CreateAccount(props) {
                     className={password.length != 0 && password.length < 6 ? 
                     "relative block w-full appearance-none rounded border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm border-red-500" :
                     "relative block w-full appearance-none rounded border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"}
-                    // className="shadow appearance-none border border-red-500 rounded-none w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -101,12 +99,6 @@ function CreateAccount(props) {
                     Remember me
                     </label>
                 </div>
-
-                {/* <div className="text-sm">
-                    <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                    Forgot your password?
-                    </a>
-                </div> */}
                 </div>
 
                 <div>
