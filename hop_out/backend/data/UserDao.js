@@ -36,6 +36,7 @@ class UserDao {
     if (!result.success) {
       throw new ApiError(400, "Invalid Email!");
     }
+    // note: email validation is not working
 
     result = await User.exists({ username: username.toLowerCase() });
     if (result) {
