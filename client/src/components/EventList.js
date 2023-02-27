@@ -36,6 +36,21 @@ class EventList extends Component {
           name: "HopOut CEO",
         }
       },
+      {
+        event: {
+          _id: 3,
+          title: 'HopOut IPO',
+          start: '2023-04-22T20:00:00Z',
+          end: '2023-04-22T22:00:00Z',
+          description: 'HopOut IPO',
+          image: 'https://picsum.photos/200/200',
+          location: '123 Main St, New York, NY 10001',
+          visibility: 'public',
+        },
+        organizer: {
+          name: "HopOut CEO",
+        }
+      },
     ],
   };
 
@@ -46,7 +61,7 @@ class EventList extends Component {
       <div className='bg-stone-100 min-h-screen'>
         <div className='mx-auto flex flex-col items-center justify-center h-full'>
           <Header />
-          <div className='mt-5 w-4/5'>
+          <div className='mt-5 w-11/12'>
             {
               events.map((event) => {
                 const start = new Date(event.event.start);
