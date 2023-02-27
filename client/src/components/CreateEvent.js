@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 
 function CreateEvent(props) {
-    // const { setUserName } = props;
   const navigate = useNavigate();
 
   const createEvent = () => {
@@ -38,7 +37,7 @@ function CreateEvent(props) {
     return (
       <>
       <div>
-        <div className="md:grid md:grid-cols-3 md:gap-6 md:mt-40" >
+        <div className="md:grid md:grid-cols-3 md:gap-6" >
           <div className="md:col-span-1">
             <div className="py-20 sm:px-10">
               <h3 className="text-lg font-medium leading-6 text-gray-900">Event info</h3>
