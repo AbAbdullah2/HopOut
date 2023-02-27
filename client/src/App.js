@@ -1,5 +1,5 @@
-import EventList from './components/EventList';
-import Landing from './components/Landing';
+import EventList from './pages/EventList';
+import Landing from './pages/Landing';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
 import CreateAccount from './pages/CreateAccount';
