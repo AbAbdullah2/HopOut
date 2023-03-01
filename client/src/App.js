@@ -6,6 +6,7 @@ import CreateAccount from './pages/CreateAccount';
 import CreateEvent from './components/CreateEvent';
 import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
+import Account from './pages/Account';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="create" element={<Landing />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<CreateAccount />} />
+          <Route path="account" element={<Account />} />
           <Route path="createevent" element={<CreateEvent />}/>
           <Route path="*" element={<NotFound />} />
         </Route>

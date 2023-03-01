@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import eventData from '../assets/data.js';
+import eventData from '../assets/eventData';
 import NotFound from './NotFound';
 import Header from '../components/Header';
 import { formatEventDates } from '../helpers/FormatDate';

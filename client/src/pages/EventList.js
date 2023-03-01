@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
-import eventData from '../assets/data.js';
+import eventData from '../assets/eventData.js';
 
 class EventList extends Component {
   state = eventData;
