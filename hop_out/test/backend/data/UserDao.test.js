@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import UserDao from "../../../backend/data/UserDao.js";
 import { faker } from "@faker-js/faker";
 import User from "../../../backend/models/User.js";
-import * as db from "../../../backend/index.js";
+import * as db from "../../../backend/data/db.js"
 import * as dotenv from "dotenv";
 import { verifyPassword } from "../../../backend/util/password.js";
 import mongoose from "mongoose";
@@ -27,10 +27,13 @@ describe("Test UserDao", () => {
 
     it("test create()", async () => {
         const name = faker.name.fullName();
+        const username = faker.internet.userName();
         const email = faker.internet.email();
         const password = faker.internet.password(6);
-        const _user = await userDao.create({ name, email, password });
+        console.log(email)
+        const _user = await userDao.create({ name, username, email, password });
         expect(_user.name).toBe(name);
+        expect(_user.username).toBe(username);
         expect(_user.email).toBe(email);
         expect(verifyPassword(password, _user.password)).toBe(true);
         expect(_user.id).toBeDefined();
