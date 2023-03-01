@@ -98,7 +98,7 @@ function Login(props) {
             </form>
             <button
                 className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                onClick={(e) => navigate('/createaccount')}
+                onClick={(e) => navigate('/signup')}
             >
                 Create a new account 
             </button>

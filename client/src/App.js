@@ -3,6 +3,7 @@ import Landing from './pages/Landing';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
 import CreateAccount from './pages/CreateAccount';
+import CreateEvent from './components/CreateEvent';
 import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 
@@ -17,6 +18,7 @@ const App = () => {
           <Route path="create" element={<Landing />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<CreateAccount />} />
+          <Route path="createevent" element={<CreateEvent />}/>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
