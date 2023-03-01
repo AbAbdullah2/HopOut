@@ -6,12 +6,11 @@ const eventDao = new EventDao();
 
 router.get('/events', async (req, res, next) => {
   try {
-    const { name } = req.query;
-    const users = await eventDao.readAll({ name });
+    const events = await eventDao.readAll();
     res.json({
       status: 200,
-      message: `Successfully retrieved ${users.length} users!`,
-      data: users,
+      message: `Successfully retrieved ${events.length} events!`,
+      data: events,
     });
   } catch (err) {
     next(err);
@@ -37,42 +36,40 @@ router.get("/events/:id", async (req, res, next) => {
   }
 });
 
-router.post('/register', async (req, res, next) => {
+router.post('/events', async (req, res, next) => {
   try {
-    const { email, name, password } = req.body;
-    const user = await eventDao.exists({ email: email.toLowerCase() });
+    const { name, start, end, location, description, visibility, organizer, categories } = req.body;
+    const event = eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
 
-    if (user) {
-      return res.json({
-        msg: 'This email is already in use. Please try a different one.',
-        status: 409,
-      });
-    } else {
-      const encryptedPassword = hashPassword(password);
-      const savedUser = await eventDao.create({
-        email: email.toLowerCase(),
-        name,
-        password: encryptedPassword,
-      });
-
-      return res.json({
-        userDetails: {
-          email: savedUser.email,
-          username: savedUser.username,
-          id: savedUser._id,
-        },
-        status: 200,
-      });
-    }
+    return res.json({
+      status: 200,
+      message: `Successfully created the following event!`,
+      data: event
+    });
   } catch (err) {
     return res.status(500).send('Something went wrong. Please try again.');
   }
 });
 
-router.delete("/users/:id", async (req, res, next) => {
+router.put(`/events/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await eventDao.delete(id);
+    const { name, start, end, location, description, visibility, categories, attendees, invitees } = req.body;
+    const event = await eventDao.update({ id, name, start, end, location, description, visibility, categories, attendees, invitees });
+    res.json({
+      status: 200,
+      message: `Successfully updated the following event!`,
+      data: event
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/events/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const event = await eventDao.delete(id);
 
     if (!user) {
       throw new ApiError(404, "Resource not found!");
@@ -80,8 +77,8 @@ router.delete("/users/:id", async (req, res, next) => {
 
     res.json({
       status: 200,
-      message: `Successfully deleted the following user!`,
-      data: user,
+      message: `Successfully deleted the following event!`,
+      data: event,
     });
   } catch (err) {
     next(err);

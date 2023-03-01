@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import ApiError from "../models/ApiError.js";
 import { z } from "zod";
 import Event from "../models/Event";
-import UserDao from "./UserDao";
+import User from "../models/User";
 
 const validObjectId = z
   .string()
@@ -62,7 +62,7 @@ class EventDao {
 
     //check Organizer is valid
     try {
-      UserDao.read(organizer);
+      User.findById(organizer);
     } catch(e) {
       throw new ApiError(400, "Invalid Organizer!");
     }
@@ -83,7 +83,7 @@ class EventDao {
   }
 
   // return all events
-  async readAll() {
+  async readAll({ name, start, end, location, description, visibility, organizer, categories }) {
     const events = await Event.find();
     return events;
   }
@@ -169,7 +169,7 @@ class EventDao {
     //check attendees list has valid attendees
     attendees.forEach((user) => { 
       try {
-        UserDao.read(user.id);
+        User.findById(user.id);
       } catch (e) {
         throw new ApiError(400, "Invalid Attendee in attendees list!");
       }
@@ -178,7 +178,7 @@ class EventDao {
     //check invitees list has valid attendees
     invitees.forEach((user) => { 
       try {
-        UserDao.read(user.id);
+        User.findById(user.id);
       } catch (e) {
         throw new ApiError(400, "Invalid Invitee in invitee list!");
       }

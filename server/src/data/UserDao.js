@@ -8,7 +8,6 @@ const validObjectId = z
   .string()
   .refine((id) => mongoose.isValidObjectId(id), "Invalid ID!");
 const validName = z.string().min(1, "Missing name attribute!");
-const validUsername = z.string().min(1, "Missing username attribute!");
 const validEmail = z.string().email("Invalid Email!");
 const validPassword = z
   .string()
@@ -17,7 +16,7 @@ const validPassword = z
 class UserDao {
 
   // return the created user
-  async create({ name, email, username, password }) {
+  async create({ name, email, password }) {
     
     //check name is valid
     let result = validName.safeParse(name);
@@ -38,17 +37,6 @@ class UserDao {
     }
     // note: email validation is not working
 
-    result = await User.exists({ username: username.toLowerCase() });
-    if (result) {
-        throw new ApiError(400, 'this username is already in use. please try a different one.');
-    }
-
-    //check username is valid
-    result = validUsername.safeParse(username);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Username!");
-    }
-
     //check password is valid
     result = validPassword.safeParse(password);
     if (!result.success) {
@@ -57,7 +45,7 @@ class UserDao {
     password = hashPassword(password);
 
     //create user
-    const user = await User.create({ name, email, username, password });
+    const user = await User.create({ name, email, password });
     return user;
 
   }

@@ -9,7 +9,8 @@ router.get('/users', async (req, res, next) => {
   try {
     const { name } = req.query;
     const users = await userDao.readAll({ name });
-    res.json({
+    users.forEach((u) => u["password"] = null);
+    return res.json({
       status: 200,
       message: `Successfully retrieved ${users.length} users!`,
       data: users,
@@ -23,12 +24,13 @@ router.get("/users/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userDao.read(id);
+    user["password"] = null;
 
     if (!user) {
       throw new ApiError(404, "Resource not found!");
     }
 
-    res.json({
+    return res.json({
       status: 200,
       message: `Successfully retrieved the following user!`,
       data: user,
@@ -57,13 +59,10 @@ router.post('/register', async (req, res, next) => {
       });
 
       return res.json({
-        userDetails: {
-          email: savedUser.email,
-          username: savedUser.username,
-          id: savedUser._id,
-        },
-        status: 200,
-      });
+        status: 201,
+        message: `Successfully registered the following user!`,
+        data: savedUser,
+      });;
     }
   } catch (err) {
     return res.status(500).send('Something went wrong. Please try again.');
@@ -74,26 +73,24 @@ router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await userDao.findOne({ email: email.toLowerCase() });
+    user["password"] = null;
 
     if (!user) {
       return res.json({
-        msg: 'Invalid credentials. Please try again.',
+        message: 'Invalid credentials. Please try again.',
         status: 409,
       });
     }
 
     if (user && verifyPassword(password, user.password)) {
       return res.json({
-        userDetails: {
-          email: user.email,
-          name: user.name,
-          id: user._id,
-        },
-        status: 200,
+        status: 201,
+        message: `Successfully logged in the following user!`,
+        data: user,
       });
     }
     return res.json({
-      msg: 'Invalid credentials. Please try again.',
+      message: 'Invalid credentials. Please try again.',
       status: 400,
     });
   } catch (err) {
@@ -101,16 +98,33 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+router.put(`/users/:id`, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { name, password } = req.body;
+    const user = await userDao.update({ id, name, password });
+    user["password"] = null;
+    res.json({
+      status: 200,
+      message: `Successfully updated the following user!`,
+      data: user
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete("/users/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userDao.delete(id);
+    user["password"] = null;
 
     if (!user) {
       throw new ApiError(404, "Resource not found!");
     }
 
-    res.json({
+    return res.json({
       status: 200,
       message: `Successfully deleted the following user!`,
       data: user,
