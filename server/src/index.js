@@ -1,5 +1,5 @@
 import express from "express";
-//import eventUrls from "./routes/event.js";
+import eventUrls from "./routes/event.js";
 import userUrls from "./routes/user.js";
 //import api from "./routes/api.js"
 import cors from "cors"
@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to the HopOut API!");
 });
 
-//app.use(eventUrls);
+app.use(eventUrls);
 app.use(userUrls);
 
 app.use((err, req, res, next) => {
