@@ -15,18 +15,18 @@ function Login(props) {
     const [success, setSuccess] = useState(false);
 
     const login = (e) => {
-        postLogin({email: email, password: password}).then(data => {
-            console.log('data recieved: ', data);
-            if (data.status == 200) {
-                console.log("login success! fetching user by id ", userDetails);
-                // here we need to fetch user details based on userID? 
-                getUser(data.userDetails.id).then(data => {
-                    console.log("fetched user by id successfully! setting global curUser ", data);
-                    setCurUser(data.data);
-                })
+        // postLogin({email: email, password: password}).then(data => {
+        //     console.log('data recieved: ', data);
+        //     if (data.status == 200) {
+        //         console.log("login success! fetching user by id ", userDetails);
+        //         // here we need to fetch user details based on userID? 
+        //         getUser(data.userDetails.id).then(data => {
+        //             console.log("fetched user by id successfully! setting global curUser ", data);
+        //             setCurUser(data.data);
+        //         })
 
-            }
-        }).catch(err => {console.log(err)});
+        //     }
+        // }).catch(err => {console.log(err)});
         if (false) {// some sort of bad condition 
             setSuccess(false); 
             setToast(true);

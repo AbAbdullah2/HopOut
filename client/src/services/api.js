@@ -14,7 +14,7 @@ async function getAllUsers(user) {
 
 // Get user by id 
 async function getUser(userId) {
-    const response = await axios.get(`${BASE_URL}/users/${flashcardId}`)
+    const response = await axios.get(`${BASE_URL}/users/${userId}`)
     .catch(function (error) {
         console.log(error);
     });
