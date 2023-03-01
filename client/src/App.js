@@ -4,6 +4,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
 import CreateAccount from './pages/CreateAccount';
 import CreateEvent from './components/CreateEvent';
+import NotFound from './pages/NotFound';
+import EventDetail from './pages/EventDetail';
 
 const App = () => {
   return (
@@ -12,10 +14,12 @@ const App = () => {
         <Route path="/">
           <Route index element={<Landing />} />
           <Route path="events" element={<EventList />} />
+          <Route path="events/:eventid" element={<EventDetail />} />
           <Route path="create" element={<Landing />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<CreateAccount />} />
           <Route path="createevent" element={<CreateEvent />}/>
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>
