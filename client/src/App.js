@@ -4,9 +4,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './pages/Login';
 import CreateAccount from './pages/CreateAccount';
 import CreateEvent from './components/CreateEvent';
-import Hello from './components/Hello';
-
-
 
 const App = () => {
   return (
