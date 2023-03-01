@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest --no-threads --no-isolate",
-    "start": "node index.js",
-    "start-watch": "nodemon index.js",
+    "start": "node server.js",
+    "start-watch": "nodemon server.js",
     "dev": "dotenv -e .env nodemon server.js"
   },
   "repository": {

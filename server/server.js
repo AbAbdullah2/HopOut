@@ -1,5 +1,5 @@
-import app from "./backend/index.js";
-import * as db from "./backend/data/db.js";
+import app from "./src/index.js";
+import * as db from "./src/data/db.js";
 
 //db.connect(process.env.TEST_DB)
 db.connect(process.env.DB);
