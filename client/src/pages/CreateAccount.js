@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { register } from '../services/api'
 
 function CreateAccount(props) {
     const [email, setEmail] = useState("");
@@ -18,7 +19,20 @@ function CreateAccount(props) {
             setSuccess(false); 
             return;
         }
-        else setSuccess(true);
+        else {
+            // Uncomment this when connected to backend!
+            
+            // register({email: email, name: name, password: password}).then(data => {
+            //     console.log('data recieved: ', data);
+            //     if (data.status == 200) {
+            //         console.log("create account success! response: ", data);
+            //     } else {
+            //         // do smth
+            //     }
+            // }).catch(err => {console.log(err)});
+    
+            setSuccess(true);
+        }
         setToast(true);
     }
 
