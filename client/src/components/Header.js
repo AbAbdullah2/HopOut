@@ -3,7 +3,7 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function Header({ icons }) {
   return (
-    <div className="w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap justify-between">
+    <div className={"w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap" + (icons ? " justify-between" : " justify-center text-center items-center")}>
       <a href='/' className='mx-2'>
         <span className='text-4xl font-extrabold italic text-blue-400 mr-1'>H</span><span className='text-4xl'>opout</span>
       </a>

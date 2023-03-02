@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-//import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
 import userData from '../assets/userData';
+import toast, { Toaster } from 'react-hot-toast';
 
 function CreateEvent(props) {
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const currentUsers = userData.users;
   const currentUser = currentUsers[0].user;
@@ -37,8 +38,15 @@ function CreateEvent(props) {
       }
     };
 
-    console.log(newEvent);
-    //navigate("/");
+    let newEventResponse = null;
+    if (newEventResponse) {
+      const newURL = "/events/" + newEventResponse._id;
+      navigate(newURL); //navigate to page with new event
+    } else {
+      const error = 'Could not create event ' + newEvent.event.title;
+      toast.error(error);
+    }
+
   }
 
   const [title, setTitle] = useState("");
@@ -56,6 +64,7 @@ function CreateEvent(props) {
     
     return (
       <div className='bg-stone-100 min-h-screen'>
+        <Toaster/>
         <div className='mx-auto flex flex-col h-full'>
           <Header icons={true} />
           <div className="m-5 shadow rounded-md">
@@ -169,7 +178,7 @@ function CreateEvent(props) {
                           required
                         />
                       </div>
-                      <div className="mt-3 flex rounded-md shadow-sm">
+                      <div className="mt-3 flex rounded-md shadow-sm w-1/4">
                         <select
                           name="state"
                           id="state"
@@ -186,7 +195,7 @@ function CreateEvent(props) {
                         ))}
                         </select>
                       </div>
-                      <div className="mt-3 flex rounded-md shadow-sm">
+                      <div className="mt-3 flex rounded-md shadow-sm w-1/4">
                         <input
                           type="text"
                           name="zip"
@@ -295,6 +304,7 @@ function CreateEvent(props) {
           </div>
         </div>
       </div>
+      
       );
 }
 
