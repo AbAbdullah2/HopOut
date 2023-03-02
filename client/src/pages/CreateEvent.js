@@ -67,7 +67,7 @@ function CreateEvent(props) {
         <Toaster/>
         <div className='mx-auto flex flex-col h-full'>
           <Header icons={true} />
-          <div className="m-5 shadow rounded-md">
+          <div className="m-10 shadow rounded-md">
             <div className="py-5 bg-gray-50 rounded-md px-4">
               <h3 className="text-lg font-medium leading-6 text-gray-700">New Event</h3>
             </div>
