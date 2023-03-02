@@ -1,40 +1,58 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+//import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
+import userData from '../assets/userData';
 
 function CreateEvent(props) {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
 
-  const createEvent = () => {
+  const currentUsers = userData.users;
+  const currentUser = currentUsers[0].user;
+
+  const createEvent = (e) => {
+    e.preventDefault();
     const start = new Date(startDate.startDate + ' ' + startTime)
     const end = new Date(endDate.startDate + ' ' + endTime);
+    const coverImage = URL.createObjectURL(cover);
+    const thumbnailImage = URL.createObjectURL(thumbnail);
 
-    console.log('start and end:', start, end)
     const newEvent = {
-      _id: 1, 
-      title: title,
-      start: start,
-      end: end,
-      description: description,
-      image: 'https://picsum.photos/200/200',
-      location: address,
-    }
-    console.log("creating event: ", newEvent);
-    navigate("/");
+      event: {
+        title: title,
+        start: start,
+        end: end,
+        description: description,
+        thumbnail: thumbnailImage,
+        image: coverImage,
+        address: address,
+        city: city,
+        state: state,
+        zip: zip,
+        visibility: 'public',
+      },
+      organizer: {
+        name: currentUser.name,
+      }
+    };
+
+    console.log(newEvent);
+    //navigate("/");
   }
 
   const [title, setTitle] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   const [description, setDescription] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
+  const [cover, setCover] = useState();
+  const [thumbnail, setThumbnail] = useState();
     
     return (
       <div className='bg-stone-100 min-h-screen'>
@@ -44,7 +62,7 @@ function CreateEvent(props) {
             <div className="py-5 bg-gray-50 rounded-md px-4">
               <h3 className="text-lg font-medium leading-6 text-gray-700">New Event</h3>
             </div>
-            <form action="#" method="POST">
+            <form onSubmit={createEvent}>
               <div className="space-y-6 bg-white p-4">
                 <div className="grid grid-cols-3 gap-6">
                   <div className="col-span-3">
@@ -77,7 +95,7 @@ function CreateEvent(props) {
                           displayFormat={"MM/DD/YYYY"}  
                           asSingle={true} 
                           value={startDate} 
-                          onChange={(e) => {setStartDate(e); console.log("date: ", e)}} 
+                          onChange={(e) => {setStartDate(e)}} 
                         /> 
                         <div className="col-span-1 w-1/2">
                           <input
@@ -104,7 +122,7 @@ function CreateEvent(props) {
                           displayFormat={"MM/DD/YYYY"}  
                           asSingle={true} 
                           value={endDate} 
-                          onChange={(e) => {setEndDate(e); console.log("date: ", e)}} 
+                          onChange={(e) => {setEndDate(e)}} 
                         /> 
                         <div className="col-span-1 w-1/2">
                           <input
@@ -160,7 +178,7 @@ function CreateEvent(props) {
                           onChange={(e) => setState(e.target.value)}
                           required
                         >
-                        <option value="" selected>State</option>
+                        <option value="">State</option>
                         {states.map((state) => (
                           <option key={state.name} value={state.abbreviation}>
                             {state.name}
@@ -221,14 +239,14 @@ function CreateEvent(props) {
                         </svg>
                         <div className="text-sm text-gray-600">
                           <label
-                            htmlFor="file-upload"
+                            htmlFor="cover-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                           >
-                            <span>Upload a file</span>
-                              <input id="file-upload" name="file-upload" type="file" className="sr-only" required/>
+                            <span>{cover ? cover.name : 'Upload a cover image'}</span>
+                              <input id="cover-upload" name="cover-upload" type="file" className="sr-only" required onChange={(e) => setCover(e.target.files[0])}/>
                           </label>
                         </div>
-                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        <p className="text-xs text-gray-500">{cover ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
                       </div>
                     </div>
                   </div>
@@ -252,14 +270,14 @@ function CreateEvent(props) {
                         </svg>
                         <div className="text-sm text-gray-600">
                           <label
-                            htmlFor="file-upload"
+                            htmlFor="thumbnail-upload"
                             className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                           >
-                            <span>Upload a file</span>
-                              <input id="file-upload" name="file-upload" type="file" className="sr-only" required/>
+                            <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
+                              <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" required onChange={(e) => setThumbnail(e.target.files[0])} />
                           </label>
                         </div>
-                        <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
+                        <p className="text-xs text-gray-500">{thumbnail ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
                       </div>
                     </div>
                   </div>
@@ -268,7 +286,6 @@ function CreateEvent(props) {
               <div className="bg-gray-50 rounded-md px-4 py-3 text-right">
                 <button
                   type="submit"
-                  onClick={() => createEvent()}
                   className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                 >
                   Add Event
