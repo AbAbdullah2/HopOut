@@ -28,7 +28,7 @@ class EventDao {
     if (!result.success) {
       throw new ApiError(400, "Invalid Start Date!");
     }
-
+  
     //check end is valid
     result = validDate.safeParse(end);
     if (!result.success) {
@@ -77,13 +77,13 @@ class EventDao {
 
     //create event
     const event = await Event.create({ name, start, end, location, description, visibility, organizer, categories, 
-        attendees: [], invitees: [] });
+        attendees: [], invitees: [], coverId: "", thumbnailId: "" });
     
     return event;
   }
 
   // return all events
-  async readAll({ name, start, end, location, description, visibility, organizer, categories }) {
+  async readAll() {
     const events = await Event.find();
     return events;
   }
@@ -109,7 +109,7 @@ class EventDao {
   // update an event given its ID
   // return the updated event
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({ id, name, start, end, location, description, visibility, categories, attendees, invitees }) {
+  async update({ id, name, start, end, location, description, visibility, categories, attendees, invitees, coverId, thumbnailId }) {
 
     //validate id
     let result = validObjectId.safeParse(id);
@@ -119,7 +119,7 @@ class EventDao {
 
     //validate name
     if (name !== undefined) {
-      result = validName.safeParse(name);
+      result = validString.safeParse(name);
       if (!result.success) {
         throw new ApiError(400, "Invalid Name!");
       }
@@ -127,67 +127,83 @@ class EventDao {
 
     //check start is valid
     //NOTE for LATER: also check that start date is before end date
-    result = validDate.safeParse(start);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Start Date!");
+    if (start !== undefined) {
+      result = validDate.safeParse(start);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid Start Date!");
+      }
     }
 
     //check end is valid
-    result = validDate.safeParse(end);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid End Date!");
+    if (end !== undefined) {
+      result = validDate.safeParse(end);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid End Date!");
+      }
     }
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-    result = validString.safeParse(location);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Location!");
+    if (location !== undefined) {
+      result = validString.safeParse(location);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid Location!");
+      }
     }
 
-    //check description is valid
-    result = validString.safeParse(description);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Description!");
+    if (description !== undefined) {
+      //check description is valid
+      result = validString.safeParse(description);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid Description!");
+      }
     }
 
     //check visibility is valid
     //CHECK IF PARSE IS CORRECT LATER
-    result = visibilityEnum.safeParse(visibility);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid visibility!");
+    if (visibility !== undefined) {
+      result = visibilityEnum.safeParse(visibility);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid visibility!");
+      }
     }
 
     //check categories array has valid categories
-    categories.forEach((t) => { 
-      result = validString.safeParse(t);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid Tag in categories array!");
-      }
-    })
+    if (categories !== undefined) {
+      categories.forEach((t) => { 
+        result = validString.safeParse(t);
+        if (!result.success) {
+          throw new ApiError(400, "Invalid Tag in categories array!");
+        }
+      })
+    }
 
     //check attendees list has valid attendees
-    attendees.forEach((user) => { 
-      try {
-        User.findById(user.id);
-      } catch (e) {
-        throw new ApiError(400, "Invalid Attendee in attendees list!");
-      }
-    })
+    if (attendees !== undefined) {
+      attendees.forEach((user) => { 
+        try {
+          User.findById(user.id);
+        } catch (e) {
+          throw new ApiError(400, "Invalid Attendee in attendees list!");
+        }
+      })
+    }
 
     //check invitees list has valid attendees
-    invitees.forEach((user) => { 
-      try {
-        User.findById(user.id);
-      } catch (e) {
-        throw new ApiError(400, "Invalid Invitee in invitee list!");
-      }
-    })
+    if (invitees !== undefined) {
+      invitees.forEach((user) => { 
+        try {
+          User.findById(user.id);
+        } catch (e) {
+          throw new ApiError(400, "Invalid Invitee in invitee list!");
+        }
+      })
+    }
 
     //update event
     const event = await Event.findByIdAndUpdate(
       id,
-      { name, start, end, location, description, visibility, categories, attendees, invitees },
+      { name, start, end, location, description, visibility, categories, attendees, invitees, coverId, thumbnailId },
       { new: true }
     );
     if (!event) {

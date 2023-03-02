@@ -36,10 +36,10 @@ router.get("/events/:id", async (req, res, next) => {
 router.post('/events', async (req, res, next) => {
   try {
     const { name, start, end, location, description, visibility, organizer, categories } = req.body;
-    const event = eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-
+    const event = await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
+    console.log(event);
     return res.json({
-      status: 200,
+      status: 201,
       message: `Successfully created the following event!`,
       data: event
     });
