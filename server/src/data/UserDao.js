@@ -56,6 +56,16 @@ class UserDao {
     return users;
   }
 
+  async readByEmail(email) {
+    //find user
+    const user = await User.findOne({email});
+    if (!user) {
+      throw new ApiError(404, "Resource not found!");
+    }
+
+    return user;
+  }
+
   // return the user with the given ID
   // throws ApiError if id is invalid or resource does not exist in our database
   async read(id) {

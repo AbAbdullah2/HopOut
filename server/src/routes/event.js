@@ -7,6 +7,7 @@ const eventDao = new EventDao();
 router.get('/events', async (req, res, next) => {
   try {
     const events = await eventDao.readAll();
+
     res.json({
       status: 200,
       message: `Successfully retrieved ${events.length} events!`,
@@ -21,10 +22,6 @@ router.get("/events/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.read(id);
-
-    if (!event) {
-      throw new ApiError(404, "Resource not found!");
-    }
 
     res.json({
       status: 200,
@@ -47,7 +44,7 @@ router.post('/events', async (req, res, next) => {
       data: event
     });
   } catch (err) {
-    return res.status(500).send('Something went wrong. Please try again.');
+    next(err);
   }
 });
 
@@ -56,6 +53,7 @@ router.put(`/events/:id`, async (req, res, next) => {
     const { id } = req.params;
     const { name, start, end, location, description, visibility, categories, attendees, invitees } = req.body;
     const event = await eventDao.update({ id, name, start, end, location, description, visibility, categories, attendees, invitees });
+    
     res.json({
       status: 200,
       message: `Successfully updated the following event!`,
@@ -70,10 +68,6 @@ router.delete("/events/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.delete(id);
-
-    if (!user) {
-      throw new ApiError(404, "Resource not found!");
-    }
 
     res.json({
       status: 200,
