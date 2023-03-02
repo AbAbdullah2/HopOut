@@ -22,7 +22,7 @@ export default function EventDetail() {
   return selectedEvent === null ? <NotFound /> : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <Header />
+        <Header icons={true} />
         <img src={selectedEvent.image} alt={selectedEvent.title} className='w-full object-cover h-60' />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{selectedEvent.title}</p>
