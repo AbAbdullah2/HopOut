@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import ApiError from "../models/ApiError.js";
 import { z } from "zod";
-import Event from "../models/Event";
-import User from "../models/User";
+import Event from "../models/Event.js";
+import User from "../models/User.js";
 
 const validObjectId = z
   .string()
