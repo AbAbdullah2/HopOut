@@ -9,13 +9,13 @@ export default function Header({ icons }) {
       </a>
       {icons ? (<div className='flex justify-end content-end items-end right-0 text-2xl font-semibold space-x-4 mx-2 mr-4'>
         <a href='/events' className='hover:text-blue-400'>
-          <FontAwesomeIcon icon={solid('calendar')} className="px-1" /><span className='pl-1'>Events</span>
+          <FontAwesomeIcon icon={solid('calendar')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Events</span>
         </a>
         <a href='/create' className='hover:text-blue-400'>
-          <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1'>Create</span>
+          <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Create</span>
         </a>
         <a href='/account' className='hover:text-blue-400'>
-          <FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1'>Profile</span>
+          <FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Profile</span>
         </a>
       </div> ) : null}
     </div>
