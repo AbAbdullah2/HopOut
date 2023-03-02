@@ -1,8 +1,6 @@
 import { expect, test } from "vitest";
 import User from "../../../backend/models/User.js";
 import {faker} from "@faker-js/faker";
-import * as db from "../../../backend/index.js";
-import * as dotenv from "dotenv";
 
 test("test constructor", async () => {
   const name = faker.name.fullName();
