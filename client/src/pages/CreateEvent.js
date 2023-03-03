@@ -32,15 +32,12 @@ function CreateEvent(props) {
     e.preventDefault();
     // Upload cover img 
     if (cover !== undefined){
-      console.log("call upload img called, cover = ", cover);
       uploadImg(cover).then(data => {
         // Store ImgBB URL  
         if (data.status == 200) coverUrl = data.data.data.display_url; 
         // Upload thumbnail img 
         if (thumbnail !== undefined){
-          console.log("call upload img called, thumbnail = ", thumbnail);
           uploadImg(thumbnail).then(data => {
-            console.log('data recieved: ', data);
             // Store ImgBB URL
             if (data.status == 200) thumbnailUrl = data.data.data.display_url;
             createEvent();
@@ -279,7 +276,7 @@ function CreateEvent(props) {
                           className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                         >
                           <span>{cover ? cover.name : 'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" required onChange={(e) => {setCover(e.target.files[0]); console.log("file selected: ", e.target.files[0])}}/>
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" required onChange={(e) => setCover(e.target.files[0])}/>
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">{cover ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
