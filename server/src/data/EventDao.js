@@ -83,10 +83,16 @@ class EventDao {
   }
 
   // return all events
-  async readAll() {
-    const events = await Event.find();
+  async readAll({ name }) {
+    const filter = {};
+    if (name) {
+      filter.name = name;
+    }
+ 
+    const events = await Event.find(filter);
     return events;
   }
+ 
 
   // return the event with the given ID
   // throws ApiError if id is invalid or resource does not exist in our database
@@ -230,6 +236,11 @@ class EventDao {
     }
 
     return event;
+  }
+
+  // delete all events
+  async deleteAll() {
+    await Event.deleteMany({});
   }
 }
 

@@ -51,10 +51,16 @@ class UserDao {
   }
 
   // return all users
-  async readAll() {
-    const users = await User.find();
+  async readAll({ name }) {
+    const filter = {};
+    if (name) {
+      filter.name = name;
+    }
+ 
+    const users = await User.find(filter);
     return users;
   }
+ 
 
   async readByEmail(email) {
     //find user
