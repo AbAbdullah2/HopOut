@@ -6,7 +6,9 @@ const eventDao = new EventDao();
 
 router.get('/events', async (req, res, next) => {
   try {
-    const events = await eventDao.readAll();
+    const { name } = req.query;
+
+    const events = await eventDao.readAll({ name });
 
     res.json({
       status: 200,
