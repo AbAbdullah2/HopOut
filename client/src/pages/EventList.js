@@ -12,8 +12,8 @@ class EventList extends Component {
     return (
       <div className='bg-stone-100 min-h-screen'>
         <div className='mx-auto flex flex-col items-center justify-center h-full'>
-          <Header />
-          <div className='my-5 w-11/12 grid grid-cols-3 items-center justify-center'>
+          <Header icons={true} />
+          <div className='my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>
             {
               events.map((event) => {
                 return (
