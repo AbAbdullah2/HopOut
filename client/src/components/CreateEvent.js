@@ -1,14 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
+import { uploadImg } from "../services/imgbb"
 
 function CreateEvent(props) {
+  const fileInput = useRef(null)
+  const [img, setImg] = useState(undefined);
+  const [imgURL, setImgURL] = useState(undefined);
+
   const navigate = useNavigate();
+  const handleFileChange = (e) => {
+    console.log('changed: ', e.target.files);
+    setImg(e.target.files[0]);
+  }
+
+  useEffect(() => {
+    callUploadImg();
+  }, [img]);
+
+  const callUploadImg = () => {
+    if (img == undefined) return;
+    console.log("call upload img called, img = ", img);
+    uploadImg(img).then(data => {
+      console.log('data recieved: ', data);
+      if (data.status == 200) {
+        console.log("upload was a success!");
+        // store imgid  
+        console.log(data.data);
+        setImgURL(data.data.display_url);
+      }
+    }).catch(err => {console.log(err)});
+  }
 
   const createEvent = () => {
     if (date === null || startTime === null || endTime === null || title === "" || location === "") {
       console.log('something is empty');
     }
+
+    if (img != undefined)  callUploadImg(); 
 
     const start = new Date(date.startDate + ' ' + startTime)
     const end = new Date(date.startDate + ' ' + endTime);
@@ -20,7 +49,8 @@ function CreateEvent(props) {
       start: start,
       end: end,
       description: description,
-      image: 'https://picsum.photos/200/200',
+      coverId: imgURL,
+      thumbnailId: imgURL,
       location: location,
     }
     console.log("creating event: ", newEvent);
@@ -34,6 +64,7 @@ function CreateEvent(props) {
   const [description, setDescription] = useState("");
   const [location, setLocation] = useState("");
     
+
     return (
       <>
       <div>
@@ -173,7 +204,11 @@ function CreateEvent(props) {
                             className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
                           >
                             <span>Upload a file</span>
-                              <input id="file-upload" name="file-upload" type="file" className="sr-only" />
+                              <input id="file-upload"
+                              name="file-upload" 
+                              type="file" 
+                              className="sr-only" 
+                              onChange={(e) => handleFileChange(e)}/>
                           </label>
                         </div>
                         <p className="text-xs text-gray-500">PNG, JPG, GIF up to 10MB</p>
