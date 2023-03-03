@@ -1,10 +1,29 @@
-import Hello from './components/Hello';
+import EventList from './pages/EventList';
+import Landing from './pages/Landing';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from './pages/Login';
+import CreateAccount from './pages/CreateAccount';
+import CreateEvent from './pages/CreateEvent';
+import NotFound from './pages/NotFound';
+import EventDetail from './pages/EventDetail';
+import Account from './pages/Account';
 
 const App = () => {
   return (
-    <div className="mx-auto h-screen flex flex-col items-center text-left justify-center relative">
-      <Hello />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/">
+          <Route index element={<Landing />} />
+          <Route path="events" element={<EventList />} />
+          <Route path="events/:eventid" element={<EventDetail />} />
+          <Route path="login" element={<Login />} />
+          <Route path="signup" element={<CreateAccount />} />
+          <Route path="account" element={<Account />} />
+          <Route path="create" element={<CreateEvent />}/>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 };
 

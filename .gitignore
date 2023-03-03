@@ -1,2 +1,4 @@
 server/node_modules
+/node_modules
+/tests/__snapshots__
 package-lock.json

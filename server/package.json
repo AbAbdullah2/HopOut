@@ -29,7 +29,9 @@
     "faker": "^6.6.6",
     "helmet": "^6.0.1",
     "mongoose": "^6.9.2",
-    "zod": "^3.20.6"
+    "zod": "^3.20.6",
+    "flowbite": "^1.6.3",
+    "flowbite-react": "^0.3.8"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
