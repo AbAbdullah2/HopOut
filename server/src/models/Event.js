@@ -7,11 +7,11 @@ const EventSchema = new mongoose.Schema(
       required: true,
     },
     start: {
-      type: Date,
+      type: String,
       required: true,
     },
     end: {
-      type: Date,
+      type: String,
       required: true,
     },
     location: {
@@ -25,6 +25,7 @@ const EventSchema = new mongoose.Schema(
     visibility: {
       type: String,
       enum: ["public", "private"],
+      default: "private",
       required: true,
     },
     organizer: {
