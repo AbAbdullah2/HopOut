@@ -3,7 +3,6 @@
 exports[`matches snapshot 1`] = `
 <div
   className="bg-stone-100 min-h-screen"
-  data-testid="login"
 >
   <div
     onMouseEnter={[Function]}
