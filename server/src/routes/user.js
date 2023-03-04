@@ -113,4 +113,19 @@ router.delete("/users/:id", async (req, res, next) => {
   }
 });
 
+
+router.delete("/users", async (req, res, next) => {
+  try {
+    const users = await userDao.deleteAll();
+
+    res.json({
+      status: 200,
+      message: `Successfully deleted ${users.length} events!`,
+      data: users,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

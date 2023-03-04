@@ -61,9 +61,8 @@ class EventDao {
     }
 
     //check Organizer is valid
-    try {
-      User.findById(organizer);
-    } catch(e) {
+    const org = await User.findById(organizer);
+    if (!org) {
       throw new ApiError(400, "Invalid Organizer!");
     }
 
@@ -166,7 +165,6 @@ class EventDao {
     }
 
     //check visibility is valid
-    //CHECK IF PARSE IS CORRECT LATER
     if (visibility !== undefined) {
       result = visibilityEnum.safeParse(visibility);
       if (!result.success) {
@@ -179,31 +177,29 @@ class EventDao {
       categories.forEach((t) => { 
         result = validString.safeParse(t);
         if (!result.success) {
-          throw new ApiError(400, "Invalid Tag in categories array!");
+          throw new ApiError(400, "Invalid tag in categories array!");
         }
       })
     }
 
     //check attendees list has valid attendees
     if (attendees !== undefined) {
-      attendees.forEach((user) => { 
-        try {
-          User.findById(user.id);
-        } catch (e) {
-          throw new ApiError(400, "Invalid Attendee in attendees list!");
+      for (const user of attendees) {
+        const u = await User.findById(user);
+        if (!u) {
+          throw new ApiError(400, "Invalid attendee in attendees list!");
         }
-      })
+      }
     }
 
     //check invitees list has valid attendees
     if (invitees !== undefined) {
-      invitees.forEach((user) => { 
-        try {
-          User.findById(user.id);
-        } catch (e) {
-          throw new ApiError(400, "Invalid Invitee in invitee list!");
+      for (const user of invitees) {
+        const u = await User.findById(user);
+        if (!u) {
+          throw new ApiError(400, "Invalid invitee in invitees list!");
         }
-      })
+      }
     }
 
     //update event

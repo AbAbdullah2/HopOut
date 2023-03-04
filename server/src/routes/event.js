@@ -39,7 +39,6 @@ router.post('/events', async (req, res, next) => {
   try {
     const { name, start, end, location, description, visibility, organizer, categories } = req.body;
     const event = await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    console.log(event);
     return res.json({
       status: 201,
       message: `Successfully created the following event!`,
@@ -75,6 +74,20 @@ router.delete("/events/:id", async (req, res, next) => {
       status: 200,
       message: `Successfully deleted the following event!`,
       data: event,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/events", async (req, res, next) => {
+  try {
+    const events = await eventDao.deleteAll();
+
+    res.json({
+      status: 200,
+      message: `Successfully deleted ${events.length} events!`,
+      data: events,
     });
   } catch (err) {
     next(err);
