@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const API_KEY = process.env.REACT_APP_IMGBB_KEY;
 const BASE_URL = `https://api.imgbb.com/1/upload?expiration=600&key=${API_KEY}`;
 // You should never save API key directly in source code
@@ -15,5 +16,5 @@ async function uploadImg(img) {
     return response;
 }
 
-export { uploadImg  }
+export default uploadImg;
   

@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import states from '../assets/states';
 import userData from '../assets/userData';
 import toast, { Toaster } from 'react-hot-toast';
-import { uploadImg } from '../services/imgbb';
+import uploadImg from '../services/imgbb';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -34,12 +34,12 @@ function CreateEvent(props) {
     if (cover !== undefined){
       uploadImg(cover).then(data => {
         // Store ImgBB URL  
-        if (data.status == 200) coverUrl = data.data.data.display_url; 
+        if (data.status === 200) coverUrl = data.data.data.display_url; 
         // Upload thumbnail img 
         if (thumbnail !== undefined){
           uploadImg(thumbnail).then(data => {
             // Store ImgBB URL
-            if (data.status == 200) thumbnailUrl = data.data.data.display_url;
+            if (data.status === 200) thumbnailUrl = data.data.data.display_url;
             createEvent();
           }).catch(err => {console.log(err)});
         }
@@ -119,7 +119,7 @@ function CreateEvent(props) {
               <div className="flex flex-row space-x-5 w-full">
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
-                    <label htmlFor="startdate" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
+                    <label htmlFor="starttime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
                       Start Date/Time
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
@@ -146,7 +146,7 @@ function CreateEvent(props) {
                 </div>
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
-                    <label htmlFor="enddate" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
+                    <label htmlFor="endtime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
                       End Date/Time
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
@@ -174,7 +174,7 @@ function CreateEvent(props) {
               </div>
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
-                  <label htmlFor="location" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Location
                   </label>
                   <div className="mt-3 flex rounded-md shadow-sm">
@@ -253,7 +253,7 @@ function CreateEvent(props) {
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
-                  <label className="block text-sm font-medium text-gray-700">Cover photo</label>
+                  <label htmlFor='cover-upload' className="block text-sm font-medium text-gray-700">Cover photo</label>
                   <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                     <div className="space-y-1 text-center">
                       <svg
@@ -271,10 +271,7 @@ function CreateEvent(props) {
                         />
                       </svg>
                       <div className="text-sm text-gray-600">
-                        <label
-                          htmlFor="cover-upload"
-                          className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
-                        >
+                        <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{cover ? cover.name : 'Upload a cover image'}</span>
                             <input id="cover-upload" name="cover-upload" type="file" className="sr-only" required onChange={(e) => setCover(e.target.files[0])}/>
                         </label>
@@ -284,7 +281,7 @@ function CreateEvent(props) {
                   </div>
                 </div>
                 <div className='w-1/3'>
-                  <label className="block text-sm font-medium text-gray-700">Thumbnail</label>
+                  <label htmlFor='thumbnail-upload' className="block text-sm font-medium text-gray-700">Thumbnail</label>
                   <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
                     <div className="space-y-1 text-center">
                       <svg
@@ -302,10 +299,7 @@ function CreateEvent(props) {
                         />
                       </svg>
                       <div className="text-sm text-gray-600">
-                        <label
-                          htmlFor="thumbnail-upload"
-                          className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500"
-                        >
+                        <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
                             <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" required onChange={(e) => setThumbnail(e.target.files[0])} />
                         </label>
