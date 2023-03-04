@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
-import eventData from '../assets/eventData.js';
-
+import getEventData from '../services/getEventData';
 class EventList extends Component {
-  state = eventData;
+  state = getEventData();
 
   render() {
     let { events } = this.state;
