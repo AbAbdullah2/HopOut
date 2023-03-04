@@ -236,7 +236,8 @@ class EventDao {
 
   // delete all events
   async deleteAll() {
-    await Event.deleteMany({});
+    const events = await Event.deleteMany();
+    return events;
   }
 }
 

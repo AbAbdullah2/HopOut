@@ -86,8 +86,7 @@ router.delete("/events", async (req, res, next) => {
 
     res.json({
       status: 200,
-      message: `Successfully deleted ${events.length} events!`,
-      data: events,
+      message: `Successfully deleted ${events.deletedCount} events!`
     });
   } catch (err) {
     next(err);
