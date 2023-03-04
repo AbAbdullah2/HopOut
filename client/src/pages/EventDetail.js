@@ -1,22 +1,24 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
-import eventData from '../assets/data.js';
+import eventData from '../assets/eventData';
 import NotFound from './NotFound';
 import Header from '../components/Header';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
-export default function EventDetail() {
-  const { eventid, curUser } = useParams();
-  const navigate = useNavigate()
+export default function EventDetail(props) {
+  const { eventid, curUser } = props;
+  console.log("eventid: ", eventid);
+  const navigate = useNavigate();
   const events = eventData.events;
   let selectedEvent = null;
   let organizer = null;
 
-  useEffect(() => {
-    if (curUser == null) navigate('/login');
-  })
+  // useEffect(() => {
+  //   console.log("event detail navigating home bc curuser is ", curUser);
+  //   if (curUser == null) navigate('/login');
+  // })
   
   events.forEach((event) => {
     if (event.event._id.toString() === eventid) {
@@ -28,7 +30,7 @@ export default function EventDetail() {
   return selectedEvent === null ? <NotFound /> : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <Header />
+        <Header icons={true} />
         <img src={selectedEvent.image} alt={selectedEvent.title} className='w-full object-cover h-60' />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{selectedEvent.title}</p>

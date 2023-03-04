@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:4000";
+const BASE_URL = "http://localhost:6002";
 // You should never save API key directly in source code
 
 // Get all users
@@ -24,20 +24,23 @@ async function getUser(userId) {
 // create user / sign up / register
 // user should be object with fields email, name password
 async function register(user) {
-    const response = await axios.post(`${BASE_URL}/register`, user)
-      .catch(function (error) {
-        console.log(error);
-      });
-    return response;
+  console.log("registering user from api.js", user);
+  const response = await axios.post(`${BASE_URL}/register`, user)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
 }
 
 // login creds should be object with fields email and password
 async function postLogin(creds) {
-    const response = await axios.post(`${BASE_URL}/login`, creds)
-      .catch(function (error) {
-        console.log(error);
-    });
-    return response;
+  console.log("posting login recieved creds", creds);
+
+  const response = await axios.post(`${BASE_URL}/login`, creds)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
 }
 
 // delete a user (must have field _id)
@@ -48,3 +51,5 @@ async function deleteUser(user) {
       });
     return response;
 }
+
+export { getAllUsers, getUser, register, postLogin, deleteUser  }

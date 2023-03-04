@@ -1,3 +1,7 @@
-/node_modules
-/tests/__snapshots__
+server/node_modules
+node_modules
+tests/__snapshots__
 package-lock.json
+yarn.lock
+server/yarn.lock
+.idea
