@@ -1,0 +1,237 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<div
+  className="bg-stone-100 min-h-screen"
+  data-testid="login"
+>
+  <div
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "bottom": 16,
+        "left": 16,
+        "pointerEvents": "none",
+        "position": "fixed",
+        "right": 16,
+        "top": 16,
+        "zIndex": 9999,
+      }
+    }
+  >
+    <div
+      className="go4109123758"
+      style={
+        Object {
+          "display": "flex",
+          "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": "translateY(0px)",
+          "transition": undefined,
+        }
+      }
+    >
+      <div
+        className="go2072408551"
+        style={
+          Object {
+            "opacity": 0,
+          }
+        }
+      >
+        <div
+          className="go685806154"
+        >
+          <div
+            className="go1858758034"
+          />
+          <div
+            className="go1579819456"
+          >
+            <div
+              className="go2534082608"
+            />
+          </div>
+        </div>
+        <div
+          aria-live="polite"
+          className="go3958317564"
+          role="status"
+        >
+          Could not login user 
+        </div>
+      </div>
+    </div>
+    <div
+      className="go4109123758"
+      style={
+        Object {
+          "display": "flex",
+          "justifyContent": "center",
+          "left": 0,
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "transform": "translateY(0px)",
+          "transition": undefined,
+        }
+      }
+    >
+      <div
+        className="go2072408551"
+        style={
+          Object {
+            "opacity": 0,
+          }
+        }
+      >
+        <div
+          className="go685806154"
+        >
+          <div
+            className="go1858758034"
+          />
+          <div
+            className="go1579819456"
+          >
+            <div
+              className="go2534082608"
+            />
+          </div>
+        </div>
+        <div
+          aria-live="polite"
+          className="go3958317564"
+          role="status"
+        >
+          Could not login user 
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="mx-auto flex flex-col h-full"
+  >
+    <div
+      className="w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap justify-center text-center items-center"
+    >
+      <a
+        className="mx-2"
+        href="/"
+      >
+        <span
+          className="text-4xl font-extrabold italic text-blue-400 mr-1"
+        >
+          H
+        </span>
+        <span
+          className="text-4xl"
+        >
+          opout
+        </span>
+      </a>
+    </div>
+    <div
+      className="flex items-center justify-center py-6"
+    >
+      <div
+        className="w-full max-w-md"
+      >
+        <h2
+          className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900"
+        >
+          Welcome back!
+        </h2>
+        <form
+          className="mt-8 space-y-6"
+          onSubmit={[Function]}
+        >
+          <div
+            className="-space-y-px rounded-md shadow-sm"
+          >
+            <div>
+              <label
+                className="sr-only"
+                htmlFor="email"
+              >
+                Email address
+              </label>
+              <input
+                autoComplete="email"
+                className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                id="email"
+                name="email"
+                onChange={[Function]}
+                placeholder="Email"
+                required={true}
+                type="email"
+                value=""
+              />
+            </div>
+            <div>
+              <label
+                className="sr-only"
+                htmlFor="password"
+              >
+                Password
+              </label>
+              <input
+                autoComplete="current-password"
+                className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500"
+                id="password"
+                name="password"
+                onChange={[Function]}
+                placeholder="Password"
+                required={true}
+                type="password"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="flex items-center space-x-5"
+          >
+            <button
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              type="submit"
+            >
+              <span
+                className="absolute inset-y-0 left-0 flex items-center pl-3"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="svg-inline--fa fa-lock h-5 w-5 text-white"
+                  data-icon="lock"
+                  data-prefix="fas"
+                  focusable="false"
+                  role="img"
+                  style={Object {}}
+                  viewBox="0 0 448 512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M144 144v48H304V144c0-44.2-35.8-80-80-80s-80 35.8-80 80zM80 192V144C80 64.5 144.5 0 224 0s144 64.5 144 144v48h16c35.3 0 64 28.7 64 64V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V256c0-35.3 28.7-64 64-64H80z"
+                    fill="currentColor"
+                    style={Object {}}
+                  />
+                </svg>
+              </span>
+              Login
+            </button>
+            <button
+              className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              onClick={[Function]}
+            >
+              Sign Up
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
