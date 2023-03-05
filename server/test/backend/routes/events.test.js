@@ -137,7 +137,8 @@ describe(`Test ${endpoint}`, () => {
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();        const description = faker.lorem.paragraph();
+        const zip = faker.address.zipCode();        
+        const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
         const categories = ["Sports"];
