@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main", "dev" ]
+    branches: [ "*" ]
   pull_request:
-    branches: [ "main", "dev" ]
+    branches: [ "*" ]
 
 jobs:
   build:
@@ -26,5 +26,10 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run build --if-present
+        cache-dependency-path: client/yarn.lock
+    - name: Run client tests
+      run: yarn run test
+      working-directory: client
+    - name: Run server tests
+      run: yarn run test
+      working-directory: server
