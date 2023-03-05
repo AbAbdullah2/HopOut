@@ -1,12 +1,17 @@
-import React, { Component } from 'react';
+import React, {useEffect} from 'react';
+import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
 import getEventData from '../services/getEventData';
-class EventList extends Component {
-  state = getEventData();
 
-  render() {
-    let { events } = this.state;
+export function EventList(props) {
+  const { curUser } = props;
+  const events = getEventData();
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (curUser == null) navigate('/login');
+  });
 
     return (
       <div className='bg-stone-100 min-h-screen'>
@@ -23,8 +28,8 @@ class EventList extends Component {
           </div>
         </div>
       </div>
-    );
-  }
+  );
+  
 }
 
 export default EventList;

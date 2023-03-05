@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import toast, { Toaster } from 'react-hot-toast';
+import { postLogin, getUser } from '../services/api';
 
 function Login(props) {
+  // const setCurUser = () => {return }
+  const {setCurUser} = props
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -17,10 +20,26 @@ function Login(props) {
       email: email,
       password: password
     }
+    console.log("logging in: ", loginData);
 
-    const loginResponse = null;
+    const loginResponse = postLogin(loginData).then(data => {
+        console.log('data recieved: ', data);
+        if (data.status == 200) {
+          // here we need to fetch user details based on userID? 
+            getUser(data.data.data._id).then(userData => {
+                console.log("fetched user by id successfully! setting global curUser ", userData.data.data);
+                setCurUser(userData.data.data);
+                navigate('/events');
+            })
+        }
+    }).catch(err => {
+      const error = 'Could not login user ' + loginData.email;
+      toast.error(error);
+      console.log(err)});
+
     if (loginResponse) {
-      navigate('/events');
+      console.log('navigating to events')
+      // navigate('/events');
     } else {
       const error = 'Could not login user ' + loginData.email;
       toast.error(error);

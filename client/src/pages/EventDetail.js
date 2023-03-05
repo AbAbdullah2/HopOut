@@ -1,4 +1,5 @@
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'
 import getEventData from '../services/getEventData';
 import NotFound from './NotFound';
 import Header from '../components/Header';
@@ -6,12 +7,20 @@ import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
-export default function EventDetail() {
+export default function EventDetail(props) {
+  const { eventid, curUser } = props;
+  console.log("eventid: ", eventid);
+  const navigate = useNavigate();
   const events = getEventData().events;
-  const { eventid } = useParams();
+
   let selectedEvent = null;
   let organizer = null;
 
+  // useEffect(() => {
+  //   console.log("event detail navigating home bc curuser is ", curUser);
+  //   if (curUser == null) navigate('/login');
+  // })
+  
   events.forEach((event) => {
     if (event.event._id.toString() === eventid) {
       selectedEvent = event.event;

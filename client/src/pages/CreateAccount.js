@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { register } from '../services/api'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 
 function CreateAccount(props) {
   const navigate = useNavigate();
-
+  const { setCurUser } = props
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +37,19 @@ function CreateAccount(props) {
       email: email,
       password: password
     }
+
+    // Call register
+    console.log("registering!", signupData);
+    register(signupData).then(data => {
+        console.log('data recieved: ', data);
+        if (data.status == 200) {
+            console.log("create account success! data.data.data: ", data.data.data);
+            setCurUser(data.data.data);
+            navigate('/events');
+        } else {
+            // do smth
+        }
+    }).catch(err => {console.log(err)});
 
     const signupResponse = null;
     if (signupResponse) {

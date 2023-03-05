@@ -41,6 +41,7 @@ router.get("/users/:id", async (req, res, next) => {
 });
 
 router.post('/register', async (req, res, next) => {
+  console.log("posting user ", req.body)
   try {
     const { email, name, password } = req.body;
     
