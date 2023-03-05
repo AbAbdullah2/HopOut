@@ -23,12 +23,12 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-test('matches snapshot', () => {
-  const tree = renderer.create(<EventList/>).toJSON();
+test('matches snapshot', async () => {
+  const tree = await renderer.create(<EventList/>).toJSON();
   expect(tree).toMatchSnapshot();
 });
 
-test('renders proper event data', () => {
+test('renders proper event data', async () => {
   render(<EventList />);
 
   let eventData = [];
