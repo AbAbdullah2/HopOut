@@ -16,7 +16,6 @@ const App = () => {
     setCurUser(JSON.parse(window.localStorage.getItem('curUser')));
   }, []);
   useEffect(() => {
-    console.log(localStorage.getItem('curUser'));
   }, [curUser]);
 
   return (
