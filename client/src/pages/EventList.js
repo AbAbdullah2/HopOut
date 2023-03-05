@@ -6,7 +6,7 @@ import getEventData from '../services/getEventData';
 
 export function EventList(props) {
   const { curUser } = props;
-  const events = getEventData();
+  const events = getEventData().events;
 
   const navigate = useNavigate();
   useEffect(() => {
