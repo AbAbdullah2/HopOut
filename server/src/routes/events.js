@@ -2,7 +2,7 @@ import express from 'express';
 import EventDao from '../data/EventDao.js';
 
 const router = express.Router();
-const eventDao = new EventDao();
+export const eventDao = new EventDao();
 
 router.get('/events', async (req, res, next) => {
   try {
