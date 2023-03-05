@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { register } from '../services/api'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -39,15 +37,13 @@ function CreateAccount(props) {
     }
 
     // Call register
-    console.log("registering!", signupData);
     register(signupData).then(data => {
-        console.log('data recieved: ', data);
-        if (data.status == 200) {
-            console.log("create account success! data.data.data: ", data.data.data);
+        if (data.status === 200) {
             setCurUser(data.data.data);
             navigate('/events');
         } else {
-            // do smth
+          const error = 'Could not register user ' + email;
+          toast.error(error);
         }
     }).catch(err => {console.log(err)});
 
