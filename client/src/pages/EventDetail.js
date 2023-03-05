@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import eventData from '../assets/eventData';
+import getEventData from '../services/getEventData';
 import NotFound from './NotFound';
 import Header from '../components/Header';
 import { formatEventDates } from '../helpers/FormatDate';
@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function EventDetail() {
-  const events = eventData.events;
+  const events = getEventData().events;
   const { eventid } = useParams();
   let selectedEvent = null;
   let organizer = null;
