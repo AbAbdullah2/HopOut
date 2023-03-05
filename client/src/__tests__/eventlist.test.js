@@ -2,7 +2,7 @@ import '@testing-library/jest-dom'
 import {render, screen} from '@testing-library/react'
 import renderer from 'react-test-renderer';
 import EventList from '../pages/EventList'
-import getEventData from '../services/getEventData';
+import { getAllEvents } from '../services/api';
 
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -31,7 +31,12 @@ test('matches snapshot', () => {
 test('renders proper event data', () => {
   render(<EventList />);
 
-  const eventData = getEventData().events;
+  let eventData = [];
+
+  getAllEvents().then((res) => {
+    eventData = res.data.data;
+  });
+
   eventData.forEach((event) => {
     expect(screen.getByText(event.event.title)).toBeInTheDocument();
   });
