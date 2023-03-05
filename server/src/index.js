@@ -1,7 +1,6 @@
 import express from "express";
-import eventUrls from "./routes/event.js";
-import userUrls from "./routes/user.js";
-//import api from "./routes/api.js"
+import eventUrls from "./routes/events.js";
+import userUrls from "./routes/users.js";
 import cors from "cors"
 import helmet from "helmet"
 

@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Event from "../models/Event.js"
 import { hashPassword, verifyPassword } from "../util/password.js";
 import mongoose from "mongoose";
 import ApiError from "../models/ApiError.js";
@@ -24,6 +25,11 @@ class UserDao {
       throw new ApiError(400, "Invalid Name!");
     }
 
+    //check email is undefined
+    if (!email) {
+      throw new ApiError(400, "Undefined Email!");
+    }
+    
     //check if user already exists
     result = await User.exists({ email: email.toLowerCase() });
     if (result) {
@@ -35,7 +41,6 @@ class UserDao {
     if (!result.success) {
       throw new ApiError(400, "Invalid Email!");
     }
-    // note: email validation is not working
 
     //check password is valid
     result = validPassword.safeParse(password);
@@ -94,7 +99,7 @@ class UserDao {
   // update a user given its ID
   // return the updated user
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({ id, name, email, password }) {
+  async update({ id, name, password, organizing, attending, invited }) {
 
     //validate id
     let result = validObjectId.safeParse(id);
@@ -110,21 +115,6 @@ class UserDao {
       }
     }
 
-    //validate email
-    if (email !== undefined) {
-      result = validEmail.safeParse(email);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid Email!");
-      }
-
-      result = await this.readAll({ email });
-      for (let user in result) {
-        if (user.id !== id) {
-          throw new ApiError(400, "Email already in use!");
-        }
-      }
-    }
-
     //validate password
     if (password !== undefined) {
       result = validPassword.safeParse(password);
@@ -135,10 +125,40 @@ class UserDao {
       password = hashPassword(password);
     }
 
+    // validate events organizing
+    if (organizing !== undefined) {
+      for (const event of organizing) {
+        const e = await Event.findById(event);
+        if (!e) {
+          throw new ApiError(400, "User is organizing invalid event!");
+        }
+      }
+    }
+
+    // validate events attending
+    if (attending !== undefined) {
+      for (const event of attending) {
+        const e = await Event.findById(event);
+        if (!e) {
+          throw new ApiError(400, "User is attending invalid event!");
+        }
+      }
+    }
+
+    // validate events invited
+    if (invited !== undefined) {
+      for (const event of invited) {
+        const e = await Event.findById(event);
+        if (!e) {
+          throw new ApiError(400, "User is invited to invalid event!");
+        }
+      }
+    }
+
     //update user
     const user = await User.findByIdAndUpdate(
       id,
-      { name, email, password },
+      { name, password, organizing, attending, invited },
       { new: true }
     );
     if (!user) {
@@ -168,7 +188,8 @@ class UserDao {
   }
 
   async deleteAll() {
-    await User.deleteMany({});
+    const users = await User.deleteMany({});
+    return users;
   }
 }
 

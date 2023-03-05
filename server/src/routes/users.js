@@ -1,9 +1,9 @@
 import express from 'express';
-import { hashPassword, verifyPassword } from "../util/password.js";
+import { verifyPassword } from "../util/password.js";
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
-const userDao = new UserDao();
+export const userDao = new UserDao();
 
 const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
@@ -86,8 +86,8 @@ router.post('/login', async (req, res, next) => {
 router.put(`/users/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, password } = req.body;
-    const user = await userDao.update({ id, name, password });
+    const { name, password, organizing, attending, invited } = req.body;
+    const user = await userDao.update({ id, name, password, organizing, attending, invited });
 
     res.json({
       status: 200,
@@ -121,8 +121,7 @@ router.delete("/users", async (req, res, next) => {
 
     res.json({
       status: 200,
-      message: `Successfully deleted ${users.length} events!`,
-      data: users,
+      message: `Successfully deleted ${users.deletedCount} users!`
     });
   } catch (err) {
     next(err);
