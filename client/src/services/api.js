@@ -1,7 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = "http://localhost:6002";
-// You should never save API key directly in source code
+const BASE_URL = !process.env.NODE_ENV || process.env.NODE_ENV === 'development' ? 'http://localhost:6002' : 'https://hopout.herokuapp.com/';
 
 // Get all users
 async function getAllUsers(user) {
@@ -52,4 +51,20 @@ async function deleteUser(user) {
     return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser  }
+async function getAllEvents() {
+  const response = await axios.get(`${BASE_URL}/events`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+async function getEvent(eventId) {
+  const response = await axios.get(`${BASE_URL}/events/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 import { postLogin, getUser } from '../services/api';
@@ -22,7 +22,7 @@ function Login(props) {
     }
 
     const loginResponse = postLogin(loginData).then(data => {
-        if (data.status == 200) {
+        if (data.status === 200) {
           // here we need to fetch user details based on userID? 
             getUser(data.data.data._id).then(userData => {
                 setCurUser(userData.data.data);

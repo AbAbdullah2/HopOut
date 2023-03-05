@@ -3,15 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
-import userData from '../assets/userData';
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
 
-  const currentUsers = userData.users;
-  const currentUser = currentUsers[0].user;
+  const {curUser} = props
 
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -70,7 +68,7 @@ function CreateEvent(props) {
         visibility: 'public',
       },
       organizer: {
-        name: currentUser.name,
+        name: curUser.name,
       }
     };
 
