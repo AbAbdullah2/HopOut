@@ -13,6 +13,7 @@ yarn install
 cd client
 yarn dev
 ```
+## Developing
 To run tests for backend:
 ```shell
 yarn install
