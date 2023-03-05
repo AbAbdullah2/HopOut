@@ -25,6 +25,11 @@ class UserDao {
       throw new ApiError(400, "Invalid Name!");
     }
 
+    //check email is undefined
+    if (!email) {
+      throw new ApiError(400, "Undefined Email!");
+    }
+    
     //check if user already exists
     result = await User.exists({ email: email.toLowerCase() });
     if (result) {
@@ -36,7 +41,6 @@ class UserDao {
     if (!result.success) {
       throw new ApiError(400, "Invalid Email!");
     }
-    // note: email validation is not working
 
     //check password is valid
     result = validPassword.safeParse(password);

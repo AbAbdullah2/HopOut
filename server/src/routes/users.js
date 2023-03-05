@@ -3,7 +3,7 @@ import { verifyPassword } from "../util/password.js";
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
-const userDao = new UserDao();
+export const userDao = new UserDao();
 
 const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
