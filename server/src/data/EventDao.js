@@ -14,7 +14,7 @@ const visibilityEnum = z.enum(["public", "private"]);
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories }) {
+  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories, coverId, thumbnailId }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -81,16 +81,16 @@ class EventDao {
     }
 
     //check categories array has valid categories
-    categories.forEach((t) => { 
+    categories ? categories.forEach((t) => { 
       result = validString.safeParse(t);
       if (!result.success) {
         throw new ApiError(400, "Invalid Tag in categories array!");
       }
-    })
+    }) : categories = [];
 
     //create event
     const event = await Event.create({ name, start, end, location, description, visibility, organizer, categories, 
-        attendees: [], invitees: [], coverId: "", thumbnailId: "" });
+        attendees: [], invitees: [], coverId, thumbnailId});
     
     return event;
   }
