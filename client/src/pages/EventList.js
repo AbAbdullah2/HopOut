@@ -2,11 +2,11 @@ import React, {useEffect} from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
-import eventData from '../assets/eventData.js';
+import getEventData from '../services/getEventData';
 
 export function EventList(props) {
   const { curUser } = props;
-  const events = eventData.events;
+  const events = getEventData();
 
   const navigate = useNavigate();
   useEffect(() => {

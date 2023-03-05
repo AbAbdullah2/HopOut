@@ -1,3 +1,8 @@
+import '@testing-library/jest-dom'
+import {render, screen, fireEvent} from '@testing-library/react'
+import renderer from 'react-test-renderer';
+import CreateAccount from '../pages/CreateAccount'
+
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
    ...jest.requireActual('react-router-dom'),
@@ -16,12 +21,6 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
-
-import '@testing-library/jest-dom'
-import {render, screen, cleanup, fireEvent} from '@testing-library/react'
-import renderer from 'react-test-renderer';
-import CreateAccount from '../pages/CreateAccount'
-
 
 test('renders login fields', () => {
   render(<CreateAccount />);
@@ -42,8 +41,6 @@ test('renders login fields', () => {
 test('password alerts', () => {    
   render(<CreateAccount />);
 
-  const emailInput = screen.getByLabelText('Email');
-  const nameInput = screen.getByLabelText('Name');
   const passwordInput = screen.getByLabelText('Password');
   const confirmPasswordInput = screen.getByLabelText('Confirm password');
   const signupButton = screen.getByRole('button', { name: 'Create account' });

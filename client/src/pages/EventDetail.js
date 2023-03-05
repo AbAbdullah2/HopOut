@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
-import eventData from '../assets/eventData';
+import getEventData from '../services/getEventData';
 import NotFound from './NotFound';
 import Header from '../components/Header';
 import { formatEventDates } from '../helpers/FormatDate';
@@ -11,7 +11,8 @@ export default function EventDetail(props) {
   const { eventid, curUser } = props;
   console.log("eventid: ", eventid);
   const navigate = useNavigate();
-  const events = eventData.events;
+  const events = getEventData().events;
+
   let selectedEvent = null;
   let organizer = null;
 
