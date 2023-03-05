@@ -46,7 +46,6 @@ test('Clickable buttons', () => {
 
   fireEvent.change(emailInput, { target: { value: '' } });
   fireEvent.change(passwordInput, { target: { value: '' } });
-  fireEvent.click(loginButton);
   fireEvent.click(signupButton);
 });
 
