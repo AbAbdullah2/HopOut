@@ -26,17 +26,20 @@ describe("Test EventDao", () => {
 
     it("test create()", async () => {
       const name = faker.lorem.words(3);
-      const start = faker.date.future(1);
-      const end = faker.date.soon(1, start);
-      const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
+      const start = "2023-06-30T15:45:26.193Z";//faker.date.future(1);
+      const end = "2023-06-30T15:45:26.193Z";//faker.date.soon(1, start);
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode(); 
       const description = faker.lorem.paragraph();
       const visibility = "private";
-      const organizer = mongoose.Types.ObjectId();
+      const organizer = "6403aba48dda7a8182c65a07";
       const categories = ["Sports"];
-      const _event = await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
+      const _event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
       expect(_event.name).toBe(name);
       expect(_event.start).toBe(start);
-      expect(_event.location).toBe(location);
+      expect(_event.location).toStrictEqual({address, city, state, zip});
       expect(_event.description).toBe(description);
       expect(_event.visibility).toBe(visibility);
       expect(_event.organizer).toBe(organizer);
