@@ -2,7 +2,8 @@ import background from '../assets/background.jpeg'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
-export default function Landing() {
+export default function Landing(props) {
+  const { curUser } = props;
   return (
     <div 
       className="mx-auto h-screen flex flex-col bg-black items-center text-center text-white justify-center">
@@ -16,7 +17,7 @@ export default function Landing() {
         <p className='text-5xl mb-2'>Welcome to</p>
         <span className='font-extrabold italic text-blue-400 mr-1'>H</span><span>opout</span>
         <hr className='mt-6' />
-        <a href='/login'><p className='text-5xl mt-4 hover:text-blue-400'>Enter <FontAwesomeIcon icon={solid('arrow-right')} /></p></a>
+        <a href={curUser ? '/events' : '/login'}><p className='text-5xl mt-4 hover:text-blue-400'>Enter <FontAwesomeIcon icon={solid('arrow-right')} /></p></a>
       </div>
     </div>
   )

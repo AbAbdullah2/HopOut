@@ -1,12 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import toast, { Toaster } from 'react-hot-toast';
+import { postLogin, getUser } from '../services/api';
 
 function Login(props) {
+  const { curUser, setCurUser } = props
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (curUser) navigate('/events');
+  });
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,10 +24,20 @@ function Login(props) {
       password: password
     }
 
-    const loginResponse = null;
-    if (loginResponse) {
-      navigate('/events');
-    } else {
+    const loginResponse = postLogin(loginData).then(data => {
+        if (data.status === 200) {
+          // Fetch user details based on userID
+            getUser(data.data.data._id).then(userData => {
+                setCurUser(userData.data.data);
+                navigate('/events');
+            })
+        }
+    }).catch(err => {
+      const error = 'Could not login user ' + loginData.email;
+      toast.error(error);
+      console.log(err)});
+
+    if (!loginResponse) {
       const error = 'Could not login user ' + loginData.email;
       toast.error(error);
     }

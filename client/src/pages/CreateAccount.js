@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
+import { register } from '../services/api'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 
 function CreateAccount(props) {
   const navigate = useNavigate();
-
+  const { setCurUser } = props
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -34,6 +35,17 @@ function CreateAccount(props) {
       email: email,
       password: password
     }
+
+    // Call register
+    register(signupData).then(data => {
+        if (data.status === 200) {
+            setCurUser(data.data.data);
+            navigate('/events');
+        } else {
+          const error = 'Could not register user ' + email;
+          toast.error(error);
+        }
+    }).catch(err => {console.log(err)});
 
     const signupResponse = null;
     if (signupResponse) {
