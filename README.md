@@ -17,7 +17,7 @@ yarn dev
 To run tests for backend:
 ```shell
 yarn install
-cd client
+cd server
 yarn test
 ```
 
