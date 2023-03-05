@@ -8,18 +8,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function EventDetail(props) {
-  const { eventid, curUser } = props;
-  console.log("eventid: ", eventid);
+  const {eventid} = useParams();
+  const {curUser} = props
   const navigate = useNavigate();
   const events = getEventData().events;
 
   let selectedEvent = null;
   let organizer = null;
 
-  // useEffect(() => {
-  //   console.log("event detail navigating home bc curuser is ", curUser);
-  //   if (curUser == null) navigate('/login');
-  // })
+  useEffect(() => {
+    if (curUser == null) navigate('/login');
+  })
   
   events.forEach((event) => {
     if (event.event._id.toString() === eventid) {

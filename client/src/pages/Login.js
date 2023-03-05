@@ -20,14 +20,11 @@ function Login(props) {
       email: email,
       password: password
     }
-    console.log("logging in: ", loginData);
 
     const loginResponse = postLogin(loginData).then(data => {
-        console.log('data recieved: ', data);
         if (data.status == 200) {
           // here we need to fetch user details based on userID? 
             getUser(data.data.data._id).then(userData => {
-                console.log("fetched user by id successfully! setting global curUser ", userData.data.data);
                 setCurUser(userData.data.data);
                 navigate('/events');
             })
@@ -37,10 +34,7 @@ function Login(props) {
       toast.error(error);
       console.log(err)});
 
-    if (loginResponse) {
-      console.log('navigating to events')
-      // navigate('/events');
-    } else {
+    if (!loginResponse) {
       const error = 'Could not login user ' + loginData.email;
       toast.error(error);
     }

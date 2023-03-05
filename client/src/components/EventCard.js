@@ -11,9 +11,9 @@ export default function EventCard({ event }) {
   const end = new Date(event.event.end);
   console.log("event: ", event.event);
   return ( 
-    <a href={'/events/' + event.event._id}>
+    // <a href={'/events/' + event.event._id}>
       <Card imgSrc={event.event.thumbnail} className='m-3 overflow-hidden hover:bg-blue-400' 
-      // onClick={()=> navigate('/events/'+ event.event._id)}
+      onClick={()=> navigate('/events/'+ event.event._id)}
       >
         <div className='items-center justify-center text-center'>
           <p className='text-2xl'>{event.event.title}</p>
@@ -21,6 +21,6 @@ export default function EventCard({ event }) {
           <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.event.city}, {event.event.state} {event.event.zip}</p>
         </div>
       </Card>
-      </a>
+      // </a>
   );
 }
