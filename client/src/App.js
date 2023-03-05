@@ -10,15 +10,13 @@ import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
 
 const App = () => {
-  const [curUser, setCurUser] = useState(window.localStorage.getItem("curUser") ? window.localStorage.getItem("curUser") : undefined);
+  const [curUser, setCurUser] = useState(JSON.parse(window.localStorage.getItem("curUser")) ? JSON.parse(window.localStorage.getItem("curUser")) : null);
 
   useEffect(() => {
-    console.log("window.localStorage.getItem('curUser')", (window.localStorage.getItem('curUser')));
-    setCurUser(window.localStorage.getItem('curUser'));
+    setCurUser(JSON.parse(window.localStorage.getItem('curUser')));
   }, []);
-
   useEffect(() => {
-    window.localStorage.setItem('curUser', curUser);
+    console.log(localStorage.getItem('curUser'));
   }, [curUser]);
 
   return (

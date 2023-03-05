@@ -55,7 +55,7 @@ function CreateEvent(props) {
     const end = new Date(endDate.startDate + ' ' + endTime);    
     const newEvent = {
       event: {
-        title: title,
+        name: title,
         start: start,
         end: end,
         description: description,
@@ -68,7 +68,7 @@ function CreateEvent(props) {
         visibility: 'public',
       },
       organizer: {
-        name: curUser.name,
+        name: curUser._id,
       }
     };
 

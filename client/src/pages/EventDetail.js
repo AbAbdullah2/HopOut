@@ -10,8 +10,6 @@ export default function EventDetail(props) {
   const {eventid} = useParams();
   const {curUser} = props;
 
-  console.log(curUser);
-
   const [event, setEvent] = useState(null);
 
   getEvent(eventid).then((res) => {

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useNavigate } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import toast, { Toaster } from 'react-hot-toast';
 import { postLogin, getUser } from '../services/api';
