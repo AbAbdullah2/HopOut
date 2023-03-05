@@ -74,8 +74,6 @@ function CreateEvent(props) {
       }
     };
 
-    console.log("new event: ", newEvent);
-
     let newEventResponse = null;
     if (newEventResponse) {
       const newURL = "/events/" + newEventResponse._id;

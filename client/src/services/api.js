@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const BASE_URL = "http://localhost:6002";
-// You should never save API key directly in source code
+// const BASE_URL = "https://hopout.herokuapp.com"
 
 // Get all users
 async function getAllUsers(user) {
@@ -24,7 +24,6 @@ async function getUser(userId) {
 // create user / sign up / register
 // user should be object with fields email, name password
 async function register(user) {
-  console.log("registering user from api.js", user);
   const response = await axios.post(`${BASE_URL}/register`, user)
     .catch(function (error) {
       console.log(error);
@@ -34,8 +33,6 @@ async function register(user) {
 
 // login creds should be object with fields email and password
 async function postLogin(creds) {
-  console.log("posting login recieved creds", creds);
-
   const response = await axios.post(`${BASE_URL}/login`, creds)
     .catch(function (error) {
       console.log(error);
