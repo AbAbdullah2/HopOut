@@ -37,8 +37,8 @@ router.get("/events/:id", async (req, res, next) => {
 
 router.post('/events', async (req, res, next) => {
   try {
-    const { name, start, end, location, description, visibility, organizer, categories } = req.body;
-    const event = await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
+    const { name, start, end, address, city, state, zip, description, visibility, organizer, categories } = req.body;
+    const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
     return res.json({
       status: 201,
       message: `Successfully created the following event!`,
@@ -52,8 +52,8 @@ router.post('/events', async (req, res, next) => {
 router.put(`/events/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, start, end, location, description, visibility, categories, attendees, invitees } = req.body;
-    const event = await eventDao.update({ id, name, start, end, location, description, visibility, categories, attendees, invitees });
+    const { name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees } = req.body;
+    const event = await eventDao.update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees });
     
     res.json({
       status: 200,

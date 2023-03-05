@@ -14,7 +14,7 @@ const visibilityEnum = z.enum(["public", "private"]);
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, location, description, visibility, organizer, categories }) {
+  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -36,10 +36,24 @@ class EventDao {
     }
 
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-    result = validString.safeParse(location);
+    
+    result = validString.safeParse(address);
     if (!result.success) {
-      throw new ApiError(400, "Invalid Location!");
+      throw new ApiError(400, "Invalid Street Address!");
     }
+    result = validString.safeParse(city);
+    if (!result.success) {
+      throw new ApiError(400, "Invalid City!");
+    }
+    result = validString.safeParse(state);
+    if (!result.success) {
+      throw new ApiError(400, "Invalid State!");
+    }
+    result = validString.safeParse(zip);
+    if (!result.success) {
+      throw new ApiError(400, "Invalid ZIP!");
+    }
+    const location = { address, city, state, zip };
 
     //check description is valid
     result = validString.safeParse(description);
@@ -114,7 +128,7 @@ class EventDao {
   // update an event given its ID
   // return the updated event
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({ id, name, start, end, location, description, visibility, categories, attendees, invitees, coverId, thumbnailId }) {
+  async update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees, coverId, thumbnailId }) {
 
     //validate id
     let result = validObjectId.safeParse(id);
@@ -149,12 +163,34 @@ class EventDao {
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-    if (location !== undefined) {
-      result = validString.safeParse(location);
+    
+    if (address !== undefined) {
+      result = validString.safeParse(address)
       if (!result.success) {
-        throw new ApiError(400, "Invalid Location!");
+        throw new ApiError(400, "Invalid Street Address!");
       }
     }
+
+    if (city !== undefined) {
+      result = validString.safeParse(city);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid City!");
+      }
+    }
+    if (state !== undefined) {
+      result = validString.safeParse(state);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid State!");
+      }
+    }
+    if (zip !== undefined) {
+      result = validString.safeParse(zip);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid ZIP!");
+      }
+    }
+    const location = { address, city, state, zip };
+    
 
     if (description !== undefined) {
       //check description is valid

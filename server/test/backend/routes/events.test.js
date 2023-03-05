@@ -38,12 +38,15 @@ describe(`Test ${endpoint}`, () => {
       const name = faker.lorem.words(3);
       const start = "2023-06-22T15:28:37.174Z";
       const end = "2023-06-22T15:28:37.174Z";
-      const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
       const description = faker.lorem.paragraph();
       const visibility = "private";
       const organizer = uid;
       const categories = ["Sports"];
-      const event = await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
+      const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
       events.push(event);
     }
     console.log(events);
@@ -70,20 +73,23 @@ describe(`Test ${endpoint}`, () => {
       const name = faker.lorem.words(3);
       const start = "2023-06-22T15:28:37.174Z";
       const end = "2023-06-22T15:28:37.174Z";
-      const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();      
       const description = faker.lorem.paragraph();
       const visibility = "private";
       const organizer = uid;
       const categories = ["Sports"];
       const response = await request.post(endpoint).send({
-        name, start, end, location, description, visibility, organizer, categories
+        name, start, end, address, city, state, zip, description, visibility, organizer, categories
       });
       expect(response.status).toBe(201);
       expect(response.body.data._id).toBeDefined();
       expect(response.body.data.name).toBe(name);
       expect(response.body.data.start).toBe(start);
       expect(response.body.data.end).toBe(end);
-      expect(response.body.data.location).toBe(location);
+      expect(response.body.data.location).toEqual(location);
       expect(response.body.data.description).toBe(description);
       expect(response.body.data.organizer).toBe(organizer);
       expect(response.body.data.categories).toStrictEqual(categories);
@@ -94,13 +100,15 @@ describe(`Test ${endpoint}`, () => {
         const name = null;
         const start = "2023-06-22T15:28:37.174Z";
         const end = "2023-06-22T15:28:37.174Z";
-        const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-        const description = faker.lorem.paragraph();
+        const address = faker.address.streetAddress();
+        const city = faker.address.cityName();
+        const state = faker.address.countryCode();
+        const zip = faker.address.zipCode();           const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
         const categories = ["Sports"];
         const response = await request.post("/register").send({
-          name, start, end, location, description, visibility, organizer, categories
+          name, start, end, address, city, state, zip, description, visibility, organizer, categories
         });
         expect(response.status).toBe(400);
       });
@@ -109,13 +117,15 @@ describe(`Test ${endpoint}`, () => {
         const name = undefined;
         const start = "2023-06-22T15:28:37.174Z";
         const end = "2023-06-22T15:28:37.174Z";
-        const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-        const description = faker.lorem.paragraph();
+        const address = faker.address.streetAddress();
+        const city = faker.address.cityName();
+        const state = faker.address.countryCode();
+        const zip = faker.address.zipCode();        const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
         const categories = ["Sports"];
         const response = await request.post("/register").send({
-          name, start, end, location, description, visibility, organizer, categories
+          name, start, end, address, city, state, zip, description, visibility, organizer, categories
         });
         expect(response.status).toBe(400);
       });
@@ -124,13 +134,15 @@ describe(`Test ${endpoint}`, () => {
         const name = "";
         const start = "2023-06-22T15:28:37.174Z";
         const end = "2023-06-22T15:28:37.174Z";
-        const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-        const description = faker.lorem.paragraph();
+        const address = faker.address.streetAddress();
+        const city = faker.address.cityName();
+        const state = faker.address.countryCode();
+        const zip = faker.address.zipCode();        const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
         const categories = ["Sports"];
         const response = await request.post("/register").send({
-          name, start, end, location, description, visibility, organizer, categories
+          name, start, end, address, city, state, zip, description, visibility, organizer, categories
         });
         expect(response.status).toBe(400);
       });
@@ -208,7 +220,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.name).toBe(event.name);
       expect(response.body.data.start).toBe(event.start);
       expect(response.body.data.end).toBe(event.end);
-      expect(response.body.data.location).toBe(event.location);
+      expect(response.body.data.location).toEqual(event.location);
       expect(response.body.data.description).toBe(event.description);
       expect(response.body.data.organizer).toBe(`${event.organizer}`);
       expect(response.body.data.categories).toStrictEqual(event.categories);
