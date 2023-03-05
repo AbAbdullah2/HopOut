@@ -1,0 +1,44 @@
+{
+  "name": "sp23-oose-project-team-03",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest --no-threads --no-isolate",
+    "start": "node server.js",
+    "start-watch": "nodemon server.js",
+    "dev": "dotenv -e .env nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cs421sp23-homework/sp23-oose-project-team-03.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03/issues"
+  },
+  "homepage": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "faker": "^6.6.6",
+    "flowbite": "^1.6.3",
+    "flowbite-react": "^0.3.8",
+    "helmet": "^6.0.1",
+    "mongoose": "^6.9.2",
+    "supertest": "^6.3.3",
+    "zod": "^3.20.6"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0",
+    "concurrently": "^7.6.0",
+    "dotenv-cli": "^7.0.0",
+    "nodemon": "^2.0.20",
+    "vitest": "^0.29.1"
+  }
+}

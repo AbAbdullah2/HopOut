@@ -1,5 +1,5 @@
 server/node_modules
 client/node_modules
-tests/__snapshots__
+node_modules
 package-lock.json
 .idea
