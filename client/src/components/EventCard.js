@@ -9,7 +9,6 @@ export default function EventCard({ event }) {
   const navigate = useNavigate();
   const start = new Date(event.event.start);
   const end = new Date(event.event.end);
-  console.log("event: ", event.event);
   return ( 
     // <a href={'/events/' + event.event._id}>
       <Card imgSrc={event.event.thumbnail} className='m-3 overflow-hidden hover:bg-blue-400' 
