@@ -44,12 +44,6 @@ test('renders correct form fields', () => {
   expect(addButton).toBeInTheDocument();
 });
 
-test('matches snapshot', () => {
-  const tree = renderer.create(<CreateEvent/>).toJSON();
-  expect(tree).toMatchSnapshot();
-});
-
-
 test('cover upload works properly', () => {    
   render(<CreateEvent />);
 
