@@ -1801,7 +1801,6 @@ exports[`matches snapshot 1`] = `
                         id="cover-upload"
                         name="cover-upload"
                         onChange={[Function]}
-                        required={true}
                         type="file"
                       />
                     </label>
@@ -1857,7 +1856,6 @@ exports[`matches snapshot 1`] = `
                         id="thumbnail-upload"
                         name="thumbnail-upload"
                         onChange={[Function]}
-                        required={true}
                         type="file"
                       />
                     </label>

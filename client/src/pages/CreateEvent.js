@@ -24,32 +24,33 @@ function CreateEvent(props) {
   const [zip, setZip] = useState("");
   const [cover, setCover] = useState(undefined);
   const [thumbnail, setThumbnail] = useState(undefined);
-  let coverUrl = "";
-  let thumbnailUrl = "";
+  const [coverUrl, setCoverUrl] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   const handleCreateEvent = (e) => {
     e.preventDefault();
     toast.success('Creating event...', {duration: 10000});
-    // Upload cover img 
-    if (cover !== undefined){
+    // Upload cover img
+
+    if (cover === undefined) {
+      setCoverUrl("https://via.placeholder.com/1920x1080");
+    } else {
       uploadImg(cover).then(data => {
-        // Store ImgBB URL  
-        if (data.status === 200) coverUrl = data.data.data.display_url; 
-        // Upload thumbnail img 
-        if (thumbnail !== undefined){
-          uploadImg(thumbnail).then(data => {
-            // Store ImgBB URL
-            if (data.status === 200) thumbnailUrl = data.data.data.display_url;
-            createEvent();
-          }).catch(err => {console.log(err)});
-        }
-        else {
-          thumbnailUrl = coverUrl;
-          createEvent();
-        }
+        // Store ImgBB URL
+        if (data.status === 200) setCoverUrl(data.data.data.display_url);
       }).catch(err => {console.log(err)});
-    } 
-    else createEvent(); 
+    }
+
+    if (thumbnail === undefined) {
+      setThumbnailUrl("https://via.placeholder.com/100x100");
+    } else {
+      uploadImg(thumbnail).then(data => {
+        // Store ImgBB URL
+        if (data.status === 200) setThumbnailUrl(data.data.data.display_url);
+      }).catch(err => {console.log(err)});
+    }
+
+    createEvent(); 
   }
   
   const createEvent = () => {
@@ -266,7 +267,7 @@ function CreateEvent(props) {
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{cover ? cover.name : 'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" required onChange={(e) => setCover(e.target.files[0])}/>
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={(e) => setCover(e.target.files[0])}/>
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">{cover ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
@@ -294,7 +295,7 @@ function CreateEvent(props) {
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
-                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" required onChange={(e) => setThumbnail(e.target.files[0])} />
+                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" onChange={(e) => setThumbnail(e.target.files[0])} />
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">{thumbnail ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
