@@ -24,7 +24,7 @@ function Login(props) {
       password: password
     }
 
-    const loginResponse = postLogin(loginData).then(data => {
+    postLogin(loginData).then(data => {
         if (data.status === 200) {
           // Fetch user details based on userID
             getUser(data.data.data._id).then(userData => {
@@ -36,11 +36,6 @@ function Login(props) {
       const error = 'Could not login user ' + loginData.email;
       toast.error(error);
       console.log(err)});
-
-    if (!loginResponse) {
-      const error = 'Could not login user ' + loginData.email;
-      toast.error(error);
-    }
   }
 
   return (
