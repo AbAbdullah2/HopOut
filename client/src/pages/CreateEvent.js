@@ -27,7 +27,7 @@ function CreateEvent(props) {
   const [coverUrl, setCoverUrl] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
 
-  const handleCreateEvent = (e) => {
+  const handleCreateEvent = async (e) => {
     e.preventDefault();
     toast.success('Creating event...', {duration: 10000});
     // Upload cover img
@@ -35,7 +35,7 @@ function CreateEvent(props) {
     if (cover === undefined) {
       setCoverUrl("https://via.placeholder.com/1920x1080");
     } else {
-      uploadImg(cover).then(data => {
+      await uploadImg(cover).then(data => {
         // Store ImgBB URL
         if (data.status === 200) setCoverUrl(data.data.data.display_url);
       }).catch(err => {console.log(err)});
@@ -44,7 +44,7 @@ function CreateEvent(props) {
     if (thumbnail === undefined) {
       setThumbnailUrl("https://via.placeholder.com/100x100");
     } else {
-      uploadImg(thumbnail).then(data => {
+      await uploadImg(thumbnail).then(data => {
         // Store ImgBB URL
         if (data.status === 200) setThumbnailUrl(data.data.data.display_url);
       }).catch(err => {console.log(err)});
