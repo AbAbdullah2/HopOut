@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import states from '../assets/states';
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
+import { createNewEvent } from '../services/api';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ function CreateEvent(props) {
 
   const handleCreateEvent = (e) => {
     e.preventDefault();
+    toast.success('Creating event...', {duration: 10000});
     // Upload cover img 
     if (cover !== undefined){
       uploadImg(cover).then(data => {
@@ -54,32 +56,27 @@ function CreateEvent(props) {
     const start = new Date(startDate.startDate + ' ' + startTime)
     const end = new Date(endDate.startDate + ' ' + endTime);    
     const newEvent = {
-      event: {
-        name: title,
-        start: start,
-        end: end,
-        description: description,
-        thumbnailId: thumbnailUrl,
-        coverId: coverUrl,
-        address: address,
-        city: city,
-        state: state,
-        zip: zip,
-        visibility: 'public',
-      },
-      organizer: {
-        name: curUser._id,
-      }
+      name: title,
+      start: start,
+      end: end,
+      description: description,
+      thumbnailId: thumbnailUrl,
+      coverId: coverUrl,
+      address: address,
+      city: city,
+      state: state,
+      zip: zip,
+      visibility: 'public',
+      organizer: curUser._id,
     };
 
-    let newEventResponse = null;
-    if (newEventResponse) {
-      const newURL = "/events/" + newEventResponse._id;
-      navigate(newURL); //navigate to page with new event
-    } else {
-      const error = 'Could not create event ' + newEvent.event.title;
-      toast.error(error);
-    }
+    createNewEvent(newEvent).then((res) => {
+      if (res.status === 200) {
+        navigate('/events/' + res.data.data._id);
+      } else {
+        toast.error('Could not create event ' + newEvent.title);
+      }
+    });
   }
     
   return (

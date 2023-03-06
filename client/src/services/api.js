@@ -64,4 +64,12 @@ async function getEvent(eventId) {
   return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent }
+async function createNewEvent(event) {
+  const response = await axios.post(`${BASE_URL}/events`, event)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
