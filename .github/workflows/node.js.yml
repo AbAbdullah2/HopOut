@@ -22,4 +22,14 @@ jobs:
     - name: Run tests
       run: yarn run test
       working-directory: client
-
+    - uses: actions/checkout@v1
+      with:
+        node-version: '12.x'
+        cache: 'npm'
+        cache-dependency-path: server/yarn.lock
+    - name: Install dependencies
+      run: yarn install 
+      working-directory: server
+    - name: Run tests
+      run: yarn run test
+      working-directory: server

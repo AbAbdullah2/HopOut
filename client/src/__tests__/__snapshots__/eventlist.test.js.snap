@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<div
+  className="bg-stone-100 min-h-screen"
+>
+  <div
+    className="mx-auto flex flex-col items-center justify-center h-full"
+  >
+    <div
+      className="w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap justify-between"
+    >
+      <a
+        className="mx-2"
+        href="/"
+      >
+        <span
+          className="text-4xl font-extrabold italic text-blue-400 mr-1"
+        >
+          H
+        </span>
+        <span
+          className="text-4xl"
+        >
+          opout
+        </span>
+      </a>
+      <div
+        className="flex justify-end content-end items-end right-0 text-2xl font-semibold space-x-4 mx-2 mr-4"
+      >
+        <a
+          className="hover:text-blue-400"
+          href="/events"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-calendar px-1"
+            data-icon="calendar"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 448 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M96 32V64H48C21.5 64 0 85.5 0 112v48H448V112c0-26.5-21.5-48-48-48H352V32c0-17.7-14.3-32-32-32s-32 14.3-32 32V64H160V32c0-17.7-14.3-32-32-32S96 14.3 96 32zM448 192H0V464c0 26.5 21.5 48 48 48H400c26.5 0 48-21.5 48-48V192z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          <span
+            className="pl-1 invisible hidden md:visible md:inline"
+          >
+            Events
+          </span>
+        </a>
+        <a
+          className="hover:text-blue-400"
+          href="/create"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-plus px-1"
+            data-icon="plus"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 448 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M240 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H176V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H384c17.7 0 32-14.3 32-32s-14.3-32-32-32H240V80z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          <span
+            className="pl-1 invisible hidden md:visible md:inline"
+          >
+            Create
+          </span>
+        </a>
+        <a
+          className="hover:text-blue-400"
+          href="/account"
+        >
+          <svg
+            aria-hidden="true"
+            className="svg-inline--fa fa-user px-1"
+            data-icon="user"
+            data-prefix="fas"
+            focusable="false"
+            role="img"
+            style={Object {}}
+            viewBox="0 0 448 512"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"
+              fill="currentColor"
+              style={Object {}}
+            />
+          </svg>
+          <span
+            className="pl-1 invisible hidden md:visible md:inline"
+          >
+            Profile
+          </span>
+        </a>
+      </div>
+    </div>
+    <div
+      className="my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center"
+    />
+  </div>
+</div>
+`;
