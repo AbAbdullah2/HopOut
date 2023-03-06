@@ -13,20 +13,18 @@ export default function EventDetail(props) {
   const [event, setEvent] = useState(null);
   const [user, setUser] = useState(null);
 
-  getEvent(eventid).then((res) => {
-    setEvent(res.data.data);
-  });
-
-  if (event !== null) {
-    getUser(event.organizer).then((res) => {
-      setUser(res.data.data);
-    });
-  }
-
   const navigate = useNavigate();
   useEffect(() => {
     if (curUser == null) navigate('/login');
-  });
+    if (event !== null) {
+      getUser(event.organizer).then((res) => {
+        setUser(res.data.data);
+      });
+    }  
+    getEvent(eventid).then((res) => {
+      setEvent(res.data.data);
+    });  
+  }, []);
   
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
