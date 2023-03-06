@@ -71,7 +71,13 @@ function CreateEvent(props) {
       organizer: curUser._id,
     };
 
-    console.log(newEvent);
+    createNewEvent(newEvent).then((res) => {
+      if (res.status === 200) {
+        navigate('/events/' + res.data.data._id);
+      } else {
+        toast.error('Could not create event ' + newEvent.title);
+      }
+    });
   }
     
   return (
