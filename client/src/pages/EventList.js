@@ -8,14 +8,13 @@ export function EventList(props) {
   const { curUser } = props;
   const [eventList, setEventList] = useState([]);
 
-  getAllEvents().then((res) => {
-    setEventList(res.data.data);
-  });
-
   const navigate = useNavigate();
   useEffect(() => {
     if (curUser == null) navigate('/login');
-  });
+    getAllEvents().then((res) => {
+      setEventList(res.data.data);
+    });
+  }, []);
 
   return (
     <div className='bg-stone-100 min-h-screen'>
