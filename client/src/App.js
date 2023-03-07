@@ -7,6 +7,7 @@ import CreateAccount from './pages/CreateAccount';
 import CreateEvent from './pages/CreateEvent';
 import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
+import Profile from './pages/Profile';
 import Account from './pages/Account';
 
 const App = () => {
@@ -27,6 +28,7 @@ const App = () => {
           <Route index element={<Landing curUser={curUser} />} />
           <Route path="events" element={<EventList curUser={curUser}/>} />
           <Route path="events/:eventid" element={<EventDetail curUser={curUser}/>} />
+          <Route path="profile/:userid" element={<Profile curUser={curUser}/>} />
           <Route path="login" element={<Login curUser={curUser} setCurUser={setCurUser} />} />
           <Route path="signup" element={<CreateAccount setCurUser={setCurUser}/>} />
           <Route path="account" element={<Account curUser={curUser} />} />

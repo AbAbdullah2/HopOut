@@ -11,31 +11,35 @@ export default function EventDetail(props) {
   const {curUser} = props;
 
   const [event, setEvent] = useState(null);
-  const [user, setUser] = useState(null);
+  const [host, setHost] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (curUser == null) navigate('/login');
-    if (event !== null) {
-      getUser(event.organizer).then((res) => {
-        setUser(res.data.data);
-      });
-    }  
+    if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
     });  
   }, []);
+
+  useEffect(() => {
+    if (event !== null) {
+      getUser(event.organizer).then((res) => {
+        console.log("got user res: ", res)
+        setHost(res.data.data);
+      });
+    }  
+  }, [event]);
   
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} />
         <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{event.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address} {event.location.city}, {event.location.state} {event.location.zip}</p>
-          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by {user ? user.name : ''}</p>
+          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
           <hr className='my-4 bg-stone-800 h-1' />
           <p className='my-2'>{event.description}</p>

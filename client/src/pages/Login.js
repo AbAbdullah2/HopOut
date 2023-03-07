@@ -42,7 +42,7 @@ function Login(props) {
     <div className='bg-stone-100 min-h-screen'>
       <Toaster />
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={false} />
+        <Header icons={false} curUser={curUser} />
         <div className="flex items-center justify-center py-6">
           <div className="w-full max-w-md">
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
