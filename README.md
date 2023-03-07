@@ -9,8 +9,8 @@ yarn dev
 ```
 To run the client, open up another terminal window and run:
 ```shell
-yarn install
 cd client
+yarn install
 yarn dev
 ```
 ## Developing

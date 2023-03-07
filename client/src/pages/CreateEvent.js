@@ -24,35 +24,35 @@ function CreateEvent(props) {
   const [zip, setZip] = useState("");
   const [cover, setCover] = useState(undefined);
   const [thumbnail, setThumbnail] = useState(undefined);
-  const [coverUrl, setCoverUrl] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
+  let coverUrl = "https://via.placeholder.com/1920x1080";
+  let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
-  const handleCreateEvent = (e) => {
+  const handleCreateEvent = async (e) => {
     e.preventDefault();
     toast.success('Creating event...', {duration: 10000});
     // Upload cover img
 
-    if (cover === undefined) {
-      setCoverUrl("https://via.placeholder.com/1920x1080");
-    } else {
+    if (cover !== undefined){
       uploadImg(cover).then(data => {
-        // Store ImgBB URL
-        if (data.status === 200) setCoverUrl(data.data.data.display_url);
+        // Store ImgBB URL  
+        if (data.status === 200) coverUrl = data.data.data.display_url; 
+        // Upload thumbnail img 
+        if (thumbnail !== undefined){
+          uploadImg(thumbnail).then(data => {
+            // Store ImgBB URL
+            if (data.status === 200) thumbnailUrl = data.data.data.display_url;
+            createEvent();
+          }).catch(err => {console.log(err)});
+        }
+        else {
+          thumbnailUrl = coverUrl;
+          createEvent();
+        }
       }).catch(err => {console.log(err)});
-    }
-
-    if (thumbnail === undefined) {
-      setThumbnailUrl("https://via.placeholder.com/100x100");
-    } else {
-      uploadImg(thumbnail).then(data => {
-        // Store ImgBB URL
-        if (data.status === 200) setThumbnailUrl(data.data.data.display_url);
-      }).catch(err => {console.log(err)});
-    }
-
-    createEvent(); 
+    } 
+    else createEvent(); 
   }
-  
+
   const createEvent = () => {
     const start = new Date(startDate.startDate + ' ' + startTime)
     const end = new Date(endDate.startDate + ' ' + endTime);    
