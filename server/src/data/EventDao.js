@@ -10,7 +10,7 @@ const validObjectId = z
 const validString = z.string().min(1, 'Missing attribute!');
 const validDate = z.string().datetime('Invalid Date!');
 const visibilityEnum = z.enum(['public', 'private']);
-const validNumber = z.number.positive('Invalid capacity!');
+const validNumber = z.number().positive('Invalid capacity!');
 
 class EventDao {
   // return the created event
@@ -268,9 +268,11 @@ class EventDao {
     }
 
     //check capacity is valid
-    result = validNumber.safeParse(capacity);
-    if (!result.success || capacity <= 0) {
-      throw new ApiError(400, 'Invalid capacity!');
+    if (capacity !== undefined) {
+      result = validNumber.safeParse(capacity);
+      if (!result.success || capacity <= 0) {
+        throw new ApiError(400, 'Invalid capacity!');
+      }
     }
 
     //check attendees list has valid attendees and valid capacity

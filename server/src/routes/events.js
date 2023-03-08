@@ -97,6 +97,10 @@ router.put(`/events/:id`, async (req, res, next) => {
       attendees,
       invitees,
     } = req.body;
+    // call read, get capacity if original capity is undefined
+    const readCapacity = await eventDao.read(id).capacity;
+    let updatedCapacity = capacity || readCapacity;
+
     const event = await eventDao.update({
       id,
       name,
@@ -109,7 +113,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       description,
       visibility,
       categories,
-      capacity,
+      capacity: updatedCapacity,
       attendees,
       invitees,
     });
