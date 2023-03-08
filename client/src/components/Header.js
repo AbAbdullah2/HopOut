@@ -1,14 +1,7 @@
-import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { Dropdown } from 'flowbite-react'
 
-export default function Header(props) {
-  const { icons, setCurUser } = props;
-  const signOut = () => {
-    setCurUser(null);
-    window.localStorage.removeItem("curUser");
-  }
+export default function Header({ icons }) {
   return (
     <div className={"w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap" + (icons ? " justify-between" : " justify-center text-center items-center")}>
       <a href='/' className='mx-2'>
@@ -21,25 +14,9 @@ export default function Header(props) {
         <a href='/create' className='hover:text-blue-400'>
           <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Create</span>
         </a>
-        <Dropdown
-            floatingArrow= {false}
-            arrowIcon={false}
-            inline={true}
-            label={<div className='hover:text-blue-400'><FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Account</span></div>}
-          class="bg-transparent hover:text-blue-400"
-          dismissOnClick={false}
-        >
-          <Dropdown.Item>
-          <a href='/account'>
-            Account
-          </a>
-          </Dropdown.Item>
-          <Dropdown.Item onClick={signOut}>
-            <a href='/'>
-            Sign out
-            </a>
-          </Dropdown.Item>
-        </Dropdown>
+        <a href='/account' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Profile</span>
+        </a>
       </div> ) : null}
     </div>
   )
