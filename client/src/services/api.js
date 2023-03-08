@@ -72,4 +72,19 @@ async function createNewEvent(event) {
   return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
+// Not implemented yet
+async function addFriend(curUser, newFriend) {
+  console.log("adding friend. Curuser: ", curUser);
+  console.log("adding friend. newFriend: ", newFriend);
+  return {};
+}
+
+// Not implemented yet
+async function deleteFriend(curUser, oldFriend) {
+  console.log("Delete friend called");
+  
+  return {};
+}
+
+
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, addFriend, deleteFriend }

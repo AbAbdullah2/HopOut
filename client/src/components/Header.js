@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import 'flowbite';
+import { Dropdown } from 'flowbite-react'
 
 export default function Header(props) {
-  const { icons, curUser } = props;
+  const { icons, setCurUser } = props;
   const signOut = () => {
-    console.log("signing out curUser", curUser);
+    setCurUser(null);
+    window.localStorage.removeItem("curUser");
   }
   return (
     <div className={"w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap" + (icons ? " justify-between" : " justify-center text-center items-center")}>
@@ -20,20 +21,25 @@ export default function Header(props) {
         <a href='/create' className='hover:text-blue-400'>
           <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Create</span>
         </a>
-        <button id="dropdownUserAvatarButton" data-dropdown-toggle="dropdownAvatar" type="button">
-          <FontAwesomeIcon icon={solid('user')} className="px-1" />
-          <span className='pl-1 invisible hidden md:visible md:inline'>Profile</span>
-        </button>
-        <div id="dropdownAvatar" className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-            <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUserAvatarButton">
-              <li>
-                <a href="/account" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Account</a>
-              </li>
-            </ul>
-            <div className="py-2">
-              <a href="#" onClick={signOut} className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Sign out</a>
-            </div>
-        </div> 
+        <Dropdown
+            floatingArrow= {false}
+            arrowIcon={false}
+            inline={true}
+            label={<div className='hover:text-blue-400'><FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Account</span></div>}
+          class="bg-transparent hover:text-blue-400"
+          dismissOnClick={false}
+        >
+          <Dropdown.Item>
+          <a href='/account'>
+            Account
+          </a>
+          </Dropdown.Item>
+          <Dropdown.Item onClick={signOut}>
+            <a href='/'>
+            Sign out
+            </a>
+          </Dropdown.Item>
+        </Dropdown>
       </div> ) : null}
     </div>
   )

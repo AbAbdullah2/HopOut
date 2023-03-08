@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getUser } from '../services/api';
+import { getUser, addFriend, deleteFriend } from '../services/api';
 import Header from '../components/Header';
-import NotFound from './NotFound';
+
 
 export default function Profile(props) {
   const { userid } = useParams();
-  const { curUser } = props
+  const { curUser, setCurUser} = props
   const [user, setUser] = useState(null);
   
   const navigate = useNavigate();
@@ -17,14 +17,13 @@ export default function Profile(props) {
 
   const [friends, setFriends] = useState(false);
 
-  const addFriend = (e) => {
-    console.log("adding friend. Curuser: ", curUser);
-    console.log("adding friend. userId: ", userid);
+  const handleFriend = (e) => {
+    addFriend(curUser, user);
     setFriends(true);
   }
 
-  const removeFriend = (e) => {
-    console.log("removing friend. curuser and userid: ", curUser, userid);
+  const handleUnfriend = (e) => {
+    deleteFriend(curUser, user);
     setFriends(false);
   }
 
@@ -44,14 +43,14 @@ export default function Profile(props) {
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} curUser={curUser} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className='m-5 flex flex-col items-center'>
           <p className='text-4xl font-extrabold text-center'>{user.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {user.email}</p>
           {friends ? 
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={removeFriend}> Friend <FontAwesomeIcon icon={solid('circle-check')} /> 
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleUnfriend}> Friend <FontAwesomeIcon icon={solid('circle-check')} /> 
           </button> :
-          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={addFriend}>Add friend <FontAwesomeIcon icon={solid('plus')} /> </button>}
+          <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleFriend}>Add friend <FontAwesomeIcon icon={solid('plus')} /> </button>}
         </div>
       </div>
     </div>

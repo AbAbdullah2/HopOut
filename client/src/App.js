@@ -26,13 +26,13 @@ const App = () => {
       <Routes>
         <Route path="/">
           <Route index element={<Landing curUser={curUser} />} />
-          <Route path="events" element={<EventList curUser={curUser}/>} />
-          <Route path="events/:eventid" element={<EventDetail curUser={curUser}/>} />
-          <Route path="profile/:userid" element={<Profile curUser={curUser}/>} />
+          <Route path="events" element={<EventList curUser={curUser} setCurUser={setCurUser}/>} />
+          <Route path="events/:eventid" element={<EventDetail curUser={curUser} setCurUser={setCurUser}/>} />
+          <Route path="profile/:userid" element={<Profile curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="login" element={<Login curUser={curUser} setCurUser={setCurUser} />} />
           <Route path="signup" element={<CreateAccount setCurUser={setCurUser}/>} />
-          <Route path="account" element={<Account curUser={curUser} />} />
-          <Route path="create" element={<CreateEvent curUser={curUser} />}/>
+          <Route path="account" element={<Account curUser={curUser} setCurUser={setCurUser}/>} />
+          <Route path="create" element={<CreateEvent curUser={curUser} setCurUser={setCurUser}/>}/>
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
