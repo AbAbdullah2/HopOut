@@ -10,7 +10,7 @@ import { createNewEvent } from '../services/api';
 function CreateEvent(props) {
   const navigate = useNavigate();
 
-  const {curUser} = props
+  const {curUser, setCurUser} = props
 
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -84,7 +84,7 @@ function CreateEvent(props) {
     <div className='bg-stone-100 min-h-screen'>
       <Toaster/>
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className="m-10 shadow rounded-md">
           <div className="py-5 bg-gray-50 rounded-md px-4">
             <h3 className="text-lg font-medium leading-6 text-gray-700">New Event</h3>
