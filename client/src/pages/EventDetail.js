@@ -24,7 +24,7 @@ export default function EventDetail(props) {
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
     });  
-  }, []);
+  }, [curUser, navigate, event, eventid]);
   
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
