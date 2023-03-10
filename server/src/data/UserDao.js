@@ -164,7 +164,7 @@ class UserDao {
 
     // validate friends invited
     if (friends !== undefined) {
-      for (const friend of friends) {
+      for (let friend of friends) {
         const f = await User.findById(friend);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
@@ -174,7 +174,10 @@ class UserDao {
 
     // validate sentFriends invited
     if (sentFriends !== undefined) {
-      for (const friend of sentFriends) {
+      console.log(sentFriends);
+      console.log("entered");
+      for (let friend in sentFriends) {
+        console.log(sentFriends[friend], typeof(friend))
         const f = await User.findById(friend);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
@@ -184,7 +187,7 @@ class UserDao {
 
     // validate receivedFriends invited
     if (receivedFriends !== undefined) {
-      for (const friend of receivedFriends) {
+      for (let friend in receivedFriends) {
         const f = await User.findById(friend);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');

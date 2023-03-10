@@ -98,9 +98,9 @@ router.put(`/events/:id`, async (req, res, next) => {
       invitees,
     } = req.body;
     // call read, get capacity if original capity is undefined
-    const readCapacity = await eventDao.read(id).capacity;
+    const eventBefore = await eventDao.read(id);
+    const readCapacity = eventBefore.capacity
     let updatedCapacity = capacity || readCapacity;
-
     const event = await eventDao.update({
       id,
       name,

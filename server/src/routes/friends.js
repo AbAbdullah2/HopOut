@@ -10,14 +10,19 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
 
     const sender = await userDao.read(senderId);
     const receiver = await userDao.read(receiverId);
+  
+    const senderSentFriends = sender.sentFriends;
+    senderSentFriends.push(receiverId);
+    const receiverReceivedFriends = receiver.receivedFriends;
+    receiverReceivedFriends.push(senderId);
 
     const updatedSender = await userDao.update({
       id: senderId,
-      sentFriends: sender.sentFriends.push(receiverId),
+      sentFriends: senderSentFriends,
     });
     const updatedReceiver = await userDao.update({
       id: receiverId,
-      receivedFriends: receiver.receivedFriends.push(senderId),
+      receivedFriends: receiverReceivedFriends,
     });
 
     res.json({
@@ -126,3 +131,5 @@ router.put(`/friends/removeFriend`, async (req, res, next) => {
     next(err);
   }
 });
+
+export default router;
