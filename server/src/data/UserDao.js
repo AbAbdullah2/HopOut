@@ -1,6 +1,6 @@
 import User from '../models/User.js';
 import Event from '../models/Event.js';
-import { hashPassword, verifyPassword } from '../util/password.js';
+import { hashPassword } from '../util/password.js';
 import mongoose from 'mongoose';
 import ApiError from '../models/ApiError.js';
 import { z } from 'zod';
@@ -174,11 +174,8 @@ class UserDao {
 
     // validate sentFriends invited
     if (sentFriends !== undefined) {
-      console.log(sentFriends);
-      console.log("entered");
       for (let friend in sentFriends) {
-        console.log(sentFriends[friend], typeof(friend))
-        const f = await User.findById(friend);
+        const f = await User.findById(sentFriends[friend]);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
         }
@@ -188,7 +185,7 @@ class UserDao {
     // validate receivedFriends invited
     if (receivedFriends !== undefined) {
       for (let friend in receivedFriends) {
-        const f = await User.findById(friend);
+        const f = await User.findById(receivedFriends[friend]);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
         }
