@@ -18,6 +18,20 @@ export function EventList(props) {
     });
   }, []);
 
+  const toDisplayEvent = (ev) => {
+    if (selectedFilters.length === 0) {
+      return true;
+    }
+    for (const f in selectedFilters) {
+      for (const cat in ev.categories) {
+        if (f === cat) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   return (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
@@ -26,7 +40,10 @@ export function EventList(props) {
           <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
         </div>
         <div className='my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>
-          {eventList.map((event) => {
+          {eventList.filter((ev) => {
+            return toDisplayEvent(ev);
+          })
+          .map((event) => {
             return (
               <EventCard key={event._id} event={event}/>
             );
