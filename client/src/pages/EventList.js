@@ -6,7 +6,7 @@ import { getAllEvents } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 
 export function EventList(props) {
-  const { curUser } = props;
+  const { curUser, setCurUser} = props;
   const [eventList, setEventList] = useState([]);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -21,7 +21,7 @@ export function EventList(props) {
   return (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div>
           <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
         </div>
