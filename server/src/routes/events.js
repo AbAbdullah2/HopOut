@@ -69,7 +69,7 @@ router.post('/events', async (req, res, next) => {
       coverId,
       thumbnailId,
     });
-    return res.json({
+    return res.status(201).json({
       status: 201,
       message: `Successfully created the following event!`,
       data: event,

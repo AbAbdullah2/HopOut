@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
-import app from "../../../src/index.js";
+import app from "../../src/index.js";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
-import { userDao } from "../../../src/routes/users.js";
-import * as db from "../../../src/data/db.js";
+import { userDao } from "../../src/routes/users.js";
+import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 
@@ -23,7 +23,7 @@ describe(`Test ${endpoint}`, () => {
   beforeEach(async () => {
     await userDao.deleteAll();
     const u = await userDao.readAll({});
-    console.log(u);
+    //console.log(u);
     users = [];
     
     for (let index = 0; index < numUsers; index++) {

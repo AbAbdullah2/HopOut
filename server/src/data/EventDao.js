@@ -30,6 +30,11 @@ class EventDao {
     coverId,
     thumbnailId,
   }) {
+    console.log("NAME", name)
+    if (name === null || name === undefined) {
+      throw new ApiError(400, 'Invalid Name!')
+    }
+
     //check name is valid
     let result = validString.safeParse(name);
     if (!result.success) {
@@ -48,7 +53,6 @@ class EventDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid End Date!');
     }
-
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
 
     result = validString.safeParse(address);
