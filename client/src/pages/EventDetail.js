@@ -8,7 +8,7 @@ import { getEvent, getUser } from '../services/api';
 
 export default function EventDetail(props) {
   const {eventid} = useParams();
-  const {curUser} = props;
+  const {curUser, setCurUser} = props;
 
   const [event, setEvent] = useState(null);
   const [host, setHost] = useState(null);
@@ -16,13 +16,11 @@ export default function EventDetail(props) {
   const navigate = useNavigate();
   useEffect(() => {
     if (curUser == null) navigate('/login');
-    if (event !== null) {
-      getUser(event.organizer).then((res) => {
-        setHost(res.data.data);
-      });
-    }  
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
+      getUser(res.data.data.organizer).then((userRes) => {
+        setHost(userRes.data.data);
+      });
     });  
   }, []);
 
@@ -37,7 +35,7 @@ export default function EventDetail(props) {
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{event.name}</p>
