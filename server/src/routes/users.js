@@ -5,7 +5,7 @@ import UserDao from '../data/UserDao.js';
 const router = express.Router();
 export const userDao = new UserDao();
 
-const hidePassword = (user) => {
+export const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
   return rest;
 };

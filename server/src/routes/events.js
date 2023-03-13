@@ -20,7 +20,7 @@ router.get('/events', async (req, res, next) => {
   }
 });
 
-router.get("/events/:id", async (req, res, next) => {
+router.get('/events/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.read(id);
@@ -37,12 +37,42 @@ router.get("/events/:id", async (req, res, next) => {
 
 router.post('/events', async (req, res, next) => {
   try {
-    const { name, start, end, address, city, state, zip, description, visibility, organizer, categories, coverId, thumbnailId } = req.body;
-    const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories, coverId, thumbnailId });
+    const {
+      name,
+      start,
+      end,
+      address,
+      city,
+      state,
+      zip,
+      description,
+      visibility,
+      organizer,
+      capacity,
+      categories,
+      coverId,
+      thumbnailId,
+    } = req.body;
+    const event = await eventDao.create({
+      name,
+      start,
+      end,
+      address,
+      city,
+      state,
+      zip,
+      description,
+      visibility,
+      organizer,
+      capacity,
+      categories,
+      coverId,
+      thumbnailId,
+    });
     return res.json({
       status: 201,
       message: `Successfully created the following event!`,
-      data: event
+      data: event,
     });
   } catch (err) {
     next(err);
@@ -52,20 +82,53 @@ router.post('/events', async (req, res, next) => {
 router.put(`/events/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees } = req.body;
-    const event = await eventDao.update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees });
-    
+    const {
+      name,
+      start,
+      end,
+      address,
+      city,
+      state,
+      zip,
+      description,
+      visibility,
+      categories,
+      capacity,
+      attendees,
+      invitees,
+    } = req.body;
+    // call read, get capacity if original capity is undefined
+    const eventBefore = await eventDao.read(id);
+    const readCapacity = eventBefore.capacity
+    let updatedCapacity = capacity || readCapacity;
+    const event = await eventDao.update({
+      id,
+      name,
+      start,
+      end,
+      address,
+      city,
+      state,
+      zip,
+      description,
+      visibility,
+      categories,
+      capacity: updatedCapacity,
+      attendees,
+      invitees,
+    });
+
     res.json({
       status: 200,
       message: `Successfully updated the following event!`,
-      data: event
+      data: event,
     });
   } catch (err) {
     next(err);
   }
 });
 
-router.delete("/events/:id", async (req, res, next) => {
+router.delete('/events/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.delete(id);
@@ -80,13 +143,13 @@ router.delete("/events/:id", async (req, res, next) => {
   }
 });
 
-router.delete("/events", async (req, res, next) => {
+router.delete('/events', async (req, res, next) => {
   try {
     const events = await eventDao.deleteAll();
 
     res.json({
       status: 200,
-      message: `Successfully deleted ${events.deletedCount} events!`
+      message: `Successfully deleted ${events.deletedCount} events!`,
     });
   } catch (err) {
     next(err);
