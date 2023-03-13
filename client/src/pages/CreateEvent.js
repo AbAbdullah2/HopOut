@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
+import CATEGORIES from "../assets/categories";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
+import { Dropdown } from 'flowbite-react';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -24,6 +26,7 @@ function CreateEvent(props) {
   const [zip, setZip] = useState("");
   const [cover, setCover] = useState(undefined);
   const [thumbnail, setThumbnail] = useState(undefined);
+  const [categories, setCategories] = useState([]);
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
@@ -68,6 +71,7 @@ function CreateEvent(props) {
       state: state,
       zip: zip,
       visibility: 'public',
+      categories: categories,
       organizer: curUser._id,
     };
 
@@ -78,6 +82,14 @@ function CreateEvent(props) {
         toast.error('Could not create event ' + newEvent.title);
       }
     });
+  }
+
+  const setChecked = (v) => {
+    if (categories.includes(v)) {
+      setCategories(categories.filter((f) => {return f !== v}));
+    } else {
+      setCategories([...categories, v]);
+    }
   }
     
   return (
@@ -244,6 +256,25 @@ function CreateEvent(props) {
                     required
                   />
                 </div>
+              </div>
+              <div>
+                <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                  Categories
+                </label>
+                <div className="mt-2">
+                  <Dropdown
+                    label={"Filters"}
+                    className="bg-gray-50"
+                    dismissOnClick={false}
+                  >
+                  {CATEGORIES.map((f) => (
+                    <Dropdown.Item key={f.key}>
+                      <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                      <span className="pl-2">{f.value}</span>
+                    </Dropdown.Item>
+                  ))}
+                </Dropdown>
+              </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
