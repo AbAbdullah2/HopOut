@@ -57,6 +57,14 @@ async function deleteUser(user) {
     return response;
 }
 
+async function createNewEvent(event) {
+  const response = await axios.post(`${BASE_URL}/events`, event)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
 async function getAllEvents() {
   const response = await axios.get(`${BASE_URL}/events`)
     .catch(function (error) {
@@ -73,12 +81,20 @@ async function getEvent(eventId) {
   return response;
 }
 
-async function createNewEvent(event) {
-  const response = await axios.post(`${BASE_URL}/events`, event)
+async function updateEvent(event) {
+  const response = await axios.put(`${BASE_URL}/events/${event._id}`, event)
     .catch(function (error) {
       console.log(error);
     });
   return response;
 }
 
-export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
+async function deleteEvent(eventId) {
+  const response = await axios.delete(`${BASE_URL}/events/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, updateEvent, deleteEvent }
