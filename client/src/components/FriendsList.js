@@ -32,7 +32,7 @@ export default function FriendsList(props) {
     
     return (
     <div>
-    <h1>Friends</h1>
+    <h1 className="font-semibold text-slate-900">Friends</h1>
     <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">
         {friends.map((friend) => 
             <li className="pb-3 sm:pb-4">
