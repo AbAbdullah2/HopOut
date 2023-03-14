@@ -1,7 +1,7 @@
 import { describe, beforeAll, afterAll, expect, it } from "vitest";
-import User from "../../../src/models/User.js"
+import User from "../../src/models/User.js"
 import { faker } from "@faker-js/faker";
-import * as db from "../../../src/data/db.js";
+import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 
 dotenv.config();

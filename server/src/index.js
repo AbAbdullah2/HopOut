@@ -1,6 +1,8 @@
 import express from "express";
 import eventUrls from "./routes/events.js";
 import userUrls from "./routes/users.js";
+import friendUrls from "./routes/friends.js"
+import rsvpUrls from "./routes/rsvp.js"
 import cors from "cors"
 import helmet from "helmet"
 
@@ -17,6 +19,8 @@ app.get("/", (req, res) => {
 
 app.use(eventUrls);
 app.use(userUrls);
+app.use(friendUrls);
+app.use(rsvpUrls);
 
 app.use((err, req, res, next) => {
   if (err) {

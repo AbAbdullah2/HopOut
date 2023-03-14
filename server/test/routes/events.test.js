@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
-import app from "../../../src/index.js";
+import app from "../../src/index.js";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
-import { eventDao } from "../../../src/routes/events.js";
-import { userDao } from "../../../src/routes/users.js";
-import * as db from "../../../src/data/db.js";
+import { eventDao } from "../../src/routes/events.js";
+import { userDao } from "../../src/routes/users.js";
+import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 
@@ -26,7 +26,7 @@ describe(`Test ${endpoint}`, () => {
       email: faker.internet.email(),
       password: faker.internet.password(6)
     });
-    console.log(user);
+    //console.log(user);
     uid = user.id;
   });
 
@@ -45,8 +45,9 @@ describe(`Test ${endpoint}`, () => {
       const description = faker.lorem.paragraph();
       const visibility = "private";
       const organizer = uid;
+      const capacity = 3;
       const categories = ["Sports"];
-      const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
+      const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories });
       events.push(event);
     }
     console.log(events);
@@ -80,18 +81,20 @@ describe(`Test ${endpoint}`, () => {
       const description = faker.lorem.paragraph();
       const visibility = "private";
       const organizer = uid;
+      const capacity = 20;
       const categories = ["Sports"];
       const response = await request.post(endpoint).send({
-        name, start, end, address, city, state, zip, description, visibility, organizer, categories
+        name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
       });
       expect(response.status).toBe(201);
       expect(response.body.data._id).toBeDefined();
       expect(response.body.data.name).toBe(name);
       expect(response.body.data.start).toBe(start);
       expect(response.body.data.end).toBe(end);
-      expect(response.body.data.location).toEqual(location);
+      expect(response.body.data.location).toStrictEqual({ address, city, state, zip });
       expect(response.body.data.description).toBe(description);
       expect(response.body.data.organizer).toBe(organizer);
+      expect(response.body.data.capacity).toBe(capacity);
       expect(response.body.data.categories).toStrictEqual(categories);
     });
 
@@ -103,13 +106,19 @@ describe(`Test ${endpoint}`, () => {
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();           const description = faker.lorem.paragraph();
+        const zip = faker.address.zipCode();           
+        const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
         const categories = ["Sports"];
-        const response = await request.post("/register").send({
-          name, start, end, address, city, state, zip, description, visibility, organizer, categories
-        });
+        const capacity = 20;
+        console.log("NULL", name)
+        const response = await request.post("/events", { name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories })
+        // const response = await request.post("/register").send({
+        //   name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
+        // });
+        console.log("RESPONSE", response.body)
+
         expect(response.status).toBe(400);
       });
 
@@ -120,12 +129,14 @@ describe(`Test ${endpoint}`, () => {
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();        const description = faker.lorem.paragraph();
+        const zip = faker.address.zipCode();        
+        const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
+        const capacity = 20;
         const categories = ["Sports"];
-        const response = await request.post("/register").send({
-          name, start, end, address, city, state, zip, description, visibility, organizer, categories
+        const response = await request.post("/events").send({
+          name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
         });
         expect(response.status).toBe(400);
       });
@@ -141,9 +152,10 @@ describe(`Test ${endpoint}`, () => {
         const description = faker.lorem.paragraph();
         const visibility = "private";
         const organizer = uid;
+        const capacity = 20;
         const categories = ["Sports"];
-        const response = await request.post("/register").send({
-          name, start, end, address, city, state, zip, description, visibility, organizer, categories
+        const response = await request.post("/events").send({
+          name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
         });
         expect(response.status).toBe(400);
       });
@@ -212,7 +224,7 @@ describe(`Test ${endpoint}`, () => {
   });
 
   describe("DELETE request", () => {
-    it("Respond 200 when deleting a user", async () => {
+    it("Respond 200 when deleting an event", async () => {
       const index = Math.floor(Math.random() * numEvents);
       const event = events[index];
       const response = await request.delete(`${endpoint}/${event.id}`);
@@ -224,6 +236,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.location).toEqual(event.location);
       expect(response.body.data.description).toBe(event.description);
       expect(response.body.data.organizer).toBe(`${event.organizer}`);
+      expect(response.body.data.capacity).toBe(event.capacity);
       expect(response.body.data.categories).toStrictEqual(event.categories);
     });
 
