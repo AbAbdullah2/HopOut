@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import states from '../assets/states';
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { createNewEvent } from '../services/api';
+import { createNewEvent, updateUser } from '../services/api';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -71,9 +71,14 @@ function CreateEvent(props) {
       organizer: curUser._id,
     };
 
+    console.log("newevent: ", newEvent);
     createNewEvent(newEvent).then((res) => {
-      if (res.status === 200) {
-        navigate('/events/' + res.data.data._id);
+      if (res.status === 200) {                
+        curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
+        : setCurUser({...curUser, organizing: [res.data.data._id]})
+        updateUser(curUser).then((userData) => {
+          navigate('/events/' + res.data.data._id);
+        });
       } else {
         toast.error('Could not create event ' + newEvent.title);
       }

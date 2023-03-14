@@ -30,6 +30,15 @@ async function register(user) {
   return response;
 }
 
+async function updateUser(user) {
+  const response = await axios.put(`${BASE_URL}/users/${user._id}`, user)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
+}
+
+
 // login creds should be object with fields email and password
 async function postLogin(creds) {
   const response = await axios.post(`${BASE_URL}/login`, creds)
@@ -72,4 +81,4 @@ async function createNewEvent(event) {
   return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
+export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
