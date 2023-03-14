@@ -23,7 +23,6 @@ describe(`Test ${endpoint}`, () => {
   beforeEach(async () => {
     await userDao.deleteAll();
     const u = await userDao.readAll({});
-    //console.log(u);
     users = [];
     
     for (let index = 0; index < numUsers; index++) {
@@ -64,7 +63,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.status).toBe(201);
       expect(response.body.data._id).toBeDefined();
       expect(response.body.data.name).toBe(name);
-      expect(response.body.data.email).toBe(email);
+      expect(response.body.data.email).toBe(email.toLowerCase());
       expect(response.body.data.password).toBeUndefined();
     });
 
