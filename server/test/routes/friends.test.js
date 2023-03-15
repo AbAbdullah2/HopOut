@@ -41,12 +41,12 @@ describe(`Test ${endpoint}`, () => {
     describe("send a friend request", () => {
         it("Respond 200: friend request sent successfully", async () => {
             const senderId = requesterId;
-            const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
+            const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
             expect(response.status).toBe(200);
             expect(response.body.data._id).toBe(senderId);
-            expect(response.body.data.sentFriends[0]).toBe(receiverId);
+            expect(response.body.data.sentFriends[0].user).toBe(receiverId);
             const receiver = await userDao.read(receiverId);
-            expect(receiver.receivedFriends[0]).toBe(senderId);
+            expect(receiver.receivedFriends[0].user.toString()).toBe(senderId);
         });
     
         /*it("sender sends a friend request to receiver twice", async () => {
@@ -69,7 +69,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 400", () => {
             it("requester is invalid id", async () => {
                 const senderId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
+                const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
                 expect(response.status).toBe(400);
     
             });
@@ -77,7 +77,7 @@ describe(`Test ${endpoint}`, () => {
             it("receiver is invalid id", async () => {
                 const senderId = requesterId;
                 receiverId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
+                const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
                 expect(response.status).toBe(400);
     
             });
@@ -86,14 +86,14 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 404", () => {
             it("requester id valid but not in database", async () => {
                 const senderId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
+                const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
                 expect(response.status).toBe(404);
     
             });
             it("receiver id valid but not in database", async () => {
                 const senderId = requesterId;
                 receiverId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
+                const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
                 expect(response.status).toBe(404);
     
             });
@@ -103,16 +103,23 @@ describe(`Test ${endpoint}`, () => {
     
     describe("unsend a friend request", () => {
         it("Respond 200 (friend request unsent sucessfully)", async () => {
-            await request.put(`${endpoint}/sendRequest}`).send({senderId: requesterId, receiverId});
-            const response = await request.put(`${endpoint}/removeRequest}`).send({
+            // const senderId = requesterId;
+            // const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
+            // expect(response.status).toBe(200);
+            // expect(response.body.data._id).toBe(senderId);
+            // expect(response.body.data.sentFriends[0].user).toBe(receiverId);
+            // const receiver = await userDao.read(receiverId);
+            // expect(receiver.receivedFriends[0].user.toString()).toBe(senderId);
+            await request.put(`${endpoint}/sendRequest`).send({senderId: requesterId, receiverId});
+            const response = await request.put(`${endpoint}/removeRequest`).send({
                 otherId: receiverId,
                 removerId: requesterId
             });
             expect(response.status).toBe(200);
             expect(response.body.data._id).toBe(requesterId);
             expect(response.body.data.sentFriends.length).toBe(0);
-            const receiver = await request.get(`users/${receiverId}`);
-            expect(receiver.body.data.receivedFriends.length).toBe(0);        
+            const receiver = await userDao.read(receiverId);
+            expect(receiver.receivedFriends.length).toBe(0);        
         });
 
         /*it("friend request was never sent originally", async () => {
@@ -126,7 +133,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 400", () => {
             it("requester is invalid id", async () => {
                 requesterId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/removeRequest}`).send({
+                const response = await request.put(`${endpoint}/removeRequest`).send({
                     otherId: receiverId,
                     removerId: requesterId
                 });                
@@ -136,7 +143,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver is invalid id", async () => {
                 receiverId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/removeRequest}`).send({
+                const response = await request.put(`${endpoint}/removeRequest`).send({
                     otherId: receiverId,
                     removerId: requesterId
                 });                 
@@ -148,7 +155,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 404", () => {
             it("requester id valid but not in database", async () => {
                 requesterId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/removeRequest}`).send({
+                const response = await request.put(`${endpoint}/removeRequest`).send({
                     otherId: receiverId,
                     removerId: requesterId
                 }); 
@@ -157,7 +164,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver id valid but not in database", async () => {
                 receiverId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/removeRequest}`).send({
+                const response = await request.put(`${endpoint}/removeRequest`).send({
                     otherId: receiverId,
                     removerId: requesterId
                 }); 
@@ -169,8 +176,8 @@ describe(`Test ${endpoint}`, () => {
 
     describe("accept a friend request", () => {
         it("Respond 200 (friend request accepted sucessfully)", async () => {
-            await request.put(`${endpoint}/sendRequest}`).send({senderId: requesterId, receiverId});
-            const response = await request.put(`${endpoint}/acceptRequest}`).send({
+            await request.put(`${endpoint}/sendRequest`).send({senderId: requesterId, receiverId});
+            const response = await request.put(`${endpoint}/acceptRequest`).send({
                 acceptorId: receiverId,
                 requesterId
             });
@@ -209,7 +216,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 400", () => {
             it("requester is invalid id", async () => {
                 requesterId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/acceptRequest}`).send({
+                const response = await request.put(`${endpoint}/acceptRequest`).send({
                     acceptorId: receiverId,
                     requesterId
                 });               
@@ -219,7 +226,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver is invalid id", async () => {
                 receiverId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/acceptRequest}`).send({
+                const response = await request.put(`${endpoint}/acceptRequest`).send({
                     acceptorId: receiverId,
                     requesterId
                 });               
@@ -231,7 +238,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 404", () => {
             it("requester id valid but not in database", async () => {
                 requesterId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/acceptRequest}`).send({
+                const response = await request.put(`${endpoint}/acceptRequest`).send({
                     acceptorId: receiverId,
                     requesterId
                 });
@@ -240,7 +247,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver id valid but not in database", async () => {
                 receiverId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/acceptRequest}`).send({
+                const response = await request.put(`${endpoint}/acceptRequest`).send({
                     acceptorId: receiverId,
                     requesterId
                 });
@@ -252,8 +259,8 @@ describe(`Test ${endpoint}`, () => {
 
     describe("decline a friend request", () => {
         it("Respond 200 (friend request declined sucessfully)", async () => {
-            await request.put(`${endpoint}/sendRequest}`).send({senderId: requesterId, receiverId});
-            const response = await request.put(`${endpoint}/declineRequest}`).send({
+            await request.put(`${endpoint}/sendRequest`).send({senderId: requesterId, receiverId});
+            const response = await request.put(`${endpoint}/declineRequest`).send({
                 declinerId: receiverId,
                 requesterId
             });
@@ -279,7 +286,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 400", () => {
             it("requester is invalid id", async () => {
                 requesterId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/declineRequest}`).send({
+                const response = await request.put(`${endpoint}/declineRequest`).send({
                     declinerId: receiverId,
                     requesterId
                 });              
@@ -289,7 +296,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver is invalid id", async () => {
                 receiverId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/declineRequest}`).send({
+                const response = await request.put(`${endpoint}/declineRequest`).send({
                     declinerId: receiverId,
                     requesterId
                 });              
@@ -301,7 +308,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 404", () => {
             it("requester id valid but not in database", async () => {
                 requesterId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/declineRequest}`).send({
+                const response = await request.put(`${endpoint}/declineRequest`).send({
                     declinerId: receiverId,
                     requesterId
                 });
@@ -310,7 +317,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver id valid but not in database", async () => {
                 receiverId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/declineRequest}`).send({
+                const response = await request.put(`${endpoint}/declineRequest`).send({
                     declinerId: receiverId,
                     requesterId
                 });
@@ -322,12 +329,12 @@ describe(`Test ${endpoint}`, () => {
 
     describe("unfriend a current friend", () => {
         it("Respond 200 (unfriended a friend sucessfully)", async () => {
-            await request.put(`${endpoint}/sendRequest}`).send({senderId: requesterId, receiverId});
-            await request.put(`${endpoint}/acceptRequest}`).send({
+            await request.put(`${endpoint}/sendRequest`).send({senderId: requesterId, receiverId});
+            await request.put(`${endpoint}/acceptRequest`).send({
                 acceptorId: receiverId,
                 requesterId
             });
-            const response = await request.put(`${endpoint}/removeFriend}`).send({
+            const response = await request.put(`${endpoint}/removeFriend`).send({
                 removerId: receiverId,
                 friendId: requesterId
             });
@@ -360,7 +367,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 400", () => {
             it("requester is invalid id", async () => {
                 requesterId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/removeFriend}`).send({
+                const response = await request.put(`${endpoint}/removeFriend`).send({
                     removerId: receiverId,
                     friendId: requesterId
                 });              
@@ -370,7 +377,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver is invalid id", async () => {
                 receiverId = faker.lorem.sentence();
-                const response = await request.put(`${endpoint}/removeFriend}`).send({
+                const response = await request.put(`${endpoint}/removeFriend`).send({
                     removerId: receiverId,
                     friendId: requesterId
                 });             
@@ -382,7 +389,7 @@ describe(`Test ${endpoint}`, () => {
         describe("Respond 404", () => {
             it("requester id valid but not in database", async () => {
                 requesterId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/removeFriend}`).send({
+                const response = await request.put(`${endpoint}/removeFriend`).send({
                     removerId: receiverId,
                     friendId: requesterId
                 });
@@ -391,7 +398,7 @@ describe(`Test ${endpoint}`, () => {
 
             it("receiver id valid but not in database", async () => {
                 receiverId = mongoose.Types.ObjectId().toString();
-                const response = await request.put(`${endpoint}/removeFriend}`).send({
+                const response = await request.put(`${endpoint}/removeFriend`).send({
                     removerId: receiverId,
                     friendId: requesterId
                 });

@@ -6,7 +6,7 @@ import { eventDao } from "../../src/routes/events.js";
 import { userDao } from "../../src/routes/users.js";
 import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
-import mongoose, { mongo } from "mongoose";
+import mongoose from "mongoose";
 
 dotenv.config();
 const endpoint = "/rsvp";
