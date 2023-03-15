@@ -12,7 +12,7 @@ export default function Header(props) {
   return (
     <div className={"w-full bg-slate-800 p-5 text-white flex flex-row flex-nowrap" + (icons ? " justify-between" : " justify-center text-center items-center")}>
       <a href='/' className='mx-2'>
-        <span className='text-4xl font-extrabold italic text-blue-400 mr-1'>H</span><span className='text-4xl'>opout</span>
+        <span className='text-4xl font-extrabold italic text-blue-400 mr-1'>H</span><span className='text-4xl'>opOut</span>
       </a>
       {icons ? (<div className='flex justify-end content-end items-end right-0 text-2xl font-semibold space-x-4 mx-2 mr-4'>
         <a href='/events' className='hover:text-blue-400'>

@@ -14,24 +14,51 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  organizing: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true,
-  }],
+  organizing: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: true,
+    },
+  ],
   // account for attending vs attended (past vs future) later
-  attending: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true,
-  }],
-  invited: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event',
-    required: true,
-  }]
-})
+  attending: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: true,
+    },
+  ],
+  invited: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Event',
+      required: true,
+    },
+  ],
+  friends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+  ],
+  sentFriends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+  ],
+  receivedFriends: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+  ],
+});
 
-const User = mongoose.model("User", UserSchema);
+const User = mongoose.model('User', UserSchema);
 
 export default User;

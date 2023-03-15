@@ -1,10 +1,10 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
-import UserDao from "../../../src/data/UserDao.js";
+import UserDao from "../../src/data/UserDao.js";
 import { faker } from "@faker-js/faker";
-import User from "../../../src/models/User.js";
-import * as db from "../../../src/data/db.js"
+import User from "../../src/models/User.js";
+import * as db from "../../src/data/db.js"
 import * as dotenv from "dotenv";
-import { verifyPassword } from "../../../src/util/password.js";
+import { verifyPassword } from "../../src/util/password.js";
 
 dotenv.config();
 
