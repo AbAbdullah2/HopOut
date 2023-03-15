@@ -8,7 +8,6 @@ import CreateEvent from './pages/CreateEvent';
 import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
-import EventMap from './pages/EventMap';
 
 const App = () => {
   const [curUser, setCurUser] = useState(JSON.parse(window.localStorage.getItem("curUser")) ? JSON.parse(window.localStorage.getItem("curUser")) : null);
@@ -32,7 +31,6 @@ const App = () => {
           <Route path="signup" element={<CreateAccount setCurUser={setCurUser}/>} />
           <Route path="account" element={<Account curUser={curUser} />} />
           <Route path="create" element={<CreateEvent curUser={curUser} />}/>
-          <Route path="map" element={<EventMap curUser={curUser} />} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>

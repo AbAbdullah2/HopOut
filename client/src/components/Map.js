@@ -1,48 +1,51 @@
 import React from 'react'
-import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import EventMarker from './Marker';
 
 const API_KEY = 'AIzaSyDmxEIHuUqwqwW7gQU0MZh6T8z10Ktgahc';
 
-const containerStyle = {
-  width: '400px',
-  height: '400px'
-};
-
-const center = {
-  lat: 39.330420,
-  lng: -76.618050
-};
-
 function Map({events}) {
+
+  const [currentLocation, setCurrentLocation] = React.useState({
+    lat: 39.330420,
+    lng: -76.618050
+  });
+
+  React.useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(setCurrentLocationParser);
+    }
+  }, [events]);
+
+  function setCurrentLocationParser(position) {
+    setCurrentLocation({
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    });
+  }
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: API_KEY
-  })
-
-  const [map, setMap] = React.useState(null)
-
-  const onLoad = React.useCallback(function callback(map) {
-    const bounds = new window.google.maps.LatLngBounds(center);
-    map.fitBounds(bounds);
-
-    setMap(map)
-  }, [])
-
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null)
-  }, [])
+  });
 
   return isLoaded ? (
+    <div>
       <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
+        mapContainerClassName='rounded-lg shadow-lg w-full h-screen'
+        center={currentLocation}
+        zoom={15}
       >
-        <Marker position={center} />
+        {events.map((event) => {
+          return (
+            <EventMarker
+              key={event._id}
+              event={event}
+            />
+          );
+        })}
       </GoogleMap>
+    </div>
   ) : <></>
 }
 
