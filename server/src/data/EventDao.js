@@ -31,7 +31,7 @@ class EventDao {
     thumbnailId,
   }) {
     if (name === null || name === undefined) {
-      throw new ApiError(400, 'Invalid Name!')
+      throw new ApiError(400, 'Invalid Name!');
     }
 
     //check name is valid
@@ -122,7 +122,7 @@ class EventDao {
         address,
         city,
         state,
-        zip
+        zip,
       },
       description,
       visibility,
@@ -143,6 +143,8 @@ class EventDao {
     if (name) {
       filter.name = name;
     }
+
+    filter.visibility = 'public';
 
     const events = await Event.find(filter);
     return events;
@@ -318,7 +320,7 @@ class EventDao {
           address,
           city,
           state,
-          zip
+          zip,
         },
         description,
         visibility,
