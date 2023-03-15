@@ -4,8 +4,13 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Header from '../components/Header';
 import states from '../assets/states';
 import toast, { Toaster } from 'react-hot-toast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import uploadImg from '../services/imgbb';
 import { updateEvent, getEvent } from '../services/api';
+
+const COVER_PLACEHOLDER = "https://via.placeholder.com/1920x1080";
+const THUMB_PLACEHOLDER = "https://via.placeholder.com/1000x1000";
 
 function EditEvent(props) {
   const {curUser, setCurUser} = props
@@ -14,79 +19,40 @@ function EditEvent(props) {
 
   const [event, setEvent] = useState(null);
 
-  const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [cover, setCover] = useState(undefined);
-  const [thumbnail, setThumbnail] = useState(undefined);
-  let coverUrl = "https://via.placeholder.com/1920x1080";
-  let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
+      setEvent({...res.data.data, 
+        address: res.data.data.location.address,
+        city: res.data.data.location.city,
+        zip: res.data.data.location.zip,
+        state: res.data.data.location.state
+      });
+      console.log("got event: ", res.data.data)
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
   }, []);
 
-  const handleCreateEvent = async (e) => {
+
+  const handleUpdateEvent = async (e) => {
     e.preventDefault();
-    toast.success('Creating event...', {duration: 10000});
-    // Upload cover img
-
-    if (cover !== undefined){
-      uploadImg(cover).then(data => {
-        // Store ImgBB URL  
-        if (data.status === 200) coverUrl = data.data.data.display_url; 
-        // Upload thumbnail img 
-        if (thumbnail !== undefined){
-          uploadImg(thumbnail).then(data => {
-            // Store ImgBB URL
-            if (data.status === 200) thumbnailUrl = data.data.data.display_url;
-            createEvent();
-          }).catch(err => {console.log(err)});
-        }
-        else {
-          thumbnailUrl = coverUrl;
-          createEvent();
-        }
-      }).catch(err => {console.log(err)});
-    } 
-    else createEvent(); 
-  }
-
-  const createEvent = () => {
+    toast.success('Updating event...', {duration: 10000});
     const start = new Date(startDate.startDate + ' ' + startTime)
     const end = new Date(endDate.startDate + ' ' + endTime);    
-    const newEvent = {
-      name: title,
-      start: start,
-      end: end,
-      description: description,
-      thumbnailId: thumbnailUrl,
-      coverId: coverUrl,
-      address: address,
-      city: city,
-      state: state,
-      zip: zip,
-      visibility: 'public',
-      organizer: curUser._id,
-    };
+    setEvent({...event, start: start, end: end});
 
-    console.log("newevent: ", newEvent);
-    updateEvent(newEvent).then((res) => {
+    updateEvent(event).then((res) => {
       if (res.status === 200) {                
         console.log("Successfully updated event. received res: ", res);
+        navigate('/events/' + res.data.data._id);
       } else {
-        toast.error('Could not create event ' + newEvent.title);
+        toast.error('Could not update event ' + event.name);
       }
     });
   }
@@ -98,9 +64,9 @@ function EditEvent(props) {
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className="m-10 shadow rounded-md">
           <div className="py-5 bg-gray-50 rounded-md px-4">
-            <h3 className="text-lg font-medium leading-6 text-gray-700">New Event</h3>
+            <h3 className="text-lg font-medium leading-6 text-gray-700">Edit Event</h3>
           </div>
-          <form onSubmit={handleCreateEvent}>
+          <form onSubmit={handleUpdateEvent}>
             <div className="space-y-6 bg-white p-4">
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
@@ -114,8 +80,13 @@ function EditEvent(props) {
                       id="title"
                       className="relative block w-full appearance-none rounded border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                       placeholder="My Event"
-                      value={event ? event.title : ""}
-                      onChange={(e) => setTitle(e.target.value)}
+                      value={event ? event.name : ""}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, name: e.target.value
+                      }));                    
+                    }
+                    }
+                        // (e) => setTitle(e.target.value)}
                       required
                     />
                   </div>
@@ -141,8 +112,11 @@ function EditEvent(props) {
                           name="starttime"
                           id="starttime"
                           className="block w-full flex-1 rounded-md border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                          value={event? event.start : ""}
-                          onChange={(e) => setStartTime(e.target.value)}
+                          value={startTime}
+                          onChange={(e) => {
+                            setStartTime(e.target.value)
+                            let updatedDate = new Date(startDate.startDate + ' ' + startTime)
+                          }}
                           required
                         />                    
                       </div>
@@ -189,8 +163,10 @@ function EditEvent(props) {
                       id="address"
                       className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                       placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
+                      value={event ? event.address : ""}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event,  address: e.target.value}));
+                      }}
                       required
                     />
                   </div>
@@ -202,8 +178,10 @@ function EditEvent(props) {
                         id="city"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="City"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        value={event ? event.city : ""}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, city: e.target.value}));
+                        }}
                         required
                       />
                     </div>
@@ -212,8 +190,10 @@ function EditEvent(props) {
                         name="state"
                         id="state"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
+                        value={event ? event.state : ""}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, state: e.target.value}));
+                        }}
                         required
                       >
                       <option value="">State</option>
@@ -231,8 +211,10 @@ function EditEvent(props) {
                         id="zip"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Zip Code"
-                        value={zip}
-                        onChange={(e) => setZip(e.target.value)}
+                        value={event ? event.zip : ""}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, zip: e.target.value}));
+                        }}
                         required
                       />
                     </div>
@@ -250,8 +232,10 @@ function EditEvent(props) {
                     rows={3}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                     placeholder="What do you want guests to know?"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={event ? event.description : ""}
+                    onChange={(e) => {
+                      setEvent(event => ({ ...event, description: e.target.value}));
+                    }}
                     required
                   />
                 </div>
@@ -259,9 +243,18 @@ function EditEvent(props) {
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
                   <label htmlFor='cover-upload' className="block text-sm font-medium text-gray-700">Cover photo</label>
-                  <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                    <div className="space-y-1 text-center">
-                      <svg
+                    {event && event.coverId != COVER_PLACEHOLDER ? 
+                      <div className="relative flex justify-center">
+                        <img src={event.coverId} alt={event.title} className='w-full object-cover' />
+                        <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"
+                        onClick={() => setEvent({...event, coverId: COVER_PLACEHOLDER})}>
+                          <FontAwesomeIcon icon={solid('x')} className="px-1" />
+                        </button>
+                      </div>
+                      : <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                      <div className="space-y-1 text-center">
+  
+                        <svg
                         className="mx-auto h-12 w-12 text-gray-400"
                         stroke="currentColor"
                         fill="none"
@@ -277,18 +270,34 @@ function EditEvent(props) {
                       </svg>
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
-                          <span>{cover ? cover.name : 'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={(e) => setCover(e.target.files[0])}/>
+                          <span>{'Upload a cover image'}</span>
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" 
+                              onChange={ (e) => {
+                                  uploadImg(e.target.files[0]).then(data => {
+                                    if (data.status === 200) setEvent({...event, coverId: data.data.data.display_url})
+                                  });
+                                }}
+                            />
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500">{cover ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
-                    </div>
+                      <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
+                      </div>
                   </div>
+                    }
                 </div>
                 <div className='w-1/3'>
                   <label htmlFor='thumbnail-upload' className="block text-sm font-medium text-gray-700">Thumbnail</label>
-                  <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                    <div className="space-y-1 text-center">
+                    {event && event.thumbnailId != THUMB_PLACEHOLDER ? 
+                        <div className="relative">
+                        <img src={event.thumbnailId} alt={event.title} className='w-full object-cover' />
+                        <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"
+                        onClick={() => setEvent({...event, thumbnailId: THUMB_PLACEHOLDER})}>
+                          <FontAwesomeIcon icon={solid('x')} className="px-1" />
+                        </button>
+                      </div>
+                      :
+                      <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                      <div className="space-y-1 text-center">
                       <svg
                         className="mx-auto h-12 w-12 text-gray-400"
                         stroke="currentColor"
@@ -305,13 +314,21 @@ function EditEvent(props) {
                       </svg>
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
-                          <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
-                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" onChange={(e) => setThumbnail(e.target.files[0])} />
+                          <span>{'Upload a thumbnail'}</span>
+                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" 
+                              onChange={(e) => {
+                                uploadImg(e.target.files[0]).then(data => {
+                                  if (data.status === 200) setEvent({...event, thumbnailId: data.data.data.display_url})
+                                  // setThumbnailUrl(data.data.data.display_url); 
+                                });
+                              }}
+                            />
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500">{thumbnail ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
-                    </div>
+                      <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
+                      </div>
                   </div>
+                  }
                 </div>
               </div>
             </div>
@@ -320,7 +337,7 @@ function EditEvent(props) {
                 type="submit"
                 className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
               >
-                Add Event
+                Update Event
               </button>
             </div>
           </form>

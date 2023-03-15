@@ -19,7 +19,7 @@ export default function EventHostView(props) {
         label={<div className=''><FontAwesomeIcon icon={solid('ellipsis-vertical')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'></span></div>}
         dismissOnClick={false}
     >
-        <Dropdown.Item onClick={navigate("/edit/"+eventid)}>
+        <Dropdown.Item onClick={() => navigate("/edit/"+eventid)}>
         Edit
         </Dropdown.Item>
         <Dropdown.Item onClick={() => setShowConfirm(true)}>
