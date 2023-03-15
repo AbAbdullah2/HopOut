@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Dropdown } from 'flowbite-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { deleteEvent } from '../services/api';
 
 export default function EventHostView(props) {
   const { eventid, setShowConfirm} = props;

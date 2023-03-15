@@ -52,8 +52,8 @@ router.post('/events', async (req, res, next) => {
 router.put(`/events/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees } = req.body;
-    const event = await eventDao.update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees });
+    const { name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees, coverId, thumbnailId } = req.body;
+    const event = await eventDao.update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees, coverId, thumbnailId });
     
     res.json({
       status: 200,

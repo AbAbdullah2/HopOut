@@ -42,11 +42,12 @@ function EditEvent(props) {
 
   const handleUpdateEvent = async (e) => {
     e.preventDefault();
-    toast.success('Updating event...', {duration: 10000});
+    toast.success('Updating event...', {duration: 500});
     const start = new Date(startDate.startDate + ' ' + startTime)
     const end = new Date(endDate.startDate + ' ' + endTime);    
+    if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
     setEvent({...event, start: start, end: end});
-
+    console.log("putting event: ", event)
     updateEvent(event).then((res) => {
       if (res.status === 200) {                
         console.log("Successfully updated event. received res: ", res);
@@ -319,7 +320,6 @@ function EditEvent(props) {
                               onChange={(e) => {
                                 uploadImg(e.target.files[0]).then(data => {
                                   if (data.status === 200) setEvent({...event, thumbnailId: data.data.data.display_url})
-                                  // setThumbnailUrl(data.data.data.display_url); 
                                 });
                               }}
                             />

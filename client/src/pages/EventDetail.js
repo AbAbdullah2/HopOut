@@ -26,16 +26,18 @@ export default function EventDetail(props) {
 
   useEffect(() => {
     if (event !== null) {
+      console.log("event.organizer", event.organizer);
       getUser(event.organizer).then((res) => {
         setHost(res.data.data);
       });
     }  
   }, [event]);
-  
+  console.log("event: ", event);
+
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full'>
-        <DeleteEventConfirm eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
+        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className="relative">
           <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
