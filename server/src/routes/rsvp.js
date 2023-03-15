@@ -52,16 +52,13 @@ router.put(`/rsvp/sendRSVP`, async (req, res, next) => {
 router.put(`/rsvp/sendInvite`, async (req, res, next) => {
   try {
     const { eventId, inviteeId } = req.body;
+
     const event = await eventDao.read(eventId);
     const invitee = await userDao.read(inviteeId);
-
-    console.log("finished reading")
-  
     const eventInvitees = event.invitees;
     eventInvitees.push(inviteeId);
     const userInvited = invitee.invited;
     userInvited.push(eventId);
-
     const updatedEvent = await eventDao.update({
       id: eventId,
       invitees: eventInvitees,
@@ -85,27 +82,27 @@ router.put(`/rsvp/unsendInvite`, async (req, res, next) => {
   try {
     const { eventId, uninviteeId } = req.body;
 
-    console.log(eventId)
-
     const uninvitee = await userDao.read(uninviteeId);
     const event = await eventDao.read(eventId);
 
     let filteredUninvitee = uninvitee.invited.filter((e) => e.toString() !== eventId);
     let filteredEvent = event.invitees.filter((e) => e.toString() !== uninviteeId);
 
+    console.log("filteredEvebt", filteredEvent)
+
     const updatedUninvitee = await userDao.update({
       id: uninviteeId,
-      attending: filteredUninvitee,
+      invited: filteredUninvitee,
     });
     const updatedEvent = await eventDao.update({
       id: eventId,
-      attendees: filteredEvent,
+      invitees: filteredEvent,
     });
 
     res.json({
       status: 200,
       message: `Successfully uninvited ${updatedUninvitee.name} from ${updatedEvent.name}!`,
-      data: updatedEvent.invitees,
+      data: updatedEvent,
     });
   } catch (err) {
     next(err);

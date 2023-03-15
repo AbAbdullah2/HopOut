@@ -80,7 +80,6 @@ class UserDao {
   // throws ApiError if id is invalid or resource does not exist in our database
   async read(id) {
     //validate id
-    console.log("ID", id)
     const result = validObjectId.safeParse(id);
     if (!result.success) {
       throw new ApiError(400, 'Invalid User ID!');
