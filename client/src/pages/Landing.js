@@ -15,7 +15,7 @@ export default function Landing(props) {
       }}></div>
       <div className='absolute text-7xl text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
         <p className='text-5xl mb-2'>Welcome to</p>
-        <span className='font-extrabold italic text-blue-400 mr-1'>H</span><span>opout</span>
+        <span className='font-extrabold italic text-blue-400 mr-1'>H</span><span>opOut</span>
         <hr className='mt-6' />
         <a href={curUser ? '/events' : '/login'}><p className='text-5xl mt-4 hover:text-blue-400'>Enter <FontAwesomeIcon icon={solid('arrow-right')} /></p></a>
       </div>
