@@ -82,7 +82,7 @@ class UserDao {
     //validate id
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid User ID!');
     }
 
     //find user
@@ -111,7 +111,7 @@ class UserDao {
     //validate id
     let result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid User ID!');
     }
 
     //validate name

@@ -26,7 +26,6 @@ describe(`Test ${endpoint}`, () => {
       email: faker.internet.email(),
       password: faker.internet.password(6)
     });
-    //console.log(user);
     uid = user.id;
   });
 
@@ -50,7 +49,6 @@ describe(`Test ${endpoint}`, () => {
       const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories });
       events.push(event);
     }
-    console.log(events);
   });
 
   describe("GET request", () => {
@@ -112,13 +110,7 @@ describe(`Test ${endpoint}`, () => {
         const organizer = uid;
         const categories = ["Sports"];
         const capacity = 20;
-        console.log("NULL", name)
         const response = await request.post("/events", { name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories })
-        // const response = await request.post("/register").send({
-        //   name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
-        // });
-        console.log("RESPONSE", response.body)
-
         expect(response.status).toBe(400);
       });
 
