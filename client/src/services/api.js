@@ -72,4 +72,20 @@ async function createNewEvent(event) {
   return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
+async function getAttendingEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response.data.data.attending;
+}
+
+async function getInvitedToEvents(userId) {
+  const response = await axios.post(`${BASE_URL}/users/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response.data.data.invited;
+}
+
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, getAttendingEvents, getInvitedToEvents }
