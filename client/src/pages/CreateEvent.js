@@ -104,7 +104,6 @@ function CreateEvent(props) {
   }
 
   const updateCapacity = (v) => {
-    console.log(v);
     const parsed = parseInt(v);
     if (!isNaN(parsed) && parsed > 0) {
       setCapacity(parsed);
