@@ -27,6 +27,8 @@ function CreateEvent(props) {
   const [cover, setCover] = useState(undefined);
   const [thumbnail, setThumbnail] = useState(undefined);
   const [categories, setCategories] = useState([]);
+  const [visibility, setVisibility] = useState('public');
+  const [capacity, setCapacity] = useState(22);
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
@@ -70,13 +72,14 @@ function CreateEvent(props) {
       city: city,
       state: state,
       zip: zip,
-      visibility: 'public',
+      visibility: visibility,
       categories: categories,
+      capacity: capacity,
       organizer: curUser._id,
     };
 
     createNewEvent(newEvent).then((res) => {
-      if (res.status === 200) {
+      if (res.status === 201 || res.status === 200) {
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not create event ' + newEvent.title);
@@ -89,6 +92,14 @@ function CreateEvent(props) {
       setCategories(categories.filter((f) => {return f !== v}));
     } else {
       setCategories([...categories, v]);
+    }
+  }
+
+  const toggleVisibility = () => {
+    if (visibility === 'private') {
+      setVisibility('public');
+    } else {
+      setVisibility('private');
     }
   }
     
@@ -257,23 +268,35 @@ function CreateEvent(props) {
                   />
                 </div>
               </div>
-              <div>
-                <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
-                  Categories
-                </label>
-                <div className="mt-2">
-                  <Dropdown
-                    label={"Filters"}
-                    className="bg-gray-50"
-                    dismissOnClick={false}
-                  >
-                  {CATEGORIES.map((f) => (
-                    <Dropdown.Item key={f.key}>
-                      <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
-                      <span className="pl-2">{f.value}</span>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
+              <div className="flex flex-col">
+                <div>
+                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                    Categories
+                  </label>
+                  <div className="mt-2">
+                    <Dropdown
+                      label={"Select Categories"}
+                      className="bg-gray-50"
+                      dismissOnClick={false}
+                    >
+                    {CATEGORIES.map((f) => (
+                      <Dropdown.Item key={f.key}>
+                        <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                        <span className="pl-2">{f.value}</span>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown>
+                </div>
+                <div className="mt-3">
+                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                      Visibility
+                  </label>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
+                  </label>
+                </div>
               </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
