@@ -1,7 +1,7 @@
 import { describe, beforeAll, afterAll, expect, it, vi } from "vitest";
-import Event from "../../../src/models/Event.js";
+import Event from "../../src/models/Event.js";
 import { faker } from "@faker-js/faker";
-import * as db from "../../../src/data/db.js";
+import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
 
@@ -14,27 +14,30 @@ describe("Test Event Schema & Model", () => {
   });
 
   it("test create event", async () => {
+
     const name = faker.lorem.words(3);
     const start = faker.date.future(1);
-    const end = faker.date.soon(1, start);
+    const end = faker.date.soon(1, start);  
     const address = faker.address.streetAddress();
     const city = faker.address.cityName();
     const state = faker.address.countryCode();
-    const zip = faker.address.zipCode();     
+    const zip = faker.address.zipCode(); 
     const description = faker.lorem.paragraph();
     const visibility = "private";
+    const capacity = 3;
     const organizer = mongoose.Types.ObjectId();
     const categories = ["Sports"];
-    const event = await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
+    const event = await Event.create({ name, start, end, location: {address, city, state, zip}, description, visibility, capacity, organizer, categories });
     expect(event.name).toBe(name);
-    expect(event.start).toBe(start);
-    expect(event.end).toBe(end);
+    expect(new Date(event.start).toString()).toBe(new Date(start).toString());
+    expect(new Date(event.end).toString()).toBe(new Date(end).toString());
     expect(event.location.address).toBe(address);
     expect(event.location.city).toBe(city);
     expect(event.location.state).toBe(state);
     expect(event.location.zip).toBe(zip);
     expect(event.description).toBe(description);
     expect(event.visibility).toBe(visibility)
+    expect(event.capacity).toBe(capacity)
     expect(event.organizer).toBe(organizer);
     expect(event.categories).toStrictEqual(categories);
   });
