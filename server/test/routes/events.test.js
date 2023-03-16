@@ -1,15 +1,15 @@
-import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
-import app from "../../src/index.js";
-import supertest from "supertest";
-import { faker } from "@faker-js/faker";
-import { eventDao } from "../../src/routes/events.js";
-import { userDao } from "../../src/routes/users.js";
-import * as db from "../../src/data/db.js";
-import * as dotenv from "dotenv";
-import mongoose from "mongoose";
+import { describe, it, expect, beforeEach, afterAll, beforeAll } from 'vitest';
+import app from '../../src/index.js';
+import supertest from 'supertest';
+import { faker } from '@faker-js/faker';
+import { eventDao } from '../../src/routes/events.js';
+import { userDao } from '../../src/routes/users.js';
+import * as db from '../../src/data/db.js';
+import * as dotenv from 'dotenv';
+import mongoose from 'mongoose';
 
 dotenv.config();
-const endpoint = "/events";
+const endpoint = '/events';
 const request = new supertest(app);
 
 describe(`Test ${endpoint}`, () => {
@@ -24,7 +24,7 @@ describe(`Test ${endpoint}`, () => {
     const user = await userDao.create({
       name: faker.name.fullName(),
       email: faker.internet.email(),
-      password: faker.internet.password(6)
+      password: faker.internet.password(6),
     });
     uid = user.id;
   });
@@ -32,33 +32,46 @@ describe(`Test ${endpoint}`, () => {
   beforeEach(async () => {
     await eventDao.deleteAll();
     events = [];
-    
+
     for (let index = 0; index < numEvents; index++) {
       const name = faker.lorem.words(3);
-      const start = "2023-06-22T15:28:37.174Z";
-      const end = "2023-06-22T15:28:37.174Z";
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
       const state = faker.address.countryCode();
       const zip = faker.address.zipCode();
       const description = faker.lorem.paragraph();
-      const visibility = "private";
+      const visibility = 'public';
       const organizer = uid;
       const capacity = 3;
-      const categories = ["Sports"];
-      const event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories });
+      const categories = ['Sports'];
+      const event = await eventDao.create({
+        name,
+        start,
+        end,
+        address,
+        city,
+        state,
+        zip,
+        description,
+        visibility,
+        capacity,
+        organizer,
+        categories,
+      });
       events.push(event);
     }
   });
 
-  describe("GET request", () => {
-    it("Respond 200", async () => {
+  describe('GET request', () => {
+    it('Respond 200', async () => {
       const response = await request.get(endpoint);
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(numEvents);
     });
 
-    it("Respond 200 searching for given name", async () => {
+    it('Respond 200 searching for given name', async () => {
       const index = Math.floor(Math.random() * numEvents);
       const event = events[index];
       const response = await request.get(`${endpoint}?name=${event.name}`);
@@ -67,95 +80,146 @@ describe(`Test ${endpoint}`, () => {
     });
   });
 
-  describe("POST request", () => {
-    it("Respond 201", async () => {
+  describe('POST request', () => {
+    it('Respond 201', async () => {
       const name = faker.lorem.words(3);
-      const start = "2023-06-22T15:28:37.174Z";
-      const end = "2023-06-22T15:28:37.174Z";
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
       const state = faker.address.countryCode();
-      const zip = faker.address.zipCode();      
+      const zip = faker.address.zipCode();
       const description = faker.lorem.paragraph();
-      const visibility = "private";
+      const visibility = 'private';
       const organizer = uid;
       const capacity = 20;
-      const categories = ["Sports"];
+      const categories = ['Sports'];
       const response = await request.post(endpoint).send({
-        name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
+        name,
+        start,
+        end,
+        address,
+        city,
+        state,
+        zip,
+        description,
+        visibility,
+        organizer,
+        capacity,
+        categories,
       });
       expect(response.status).toBe(201);
       expect(response.body.data._id).toBeDefined();
       expect(response.body.data.name).toBe(name);
       expect(response.body.data.start).toBe(start);
       expect(response.body.data.end).toBe(end);
-      expect(response.body.data.location).toStrictEqual({ address, city, state, zip });
+      expect(response.body.data.location).toStrictEqual({
+        address,
+        city,
+        state,
+        zip,
+      });
       expect(response.body.data.description).toBe(description);
       expect(response.body.data.organizer).toBe(organizer);
       expect(response.body.data.capacity).toBe(capacity);
       expect(response.body.data.categories).toStrictEqual(categories);
     });
 
-    describe("Respond 400", () => {
-      it("Null name", async () => {
+    describe('Respond 400', () => {
+      it('Null name', async () => {
         const name = null;
-        const start = "2023-06-22T15:28:37.174Z";
-        const end = "2023-06-22T15:28:37.174Z";
+        const start = '2023-06-22T15:28:37.174Z';
+        const end = '2023-06-22T15:28:37.174Z';
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();           
+        const zip = faker.address.zipCode();
         const description = faker.lorem.paragraph();
-        const visibility = "private";
+        const visibility = 'private';
         const organizer = uid;
-        const categories = ["Sports"];
+        const categories = ['Sports'];
         const capacity = 20;
-        const response = await request.post("/events", { name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories })
-        expect(response.status).toBe(400);
-      });
-
-      it("Undefined name", async () => {
-        const name = undefined;
-        const start = "2023-06-22T15:28:37.174Z";
-        const end = "2023-06-22T15:28:37.174Z";
-        const address = faker.address.streetAddress();
-        const city = faker.address.cityName();
-        const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();        
-        const description = faker.lorem.paragraph();
-        const visibility = "private";
-        const organizer = uid;
-        const capacity = 20;
-        const categories = ["Sports"];
-        const response = await request.post("/events").send({
-          name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
+        const response = await request.post('/events', {
+          name,
+          start,
+          end,
+          address,
+          city,
+          state,
+          zip,
+          description,
+          visibility,
+          organizer,
+          capacity,
+          categories,
         });
         expect(response.status).toBe(400);
       });
 
-      it("Empty name", async () => {
-        const name = "";
-        const start = "2023-06-22T15:28:37.174Z";
-        const end = "2023-06-22T15:28:37.174Z";
+      it('Undefined name', async () => {
+        const name = undefined;
+        const start = '2023-06-22T15:28:37.174Z';
+        const end = '2023-06-22T15:28:37.174Z';
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
-        const zip = faker.address.zipCode();        
+        const zip = faker.address.zipCode();
         const description = faker.lorem.paragraph();
-        const visibility = "private";
+        const visibility = 'private';
         const organizer = uid;
         const capacity = 20;
-        const categories = ["Sports"];
-        const response = await request.post("/events").send({
-          name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories
+        const categories = ['Sports'];
+        const response = await request.post('/events').send({
+          name,
+          start,
+          end,
+          address,
+          city,
+          state,
+          zip,
+          description,
+          visibility,
+          organizer,
+          capacity,
+          categories,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Empty name', async () => {
+        const name = '';
+        const start = '2023-06-22T15:28:37.174Z';
+        const end = '2023-06-22T15:28:37.174Z';
+        const address = faker.address.streetAddress();
+        const city = faker.address.cityName();
+        const state = faker.address.countryCode();
+        const zip = faker.address.zipCode();
+        const description = faker.lorem.paragraph();
+        const visibility = 'private';
+        const organizer = uid;
+        const capacity = 20;
+        const categories = ['Sports'];
+        const response = await request.post('/events').send({
+          name,
+          start,
+          end,
+          address,
+          city,
+          state,
+          zip,
+          description,
+          visibility,
+          organizer,
+          capacity,
+          categories,
         });
         expect(response.status).toBe(400);
       });
     });
   });
 
-  describe("GET request given ID", () => {
-    it("Respond 200 when searching for user", async () => {
+  describe('GET request given ID', () => {
+    it('Respond 200 when searching for user', async () => {
       const index = Math.floor(Math.random() * numEvents);
       const event = events[index];
       const response = await request.get(`${endpoint}/${event.id}`);
@@ -164,59 +228,59 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.name).toBe(event.name);
     });
 
-    it("Respond 400", async () => {
+    it('Respond 400', async () => {
       const response = await request.get(`${endpoint}/invalid}`);
       expect(response.status).toBe(400);
     });
 
-    it("Respond 404", async () => {
-      const response = await request.get(`${endpoint}/${mongoose.Types.ObjectId().toString()}`);
+    it('Respond 404', async () => {
+      const response = await request.get(
+        `${endpoint}/${mongoose.Types.ObjectId().toString()}`
+      );
       expect(response.status).toBe(404);
     });
   });
 
-  describe("PUT request", () => {
-    it("Respond 200 when updating a user", async () => {
+  describe('PUT request', () => {
+    it('Respond 200 when updating a user', async () => {
       const index = Math.floor(Math.random() * numEvents);
       const event = events[index];
       const name = faker.name.fullName();
-      const response = await request
-        .put(`${endpoint}/${event.id}`)
-        .send({
-          name
-        });
+      const response = await request.put(`${endpoint}/${event.id}`).send({
+        name,
+      });
       expect(response.status).toBe(200);
       expect(response.body.data._id).toBe(event.id);
       expect(response.body.data.name).toBe(name);
     });
 
-    describe("Respond 400", () => {
-      it("Invalid ID", async () => {
+    describe('Respond 400', () => {
+      it('Invalid ID', async () => {
         const response = await request.put(`${endpoint}/invalid}`);
         expect(response.status).toBe(400);
       });
 
-      it("Invalid name", async () => {
+      it('Invalid name', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
-        const name = "";
-        const response = await request
-          .put(`${endpoint}/${event.id}`)
-          .send({
-            name
-          });
+        const name = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          name,
+        });
         expect(response.status).toBe(400);
       });
     });
 
-    it("Respond 404", async () => {
-      const response = await request.put(`${endpoint}/${mongoose.Types.ObjectId().toString()}`);
+    it('Respond 404', async () => {
+      const response = await request.put(
+        `${endpoint}/${mongoose.Types.ObjectId().toString()}`
+      );
       expect(response.status).toBe(404);
     });
   });
 
-  describe("DELETE request", () => {
-    it("Respond 200 when deleting an event", async () => {
+  describe('DELETE request', () => {
+    it('Respond 200 when deleting an event', async () => {
       const index = Math.floor(Math.random() * numEvents);
       const event = events[index];
       const response = await request.delete(`${endpoint}/${event.id}`);
@@ -232,13 +296,15 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.categories).toStrictEqual(event.categories);
     });
 
-    it("Respond 400", async () => {
+    it('Respond 400', async () => {
       const response = await request.delete(`${endpoint}/invalid}`);
       expect(response.status).toBe(400);
     });
 
-    it("Respond 404", async () => {
-      const response = await request.delete(`${endpoint}/${mongoose.Types.ObjectId().toString()}`);
+    it('Respond 404', async () => {
+      const response = await request.delete(
+        `${endpoint}/${mongoose.Types.ObjectId().toString()}`
+      );
       expect(response.status).toBe(404);
     });
   });

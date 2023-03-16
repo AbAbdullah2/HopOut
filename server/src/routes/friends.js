@@ -1,50 +1,48 @@
 import express from 'express';
 import UserDao from '../data/UserDao.js';
 import { hidePassword } from './users.js';
+import ApiError from '../models/ApiError.js';
 
 const router = express.Router();
 export const userDao = new UserDao();
 
 router.put(`/friends/sendRequest`, async (req, res, next) => {
   try {
-    console.log
+    console.log;
     const timeStamp = new Date();
     const { senderId, receiverId } = req.body;
 
     const sender = await userDao.read(senderId);
     const receiver = await userDao.read(receiverId);
 
-    console.log("sender", sender)
-    console.log("receiver", receiver)
+    console.log('sender', sender);
+    console.log('receiver', receiver);
     const senderSentFriends = sender.sentFriends;
-    console.log("array", senderSentFriends)
+    console.log('array', senderSentFriends);
 
-    senderSentFriends.push({ user: receiverId, date: timeStamp});
-    console.log("array", senderSentFriends)
-
-
+    senderSentFriends.push({ user: receiverId, date: timeStamp });
+    console.log('array', senderSentFriends);
 
     const receiverReceivedFriends = receiver.receivedFriends;
-    receiverReceivedFriends.push({ user: senderId, date: timeStamp});
-    console.log("array", receiverReceivedFriends)
+    receiverReceivedFriends.push({ user: senderId, date: timeStamp });
+    console.log('array', receiverReceivedFriends);
 
-    
     const updatedSender = await userDao.update({
       id: senderId,
       sentFriends: senderSentFriends,
     });
-    console.log("updated one!")
-    
+    console.log('updated one!');
+
     const updatedReceiver = await userDao.update({
       id: receiverId,
       receivedFriends: receiverReceivedFriends,
     });
-    console.log("updated rec", updatedReceiver)
+    console.log('updated rec', updatedReceiver);
 
     res.json({
       status: 200,
       message: `Successfully sent friend request to ${updatedReceiver.name}!`,
-      data: hidePassword(updatedSender)
+      data: hidePassword(updatedSender),
     });
   } catch (err) {
     next(err);
@@ -59,24 +57,28 @@ router.put(`/friends/removeRequest`, async (req, res, next) => {
     const remover = await userDao.read(removerId);
     const other = await userDao.read(otherId);
 
-    console.log("remover", removerId)
-    console.log("other", otherId)
+    console.log('remover', removerId);
+    console.log('other', otherId);
 
-    let filteredSentRemover = remover.sentFriends.filter((e) => e.user.toString() !== otherId);
-    let filteredReceivedOther = other.receivedFriends.filter((e) => e.user.toString() !== removerId);
+    let filteredSentRemover = remover.sentFriends.filter(
+      (e) => e.user.toString() !== otherId
+    );
+    let filteredReceivedOther = other.receivedFriends.filter(
+      (e) => e.user.toString() !== removerId
+    );
 
-    console.log(filteredReceivedOther)
+    console.log(filteredReceivedOther);
 
     const updatedRemover = await userDao.update({
       id: removerId,
       sentFriends: filteredSentRemover,
     });
-    console.log("upRemove", updatedRemover)
+    console.log('upRemove', updatedRemover);
     const updatedOther = await userDao.update({
       id: otherId,
       receivedFriends: filteredReceivedOther,
     });
-    console.log("upOther", updatedOther)
+    console.log('upOther', updatedOther);
 
     res.json({
       status: 200,
@@ -90,7 +92,7 @@ router.put(`/friends/removeRequest`, async (req, res, next) => {
 
 router.put(`/friends/acceptRequest`, async (req, res, next) => {
   try {
-    const timeStamp = new Date.now();
+    const timeStamp = new Date();
     const { acceptorId, requesterId } = req.body;
 
     const acceptor = await userDao.read(acceptorId);
@@ -102,28 +104,32 @@ router.put(`/friends/acceptRequest`, async (req, res, next) => {
     let filteredRequester = requester.sentFriends.filter(
       (e) => e.user.toString() !== acceptor.id
     );
-
+    console.log('a');
     const acceptorFriends = acceptor.friends;
-    acceptorFriends.push({ user: requesterId, date: timeStamp});
+    acceptorFriends.push({ user: requesterId, date: timeStamp });
     const requesterFriends = requester.friends;
-    requesterFriends.push({ user: acceptorId, date: timeStamp});
-
+    requesterFriends.push({ user: acceptorId, date: timeStamp });
 
     const updatedAcceptor = await userDao.update({
       id: acceptorId,
       receivedFriends: filteredAcceptor,
       friends: acceptorFriends,
     });
+    console.log('b');
+
     const updatedRequester = await userDao.update({
       id: requesterId,
       sentFriends: filteredRequester,
       friends: requesterFriends,
     });
+    console.log('c');
+    console.log(updatedAcceptor);
+    console.log(updatedRequester);
 
     res.json({
       status: 200,
       message: `Successfully accepted friend request from ${updatedRequester.name}!`,
-      data: hidePassword(updatedAcceptor)
+      data: hidePassword(updatedAcceptor),
     });
   } catch (err) {
     next(err);
@@ -170,8 +176,31 @@ router.put(`/friends/removeFriend`, async (req, res, next) => {
     const remover = await userDao.read(removerId);
     const friend = await userDao.read(friendId);
 
-    let filteredRemover = remover.friends.filter((e) => e.user.toString() !== friendId);
-    let filteredFriend = friend.friends.filter((e) => e.user.toString() !== removerId);
+    let friends1 = false;
+    let friends2 = false;
+
+    remover.forEach((e) => {
+      if (e.user.toString() === friendId) {
+        friends1 = true;
+      }
+    });
+
+    friend.forEach((e) => {
+      if (e.user.toString() === removerId) {
+        friends2 = true;
+      }
+    });
+
+    if (!friends1 || !friends2) {
+      throw new ApiError(400, 'Users are not friends!');
+    }
+
+    let filteredRemover = remover.friends.filter(
+      (e) => e.user.toString() !== friendId
+    );
+    let filteredFriend = friend.friends.filter(
+      (e) => e.user.toString() !== removerId
+    );
 
     const updatedRemover = await userDao.update({
       id: removerId,

@@ -1,8 +1,10 @@
 import express from 'express';
 import EventDao from '../data/EventDao.js';
+import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
 export const eventDao = new EventDao();
+export const userDao = new UserDao();
 
 router.get('/events', async (req, res, next) => {
   try {
@@ -69,6 +71,15 @@ router.post('/events', async (req, res, next) => {
       coverId,
       thumbnailId,
     });
+
+    const user = await userDao.read(organizer);
+    let newOrganizing = user.organizing;
+    newOrganizing.push(event.id);
+    const updatedUser = await userDao.update({
+      id: user.id,
+      organizing: newOrganizing,
+    });
+
     return res.status(201).json({
       status: 201,
       message: `Successfully created the following event!`,
@@ -99,7 +110,7 @@ router.put(`/events/:id`, async (req, res, next) => {
     } = req.body;
     // call read, get capacity if original capity is undefined
     const eventBefore = await eventDao.read(id);
-    const readCapacity = eventBefore.capacity
+    const readCapacity = eventBefore.capacity;
     let updatedCapacity = capacity || readCapacity;
     const event = await eventDao.update({
       id,

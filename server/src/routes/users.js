@@ -46,20 +46,19 @@ router.get('/users/privateEvents/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userDao.read(id);
-    console.log(user);
     let events = [];
 
     for (const eventId of user.invited) {
       const event = await eventDao.read(eventId.toString());
       if (event.visibility === 'private') {
-        events.append({ event });
+        events.push({ event });
       }
     }
 
     for (const eventId of user.organizing) {
-      const event = await eventDao.read(eventId);
+      const event = await eventDao.read(eventId.toString());
       if (event.visibility === 'private') {
-        events.append(event);
+        events.push(event);
       }
     }
 
