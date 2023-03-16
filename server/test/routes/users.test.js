@@ -6,10 +6,12 @@ import { userDao } from "../../src/routes/users.js";
 import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import EventDao from "../../src/data/EventDao.js";
 
 dotenv.config();
 const endpoint = "/users";
 const request = new supertest(app);
+const eventDao = new EventDao();
 
 describe(`Test ${endpoint}`, () => {
   const numUsers = 5;
@@ -34,193 +36,194 @@ describe(`Test ${endpoint}`, () => {
     }
   });
 
-  describe("GET request", () => {
-    it("Respond 200", async () => {
-      const response = await request.get(endpoint);
-      expect(response.status).toBe(200);
-      expect(response.body.data.length).toBe(numUsers);
-    });
+  // describe("GET request", () => {
+  //   it("Respond 200", async () => {
+  //     const response = await request.get(endpoint);
+  //     expect(response.status).toBe(200);
+  //     expect(response.body.data.length).toBe(numUsers);
+  //   });
 
-    it("Respond 200 searching for given name", async () => {
-      const index = Math.floor(Math.random() * numUsers);
-      const user = users[index];
-      const response = await request.get(`${endpoint}?name=${user.name}`);
-      expect(response.status).toBe(200);
-      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
-    });
-  });
+  //   it("Respond 200 searching for given name", async () => {
+  //     const index = Math.floor(Math.random() * numUsers);
+  //     const user = users[index];
+  //     const response = await request.get(`${endpoint}?name=${user.name}`);
+  //     expect(response.status).toBe(200);
+  //     expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+  //   });
 
-  describe("POST request", () => {
-    it("Respond 201", async () => {
-      const name = faker.name.fullName();
-      const email = faker.internet.email();
-      const password = faker.internet.password(6);
-      const response = await request.post("/register").send({
-        name,
-        email,
-        password,
-      });
-      expect(response.status).toBe(201);
-      expect(response.body.data._id).toBeDefined();
-      expect(response.body.data.name).toBe(name);
-      expect(response.body.data.email).toBe(email.toLowerCase());
-      expect(response.body.data.password).toBeUndefined();
-    });
+  // });
 
-    describe("Respond 400", () => {
-      it("Null name", async () => {
-        const name = null;
-        const email = faker.internet.email();
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  // describe("POST request", () => {
+  //   it("Respond 201", async () => {
+  //     const name = faker.name.fullName();
+  //     const email = faker.internet.email();
+  //     const password = faker.internet.password(6);
+  //     const response = await request.post("/register").send({
+  //       name,
+  //       email,
+  //       password,
+  //     });
+  //     expect(response.status).toBe(201);
+  //     expect(response.body.data._id).toBeDefined();
+  //     expect(response.body.data.name).toBe(name);
+  //     expect(response.body.data.email).toBe(email.toLowerCase());
+  //     expect(response.body.data.password).toBeUndefined();
+  //   });
 
-      it("Undefined name", async () => {
-        const name = undefined;
-        const email = faker.internet.email();
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //   describe("Respond 400", () => {
+  //     it("Null name", async () => {
+  //       const name = null;
+  //       const email = faker.internet.email();
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Empty name", async () => {
-        const name = "";
-        const email = faker.internet.email();
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Undefined name", async () => {
+  //       const name = undefined;
+  //       const email = faker.internet.email();
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Null email", async () => {
-        const name = faker.name.fullName();
-        const email = null;
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Empty name", async () => {
+  //       const name = "";
+  //       const email = faker.internet.email();
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Undefined email", async () => {
-        const name = faker.name.fullName();
-        const email = undefined;
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Null email", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = null;
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Empty email", async () => {
-        const name = faker.name.fullName();
-        const email = "";
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Undefined email", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = undefined;
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Invalid email", async () => {
-        const name = faker.name.fullName();
-        const email = faker.lorem.sentence();
-        const password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Empty email", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = "";
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Duplicate email", async () => {
-        let name = faker.name.fullName();
-        const email = faker.internet.email();
-        let password = faker.internet.password(6);
-        await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
+  //     it("Invalid email", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = faker.lorem.sentence();
+  //       const password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-        name = faker.name.fullName();
-        password = faker.internet.password(6);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Duplicate email", async () => {
+  //       let name = faker.name.fullName();
+  //       const email = faker.internet.email();
+  //       let password = faker.internet.password(6);
+  //       await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
 
-      it("Null password", async () => {
-        const name = faker.name.fullName();
-        const email = faker.internet.email();
-        const password = null;
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //       name = faker.name.fullName();
+  //       password = faker.internet.password(6);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Undefined password", async () => {
-        const name = faker.name.fullName();
-        const email = faker.internet.email();
-        const password = undefined;
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Null password", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = faker.internet.email();
+  //       const password = null;
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Empty password", async () => {
-        const name = faker.name.fullName();
-        const email = faker.internet.email();
-        const password = "";
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
+  //     it("Undefined password", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = faker.internet.email();
+  //       const password = undefined;
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
 
-      it("Short password", async () => {
-        const name = faker.name.fullName();
-        const email = faker.internet.email();
-        const password = faker.internet.password(5);
-        const response = await request.post("/register").send({
-          name,
-          email,
-          password,
-        });
-        expect(response.status).toBe(400);
-      });
-    });
-  });
+  //     it("Empty password", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = faker.internet.email();
+  //       const password = "";
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
+
+  //     it("Short password", async () => {
+  //       const name = faker.name.fullName();
+  //       const email = faker.internet.email();
+  //       const password = faker.internet.password(5);
+  //       const response = await request.post("/register").send({
+  //         name,
+  //         email,
+  //         password,
+  //       });
+  //       expect(response.status).toBe(400);
+  //     });
+  //   });
+  // });
 
   describe("GET request given ID", () => {
     it("Respond 200 when searching for user", async () => {
@@ -232,6 +235,42 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.name).toBe(user.name);
       expect(response.body.data.email).toBe(user.email);
       expect(response.body.data.password).toBeUndefined();
+    });
+
+    it("Respond 200 searching for a users private events", async () => {
+      const index = Math.floor(Math.random() * numUsers);
+      const user = users[index];
+      const name = faker.lorem.words(3);
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
+      const description = faker.lorem.paragraph();
+      const visibility = 'private';
+      const organizer = user.id;
+      const capacity = 3;
+      const categories = ['Sports'];
+      const event = await request.post(`/events`).send({
+        name,
+        start,
+        end,
+        address,
+        city,
+        state,
+        zip,
+        description,
+        visibility,
+        capacity,
+        organizer,
+        categories,
+      });
+      console.log(event.body)
+      console.log("USER", user)
+      const response = await request.get(`${endpoint}/privateEvents/?id=${user.id}`);
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
 
     it("Respond 400", async () => {

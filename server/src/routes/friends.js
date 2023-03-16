@@ -49,6 +49,25 @@ router.put(`/friends/removeRequest`, async (req, res, next) => {
     const remover = await userDao.read(removerId);
     const other = await userDao.read(otherId);
 
+    let remover1 = false;
+    let other2 = false;
+
+    remover.sentFriends.forEach((e) => {
+      if (e.user.toString() === otherId) {
+        remover1 = true;
+      }
+    });
+
+    other.receivedFriends.forEach((e) => {
+      if (e.user.toString() === removerId) {
+        other2 = true;
+      }
+    });
+
+    if (!remover1 || !other2) {
+      throw new ApiError(400, 'User was not requested as friend!');
+    }
+
     let filteredSentRemover = remover.sentFriends.filter(
       (e) => e.user.toString() !== otherId
     );
@@ -82,6 +101,25 @@ router.put(`/friends/acceptRequest`, async (req, res, next) => {
 
     const acceptor = await userDao.read(acceptorId);
     const requester = await userDao.read(requesterId);
+
+    let acceptor1 = false;
+    let requester2 = false;
+
+    acceptor.receivedFriends.forEach((e) => {
+      if (e.user.toString() === requesterId) {
+        acceptor1 = true;
+      }
+    });
+
+    requester.sentFriends.forEach((e) => {
+      if (e.user.toString() === acceptorId) {
+        requester2 = true;
+      }
+    });
+
+    if (!acceptor1 || !requester2) {
+      throw new ApiError(400, 'User was not requested as friend!');
+    }
 
     let filteredAcceptor = acceptor.receivedFriends.filter(
       (e) => e.user.toString() !== requester.id
@@ -123,6 +161,25 @@ router.put(`/friends/declineRequest`, async (req, res, next) => {
 
     const decliner = await userDao.read(declinerId);
     const requester = await userDao.read(requesterId);
+
+    let decliner1 = false;
+    let requester2 = false;
+
+    decliner.receivedFriends.forEach((e) => {
+      if (e.user.toString() === requesterId) {
+        decliner1 = true;
+      }
+    });
+
+    requester.sentFriends.forEach((e) => {
+      if (e.user.toString() === declinerId) {
+        requester2 = true;
+      }
+    });
+
+    if (!decliner1 || !requester2) {
+      throw new ApiError(400, 'User was not requested as friend!');
+    }
 
     let filteredDecliner = decliner.receivedFriends.filter(
       (e) => e.user.toString() !== requester.id

@@ -45,6 +45,7 @@ router.get('/users/:id', async (req, res, next) => {
 router.get('/users/privateEvents/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log("ID", id)
     const user = await userDao.read(id);
     let events = [];
 
