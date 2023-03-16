@@ -14,29 +14,18 @@ export default function DeleteEventConfirm(props) {
         if (index > -1) { // only splice array when item is found
             organizing.splice(index, 1); // 2nd parameter means remove one item only
         }
-        console.log("organizing: ", organizing);
-          
+
         setCurUser({...curUser, 
             organizing: [...curUser.organizing.filter(id =>
                 id !== eventid
             )]
         });
-
-        console.log("set curUser in deleteevent:  ", curUser);
-        updateUser(curUser).then((res) => {
-            if (res.status === 200) {  
-                console.log("updated user, res: ", res); 
-            } else {
-                console.log("Could not update user: ", res);
-                return;
-            }
-            deleteEvent(eventid).then((res) => {
-                if (res.status === 200) {  
-                    console.log("deleted event, res: ", res);              
+        updateUser(curUser).then(() => {
+            deleteEvent(eventid).then((deleteRes) => {
+                if (deleteRes.status === 200) {  
                     navigate('/events');
-                } else console.log("Could not delete event: ", res);
+                } else console.log("Could not delete event: ", deleteRes);
             });
-    
         });
       }
     
