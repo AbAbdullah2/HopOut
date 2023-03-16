@@ -28,7 +28,7 @@ function CreateEvent(props) {
   const [thumbnail, setThumbnail] = useState(undefined);
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState('public');
-  const [capacity, setCapacity] = useState(22);
+  const [capacity, setCapacity] = useState('');
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
@@ -100,6 +100,16 @@ function CreateEvent(props) {
       setVisibility('public');
     } else {
       setVisibility('private');
+    }
+  }
+
+  const updateCapacity = (v) => {
+    console.log(v);
+    const parsed = parseInt(v);
+    if (!isNaN(parsed) && parsed > 0) {
+      setCapacity(parsed);
+    } else if (v === '') {
+      setCapacity('');
     }
   }
     
@@ -273,7 +283,7 @@ function CreateEvent(props) {
                   <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
                     Categories
                   </label>
-                  <div className="mt-2">
+                  <div className="mt-1">
                     <Dropdown
                       label={"Select Categories"}
                       className="bg-gray-50"
@@ -291,12 +301,29 @@ function CreateEvent(props) {
                   <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
                       Visibility
                   </label>
+                  <div className="mt-1">
                   <label className="relative inline-flex items-center cursor-pointer">
                   <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
                   <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
                   <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
                   </label>
+                  </div>
                 </div>
+              </div>
+              <div className="mt-3 w-1/4">
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700">
+                  Capacity
+                </label>
+                <input
+                  type="text"
+                  name="capacity"
+                  id="capacity"
+                  className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  placeholder="Capacity"
+                  value={capacity}
+                  onChange={(e) => updateCapacity(e.target.value)}
+                  required
+                />
               </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
