@@ -27,14 +27,21 @@ function EditEvent(props) {
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
-      setEvent(res.data.data);
+      const start = new Date(res.data.data.start);
+      const end = new Date(res.data.data.end);
+      setStartTime(start.toTimeString().substring(0, 5));
+      setEndTime(end.toTimeString().substring(0, 5));
+
+      setStartDate(start.toISOString().slice(0, 10),);
+      setEndDate(end.toISOString().slice(0, 10),);
+
       setEvent({...res.data.data, 
         address: res.data.data.location.address,
         city: res.data.data.location.city,
         zip: res.data.data.location.zip,
         state: res.data.data.location.state
       });
-      console.log("got event: ", res.data.data)
+
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
   }, []);
@@ -43,12 +50,11 @@ function EditEvent(props) {
   const handleUpdateEvent = async (e) => {
     e.preventDefault();
     toast.success('Updating event...', {duration: 500});
-    const start = new Date(startDate.startDate + ' ' + startTime)
-    const end = new Date(endDate.startDate + ' ' + endTime);    
+    const start = new Date(startDate + ' ' + startTime)
+    const end = new Date(endDate + ' ' + endTime); 
     if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
-    setEvent({...event, start: start, end: end});
-    console.log("putting event: ", event)
-    updateEvent(event).then((res) => {
+    console.log("Updating event: ", event)
+    updateEvent({...event, start: start, end: end}).then((res) => {
       if (res.status === 200) {                
         console.log("Successfully updated event. received res: ", res);
         navigate('/events/' + res.data.data._id);
@@ -104,8 +110,8 @@ function EditEvent(props) {
                         useRange={false}
                         displayFormat={"MM/DD/YYYY"}  
                         asSingle={true} 
-                        value={startDate} 
-                        onChange={(e) => {setStartDate(e)}} 
+                        value={{startDate: startDate, endDate: startDate}} 
+                        onChange={(e) => {setStartDate(e.startDate)}} 
                       /> 
                       <div className="col-span-1 w-1/2">
                         <input
@@ -114,10 +120,7 @@ function EditEvent(props) {
                           id="starttime"
                           className="block w-full flex-1 rounded-md border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                           value={startTime}
-                          onChange={(e) => {
-                            setStartTime(e.target.value)
-                            let updatedDate = new Date(startDate.startDate + ' ' + startTime)
-                          }}
+                          onChange={(e) => { setStartTime(e.target.value) }}
                           required
                         />                    
                       </div>
@@ -134,8 +137,8 @@ function EditEvent(props) {
                         useRange={false}
                         displayFormat={"MM/DD/YYYY"}  
                         asSingle={true} 
-                        value={endDate} 
-                        onChange={(e) => {setEndDate(e)}} 
+                        value={{startDate: endDate, endDate: endDate}} 
+                        onChange={(e) => {setEndDate(e.startDate)}} 
                       /> 
                       <div className="col-span-1 w-1/2">
                         <input

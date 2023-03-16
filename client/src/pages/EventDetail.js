@@ -26,13 +26,11 @@ export default function EventDetail(props) {
 
   useEffect(() => {
     if (event !== null) {
-      console.log("event.organizer", event.organizer);
       getUser(event.organizer).then((res) => {
         setHost(res.data.data);
       });
     }  
   }, [event]);
-  console.log("event: ", event);
 
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
