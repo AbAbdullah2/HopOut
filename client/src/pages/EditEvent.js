@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
+import CATEGORIES from "../assets/categories";
 import states from '../assets/states';
 import toast, { Toaster } from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { Dropdown } from 'flowbite-react';
 import uploadImg from '../services/imgbb';
 import { updateEvent, getEvent } from '../services/api';
 
@@ -27,6 +29,7 @@ function EditEvent(props) {
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
+      console.log("got event: ", res.data.data)
       const start = new Date(res.data.data.start);
       const end = new Date(res.data.data.end);
       setStartTime(start.toTimeString().substring(0, 5));
@@ -63,7 +66,24 @@ function EditEvent(props) {
       }
     });
   }
-    
+
+  const setChecked = (v) => {
+    if (event.categories.includes(v)) {
+      setEvent({...event, categories: event.categories.filter((f) => {return f !== v})});
+    } else {
+      setEvent({...event, categories: [...event.categories, v]});
+    }
+  }
+
+  const toggleVisibility = () => {
+    if (event.visibility === 'private') {
+      setEvent(event => ({ ...event, visibility: 'public'}));
+
+    } else {
+      setEvent(event => ({ ...event, visibility: 'private'}));
+    }
+  }
+
   return (
     <div className='bg-stone-100 min-h-screen'>
       <Toaster/>
@@ -242,6 +262,57 @@ function EditEvent(props) {
                     required
                   />
                 </div>
+              </div>
+              <div className="flex flex-col">
+                <div>
+                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                    Categories
+                  </label>
+                  <div className="mt-1">
+                    <Dropdown
+                      label={"Select Categories"}
+                      className="bg-gray-50"
+                      dismissOnClick={false}
+                    >
+                    {CATEGORIES.map((f) => (
+                      <Dropdown.Item key={f.key}>
+                        <input id="checkbox-item-1" type="checkbox" checked={event ? event.categories.includes(f.value) : false} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                        <span className="pl-2">{f.value}</span>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown>
+                </div>
+                <div className="mt-3">
+                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                      Visibility
+                  </label>
+                  <div className="mt-1">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" value="" className="sr-only peer" checked={event ? event.visibility === 'private' : false} onChange={(e) => {toggleVisibility()}} />
+                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{event ? (event.visibility === 'public' ? "Public" : "Private") : "Public"}</span>
+                  </label>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 w-1/4">
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700">
+                  Capacity
+                </label>
+                <input
+                  type="number"
+                  min="0"
+                  name="capacity"
+                  id="capacity"
+                  className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  placeholder="Capacity"
+                  value={event ? event.capacity : 1000}
+                  onChange={(e) => {
+                    setEvent(event => ({ ...event, capacity: parseInt(e.target.value)}));
+                  }}
+                required
+                />
+              </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
