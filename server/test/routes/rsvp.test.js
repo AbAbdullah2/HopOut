@@ -239,7 +239,6 @@ describe(`Test ${endpoint}`, () => {
                 await request.put(`${endpoint}/sendInvite`).send({ inviteeId: uninviteeId, eventId });
                 const response = await request.put(`${endpoint}/unsendInvite`).send({ uninviteeId, eventId });
                 expect(response.status).toBe(200);
-                console.log("data", response.body.data)
                 expect(response.body.data.invitees).not.toContain(uninviteeId.toString());
                 const updatedUninvitee = await userDao.read(uninviteeId.toString())
                 expect(updatedUninvitee.invited).not.toContain(eventId);

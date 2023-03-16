@@ -8,36 +8,28 @@ export const userDao = new UserDao();
 
 router.put(`/friends/sendRequest`, async (req, res, next) => {
   try {
-    console.log;
     const timeStamp = new Date();
     const { senderId, receiverId } = req.body;
 
     const sender = await userDao.read(senderId);
     const receiver = await userDao.read(receiverId);
 
-    console.log('sender', sender);
-    console.log('receiver', receiver);
     const senderSentFriends = sender.sentFriends;
-    console.log('array', senderSentFriends);
 
     senderSentFriends.push({ user: receiverId, date: timeStamp });
-    console.log('array', senderSentFriends);
 
     const receiverReceivedFriends = receiver.receivedFriends;
     receiverReceivedFriends.push({ user: senderId, date: timeStamp });
-    console.log('array', receiverReceivedFriends);
 
     const updatedSender = await userDao.update({
       id: senderId,
       sentFriends: senderSentFriends,
     });
-    console.log('updated one!');
 
     const updatedReceiver = await userDao.update({
       id: receiverId,
       receivedFriends: receiverReceivedFriends,
     });
-    console.log('updated rec', updatedReceiver);
 
     res.json({
       status: 200,
@@ -57,9 +49,6 @@ router.put(`/friends/removeRequest`, async (req, res, next) => {
     const remover = await userDao.read(removerId);
     const other = await userDao.read(otherId);
 
-    console.log('remover', removerId);
-    console.log('other', otherId);
-
     let filteredSentRemover = remover.sentFriends.filter(
       (e) => e.user.toString() !== otherId
     );
@@ -67,18 +56,14 @@ router.put(`/friends/removeRequest`, async (req, res, next) => {
       (e) => e.user.toString() !== removerId
     );
 
-    console.log(filteredReceivedOther);
-
     const updatedRemover = await userDao.update({
       id: removerId,
       sentFriends: filteredSentRemover,
     });
-    console.log('upRemove', updatedRemover);
     const updatedOther = await userDao.update({
       id: otherId,
       receivedFriends: filteredReceivedOther,
     });
-    console.log('upOther', updatedOther);
 
     res.json({
       status: 200,
@@ -104,7 +89,7 @@ router.put(`/friends/acceptRequest`, async (req, res, next) => {
     let filteredRequester = requester.sentFriends.filter(
       (e) => e.user.toString() !== acceptor.id
     );
-    console.log('a');
+
     const acceptorFriends = acceptor.friends;
     acceptorFriends.push({ user: requesterId, date: timeStamp });
     const requesterFriends = requester.friends;
@@ -115,16 +100,12 @@ router.put(`/friends/acceptRequest`, async (req, res, next) => {
       receivedFriends: filteredAcceptor,
       friends: acceptorFriends,
     });
-    console.log('b');
 
     const updatedRequester = await userDao.update({
       id: requesterId,
       sentFriends: filteredRequester,
       friends: requesterFriends,
     });
-    console.log('c');
-    console.log(updatedAcceptor);
-    console.log(updatedRequester);
 
     res.json({
       status: 200,
@@ -179,13 +160,13 @@ router.put(`/friends/removeFriend`, async (req, res, next) => {
     let friends1 = false;
     let friends2 = false;
 
-    remover.forEach((e) => {
+    remover.friends.forEach((e) => {
       if (e.user.toString() === friendId) {
         friends1 = true;
       }
     });
 
-    friend.forEach((e) => {
+    friend.friends.forEach((e) => {
       if (e.user.toString() === removerId) {
         friends2 = true;
       }

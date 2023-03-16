@@ -88,8 +88,6 @@ router.put(`/rsvp/unsendInvite`, async (req, res, next) => {
     let filteredUninvitee = uninvitee.invited.filter((e) => e.toString() !== eventId);
     let filteredEvent = event.invitees.filter((e) => e.toString() !== uninviteeId);
 
-    console.log("filteredEvebt", filteredEvent)
-
     const updatedUninvitee = await userDao.update({
       id: uninviteeId,
       invited: filteredUninvitee,
