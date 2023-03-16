@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import { deleteEvent, updateUser } from '../services/api';
 import { Modal } from 'flowbite-react'

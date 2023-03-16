@@ -93,7 +93,6 @@ function EditEvent(props) {
                       }));                    
                     }
                     }
-                        // (e) => setTitle(e.target.value)}
                       required
                     />
                   </div>
@@ -247,7 +246,7 @@ function EditEvent(props) {
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
                   <label htmlFor='cover-upload' className="block text-sm font-medium text-gray-700">Cover photo</label>
-                    {event && event.coverId != COVER_PLACEHOLDER ? 
+                    {event && event.coverId !== COVER_PLACEHOLDER ? 
                       <div className="relative flex justify-center">
                         <img src={event.coverId} alt={event.title} className='w-full object-cover' />
                         <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"
@@ -291,7 +290,7 @@ function EditEvent(props) {
                 </div>
                 <div className='w-1/3'>
                   <label htmlFor='thumbnail-upload' className="block text-sm font-medium text-gray-700">Thumbnail</label>
-                    {event && event.thumbnailId != THUMB_PLACEHOLDER ? 
+                    {event && event.thumbnailId !== THUMB_PLACEHOLDER ? 
                         <div className="relative">
                         <img src={event.thumbnailId} alt={event.title} className='w-full object-cover' />
                         <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
@@ -9,94 +11,72 @@ import uploadImg from '../services/imgbb';
 import { createNewEvent, updateUser } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 
+const COVER_PLACEHOLDER = "https://via.placeholder.com/1920x1080";
+const THUMB_PLACEHOLDER = "https://via.placeholder.com/1000x1000";
+
 function CreateEvent(props) {
   const navigate = useNavigate();
 
   const {curUser, setCurUser} = props
 
-  const [title, setTitle] = useState("");
+  const [event, setEvent] = useState({
+    name: "",
+    description: "",
+    thumbnailId: THUMB_PLACEHOLDER,
+    coverId: COVER_PLACEHOLDER,
+    address: "",
+    city: "",
+    state: "",
+    zip: "",
+    visibility: "public",
+    categories: [],
+    capacity: 1000,
+    organizer: curUser._id,
+  });
+
+
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [cover, setCover] = useState(undefined);
-  const [thumbnail, setThumbnail] = useState(undefined);
-  const [categories, setCategories] = useState([]);
-  let coverUrl = "https://via.placeholder.com/1920x1080";
-  let thumbnailUrl = "https://via.placeholder.com/1000x1000";
-
+  
   const handleCreateEvent = async (e) => {
     e.preventDefault();
     toast.success('Creating event...', {duration: 10000});
-    // Upload cover img
 
-    if (cover !== undefined){
-      uploadImg(cover).then(data => {
-        // Store ImgBB URL  
-        if (data.status === 200) coverUrl = data.data.data.display_url; 
-        // Upload thumbnail img 
-        if (thumbnail !== undefined){
-          uploadImg(thumbnail).then(data => {
-            // Store ImgBB URL
-            if (data.status === 200) thumbnailUrl = data.data.data.display_url;
-            createEvent();
-          }).catch(err => {console.log(err)});
-        }
-        else {
-          thumbnailUrl = coverUrl;
-          createEvent();
-        }
-      }).catch(err => {console.log(err)});
-    } 
-    else createEvent(); 
-  }
+    const start = new Date(startDate + ' ' + startTime)
+    const end = new Date(endDate + ' ' + endTime);    
 
-  const createEvent = () => {
-    const start = new Date(startDate.startDate + ' ' + startTime)
-    const end = new Date(endDate.startDate + ' ' + endTime);    
-    const newEvent = {
-      name: title,
-      start: start,
-      end: end,
-      description: description,
-      thumbnailId: thumbnailUrl,
-      coverId: coverUrl,
-      address: address,
-      city: city,
-      state: state,
-      zip: zip,
-      visibility: 'public',
-      categories: categories,
-      organizer: curUser._id,
-    };
-
-    console.log("newevent: ", newEvent);
-    createNewEvent(newEvent).then((res) => {
-      if (res.status === 200) {                
+    createNewEvent({...event, start: start, end: end}).then((res) => {
+      if (res.status === 201 || res.status === 200) {
         curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
         : setCurUser({...curUser, organizing: [res.data.data._id]})
-        updateUser(curUser).then((userData) => {
+        updateUser(curUser).then(() => {
           navigate('/events/' + res.data.data._id);
         });
       } else {
-        toast.error('Could not create event ' + newEvent.title);
+        toast.error('Could not create event ' + event.title);
       }
     });
   }
 
   const setChecked = (v) => {
-    if (categories.includes(v)) {
-      setCategories(categories.filter((f) => {return f !== v}));
+    if (event.categories.includes(v)) {
+      setEvent({...event, categories: event.categories.filter((f) => {return f !== v})});
     } else {
-      setCategories([...categories, v]);
+      setEvent({...event, categories: [...event.categories, v]});
     }
   }
-    
+
+  const toggleVisibility = () => {
+    if (event.visibility === 'private') {
+      setEvent(event => ({ ...event, visibility: 'public'}));
+
+    } else {
+      setEvent(event => ({ ...event, visibility: 'private'}));
+    }
+  }
+
   return (
     <div className='bg-stone-100 min-h-screen'>
       <Toaster/>
@@ -120,8 +100,12 @@ function CreateEvent(props) {
                       id="title"
                       className="relative block w-full appearance-none rounded border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                       placeholder="My Event"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
+                      value={event.name}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, name: e.target.value
+                      }));  
+                      }}                  
+
                       required
                     />
                   </div>
@@ -138,8 +122,8 @@ function CreateEvent(props) {
                         useRange={false}
                         displayFormat={"MM/DD/YYYY"}  
                         asSingle={true} 
-                        value={startDate} 
-                        onChange={(e) => {setStartDate(e)}} 
+                        value={{startDate: startDate, endDate: startDate}} 
+                        onChange={(e) => {setStartDate(e.startDate)}} 
                       /> 
                       <div className="col-span-1 w-1/2">
                         <input
@@ -165,8 +149,8 @@ function CreateEvent(props) {
                         useRange={false}
                         displayFormat={"MM/DD/YYYY"}  
                         asSingle={true} 
-                        value={endDate} 
-                        onChange={(e) => {setEndDate(e)}} 
+                        value={{startDate: endDate, endDate: endDate}} 
+                        onChange={(e) => {setEndDate(e.startDate)}} 
                       /> 
                       <div className="col-span-1 w-1/2">
                         <input
@@ -195,9 +179,11 @@ function CreateEvent(props) {
                       id="address"
                       className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                       placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
+                      value={event.address}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, address: e.target.value}));
+                      }}
+                        required
                     />
                   </div>
                   <div className='flex flex-row space-x-5 w-full'>
@@ -208,8 +194,10 @@ function CreateEvent(props) {
                         id="city"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="City"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        value={event.city}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, city: e.target.value}));
+                        }}
                         required
                       />
                     </div>
@@ -218,8 +206,10 @@ function CreateEvent(props) {
                         name="state"
                         id="state"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                        value={state}
-                        onChange={(e) => setState(e.target.value)}
+                        value={event.state}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, state: e.target.value}));
+                        }}
                         required
                       >
                       <option value="">State</option>
@@ -237,8 +227,10 @@ function CreateEvent(props) {
                         id="zip"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Zip Code"
-                        value={zip}
-                        onChange={(e) => setZip(e.target.value)}
+                        value={event.zip}
+                        onChange={(e) => {
+                          setEvent(event => ({ ...event, zip: e.target.value}));
+                        }}
                         required
                       />
                     </div>
@@ -256,37 +248,79 @@ function CreateEvent(props) {
                     rows={3}
                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                     placeholder="What do you want guests to know?"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={event.description}
+                    onChange={(e) => {
+                      setEvent(event => ({ ...event, description: e.target.value}));
+                    }}
                     required
                   />
                 </div>
               </div>
-              <div>
-                <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
-                  Categories
+              <div className="flex flex-col">
+                <div>
+                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                    Categories
+                  </label>
+                  <div className="mt-1">
+                    <Dropdown
+                      label={"Select Categories"}
+                      className="bg-gray-50"
+                      dismissOnClick={false}
+                    >
+                    {CATEGORIES.map((f) => (
+                      <Dropdown.Item key={f.key}>
+                        <input id="checkbox-item-1" type="checkbox" checked={event.categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                        <span className="pl-2">{f.value}</span>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown>
+                </div>
+                <div className="mt-3">
+                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                      Visibility
+                  </label>
+                  <div className="mt-1">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" value="" className="sr-only peer" checked={event.visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{event.visibility === 'public' ? "Public" : "Private"}</span>
+                  </label>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 w-1/4">
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700">
+                  Capacity
                 </label>
-                <div className="mt-2">
-                  <Dropdown
-                    label={"Filters"}
-                    className="bg-gray-50"
-                    dismissOnClick={false}
-                  >
-                  {CATEGORIES.map((f) => (
-                    <Dropdown.Item key={f.key}>
-                      <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
-                      <span className="pl-2">{f.value}</span>
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown>
+                <input
+                  type="number"
+                  min="0"
+                  name="capacity"
+                  id="capacity"
+                  className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  placeholder="Capacity"
+                  value={event.capacity}
+                  onChange={(e) => {
+                    setEvent(event => ({ ...event, capacity: parseInt(e.target.value)}));
+                  }}
+                required
+                />
               </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
                   <label htmlFor='cover-upload' className="block text-sm font-medium text-gray-700">Cover photo</label>
-                  <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                    <div className="space-y-1 text-center">
-                      <svg
+                  {event.coverId !== COVER_PLACEHOLDER ? 
+                      <div className="relative flex justify-center">
+                        <img src={event.coverId} alt={event.title} className='w-full object-cover' />
+                        <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"
+                        onClick={() => setEvent({...event, coverId: COVER_PLACEHOLDER})}>
+                          <FontAwesomeIcon icon={solid('x')} className="px-1" />
+                        </button>
+                      </div>
+                      : <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                      <div className="space-y-1 text-center">
+                        <svg
                         className="mx-auto h-12 w-12 text-gray-400"
                         stroke="currentColor"
                         fill="none"
@@ -302,18 +336,34 @@ function CreateEvent(props) {
                       </svg>
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
-                          <span>{cover ? cover.name : 'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={(e) => setCover(e.target.files[0])}/>
+                          <span>{'Upload a cover image'}</span>
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" 
+                              onChange={ (e) => {
+                                  uploadImg(e.target.files[0]).then(data => {
+                                    if (data.status === 200) setEvent({...event, coverId: data.data.data.display_url})
+                                  });
+                                }}
+                            />
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500">{cover ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
-                    </div>
+                      <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
+                      </div>
                   </div>
+                  }
                 </div>
                 <div className='w-1/3'>
                   <label htmlFor='thumbnail-upload' className="block text-sm font-medium text-gray-700">Thumbnail</label>
-                  <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
-                    <div className="space-y-1 text-center">
+                  {event.thumbnailId !== THUMB_PLACEHOLDER ? 
+                        <div className="relative">
+                        <img src={event.thumbnailId} alt={event.title} className='w-full object-cover' />
+                        <button className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1"
+                        onClick={() => setEvent({...event, thumbnailId: THUMB_PLACEHOLDER})}>
+                          <FontAwesomeIcon icon={solid('x')} className="px-1" />
+                        </button>
+                      </div>
+                      :
+                      <div className="mt-1 flex justify-center rounded-md border-2 border-dashed border-gray-300 px-6 pt-5 pb-6">
+                      <div className="space-y-1 text-center">
                       <svg
                         className="mx-auto h-12 w-12 text-gray-400"
                         stroke="currentColor"
@@ -330,13 +380,20 @@ function CreateEvent(props) {
                       </svg>
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
-                          <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
-                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" onChange={(e) => setThumbnail(e.target.files[0])} />
+                          <span>{'Upload a thumbnail'}</span>
+                            <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" 
+                              onChange={(e) => {
+                                uploadImg(e.target.files[0]).then(data => {
+                                  if (data.status === 200) setEvent({...event, thumbnailId: data.data.data.display_url})
+                                });
+                              }}
+                            />
                         </label>
                       </div>
-                      <p className="text-xs text-gray-500">{thumbnail ? '' : 'PNG, JPG, GIF up to 10MB'}</p>
-                    </div>
+                      <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
+                      </div>
                   </div>
+                  }
                 </div>
               </div>
             </div>
