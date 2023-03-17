@@ -1,7 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Header from '../components/Header';
-import FriendsList from '../components/FriendsList';
 import HostedEventsList from '../components/HostedEventsList';
 import NotFound from './NotFound';
 
@@ -18,10 +17,6 @@ export default function Account(props) {
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {curUser.email}</p>
         </div>
         <div className="container m-auto grid grid-cols-3">
-
-        <div className="tile m-auto">
-            <FriendsList curUser={curUser} />
-        </div>
         <div className="tile m-auto">
             <HostedEventsList curUser={curUser} />
         </div>

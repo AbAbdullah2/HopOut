@@ -4,21 +4,10 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { removeFriend, getUser } from '../services/api';
 
 export default function FriendsList(props) {
-    const fakeFriends = [{
-        _id: "8493",
-        name: "Fake friend",
-        email: "fake@jhu.edu"
-    }, 
-    {
-        _id: "3492",
-        name: "Fake friend",
-        email: "fake@jhu.edu"
-    }];
 
     const {curUser} = props;
 
     // Placeholder until api calls actually work
-    curUser.friends = fakeFriends;
     const [friends, setFriends] = useState(curUser.friends);
 
     const handleUnfriend = (unfriendedId) => {
