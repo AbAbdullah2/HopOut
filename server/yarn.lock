@@ -1245,6 +1245,7 @@
   "integrity" "sha512-G8LEkV0XzDMNwXKgM0Jwu3nY3lSTwSGY6XbxM9cr9+s0T/qSV1q1JVPBGzm3dcjhCic9+emZDmMffkwgPeOeLg=="
   "resolved" "https://registry.npmjs.org/esbuild/-/esbuild-0.16.17.tgz"
   "version" "0.16.17"
+
   optionalDependencies:
     "@esbuild/android-arm" "0.16.17"
     "@esbuild/android-arm64" "0.16.17"
@@ -1646,6 +1647,7 @@
   "integrity" "sha512-WvTZlI9ab0QYtTYnuMLgobULWhokRjtC7db9LtcVfJ+Hsnyr5eo6ZtNAt3Ly24XZScGMelOcGtm7lSn0332tPQ=="
   "resolved" "https://registry.npmjs.org/mongodb-connection-string-url/-/mongodb-connection-string-url-2.6.0.tgz"
   "version" "2.6.0"
+
   dependencies:
     "@types/whatwg-url" "^8.2.1"
     "whatwg-url" "^11.0.0"
@@ -1913,6 +1915,7 @@
   "integrity" "sha512-J8C6VfEBjkvYPESMQYxKHxNOh4A5a3FlP+0BETGo34HEcE4eTlgCrO2+eWzlu2a/sHs2QUkZco+wscH7jhhgWg=="
   "resolved" "https://registry.npmjs.org/rollup/-/rollup-3.18.0.tgz"
   "version" "3.18.0"
+
   optionalDependencies:
     "fsevents" "~2.3.2"
 

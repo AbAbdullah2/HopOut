@@ -13,7 +13,7 @@ export function formatDate(date) {
 }
 
 export function formatEventDates(start, end) {
-  const startString = formatDate(start) + ' ' + formatTime(start) + (AMPM(start) === AMPM(end) ? '' : AMPM(start));
-  const endString = (formatDate(end) === formatDate(start) ? '-' : ' - ' + formatDate(end) + ' ') + formatTime(end) + ' ' + AMPM(end);
+  const startString = formatDate(start) + ' ' + formatTime(start) + ' ' + ((AMPM(start) === AMPM(end) && (formatDate(start) === formatDate(end))) ? '' : AMPM(start));
+  const endString = (formatDate(end) === formatDate(start) ? ' - ' : ' - ' + formatDate(end) + ' ') + formatTime(end) + ' ' + AMPM(end);
   return startString + endString;
 }
