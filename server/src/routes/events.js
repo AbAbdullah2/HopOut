@@ -107,6 +107,8 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity,
       attendees,
       invitees,
+      coverId, 
+      thumbnailId
     } = req.body;
     // call read, get capacity if original capity is undefined
     const eventBefore = await eventDao.read(id);
@@ -127,6 +129,8 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity: updatedCapacity,
       attendees,
       invitees,
+      coverId, 
+      thumbnailId
     });
 
     res.json({
