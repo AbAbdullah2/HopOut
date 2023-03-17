@@ -17,15 +17,15 @@ function CreateEvent(props) {
 
   const {curUser, setCurUser} = props
 
+  const [validated, setValidated] = useState(false);
+
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [description, setDescription] = useState("");
-  const [streetNumber, setStreetNumber] = useState("");
   const [address, setAddress] = useState("");
-  const [apartment, setApartment] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
@@ -51,17 +51,8 @@ function CreateEvent(props) {
 
   function onPlaceChanged() {
     try {
-      setAddress('');
+      setAddress(searchBox.getPlace().name);
       searchBox.getPlace().address_components.forEach((component) => {
-        if (component.types.includes('street_number')) {
-          setStreetNumber(component.long_name);
-        }
-        if (component.types.includes('subpremise')) {
-          setApartment(component.long_name);
-        }
-        if (component.types.includes('route')) {
-          setAddress(component.long_name);
-        }
         if (component.types.includes('locality')) {
           setCity(component.long_name);
         }
@@ -72,17 +63,18 @@ function CreateEvent(props) {
           setZip(component.long_name);
         }
       });
-      console.log(streetNumber, address, apartment, city, state, zip)
-      setAddress(
-        (streetNumber === '' ? '' : streetNumber + ' ') + 
-        address + 
-        (apartment === '' ? '' : ' ' + apartment)
-      );
+      setValidated(true);
     } catch (error) { }
   }
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
+
+    if (validated === false) {
+      toast.error('Invalid address');
+      return;
+    }
+
     toast.success('Creating event...', {duration: 10000});
     // Upload cover img
 
@@ -259,7 +251,7 @@ function CreateEvent(props) {
                     onLoad={loadSearchBox}
                     className='text-center'
                     types={['address']}
-                    fields={['address_components']}
+                    fields={['address_components', 'name']}
                     restrictions={{country: 'us'}}
                   >
                     <div className="mt-3 flex rounded-md shadow-sm">
@@ -270,7 +262,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Address"
                         value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        onChange={(e) => {setAddress(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -284,7 +276,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="City"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => {setCity(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -294,7 +286,7 @@ function CreateEvent(props) {
                         id="state"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         value={state}
-                        onChange={(e) => setState(e.target.value)}
+                        onChange={(e) => {setState(e.target.value); setValidated(false)}}
                         required
                       >
                       <option value="">State</option>
@@ -313,7 +305,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Zip Code"
                         value={zip}
-                        onChange={(e) => setZip(e.target.value)}
+                        onChange={(e) => {setZip(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
