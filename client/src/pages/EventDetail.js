@@ -35,7 +35,7 @@ export default function EventDetail(props) {
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
     });  
-  }, [event]);
+  }, [event, eventid]);
 
   const confirmRsvp = () => {
     // set rsvp state to 1, show toast message and rsvp in the backend
@@ -44,7 +44,7 @@ export default function EventDetail(props) {
     rsvpToEvent(curUser._id, eventid);
   }
 
-  const cancelRsvp = () => {
+  const cancelRsvpHelper = () => {
     // set rsvp state to 0, show toast message and cancel rsvp in the backend
     setRsvp(0);
     toast.error('Your RSVP has been cancelled!');
@@ -66,7 +66,7 @@ export default function EventDetail(props) {
           {
           rsvp ? 
           <div className='flex flex-col items-center'>
-            <button className="text-2xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={cancelRsvp}>
+            <button className="text-2xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={cancelRsvpHelper}>
               Cancel RSVP
             </button>
           </div>
