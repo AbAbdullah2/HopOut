@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
 import EventCard from '../components/EventCard';
 import CategoryFilter from '../components/CategoryFilter';
-import { getAllEvents, getAttendingEvents, getInvitedToEvents } from '../services/api';
+import { getAllPublicEvents, getAllPrivateEvents, getAttendingEvents, getInvitedToEvents } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import FriendFilter from '../components/FriendFilter';
 
@@ -16,8 +16,11 @@ export function EventList(props) {
   const navigate = useNavigate();
   useEffect(() => {
     if (curUser == null) navigate('/login');
-    getAllEvents().then((res) => {
+    getAllPublicEvents().then((res) => {
       setEventList(res.data.data);
+    });
+    getAllPrivateEvents().then((res) => {
+      setEventList([...eventList, res.data.data]);
     });
   }, []);
 
@@ -29,7 +32,6 @@ export function EventList(props) {
     }
 
     for (const f in selectedFilters) {
-      
       for (const cat in ev) {
         console.log(cat);
         console.log("\n");
@@ -45,13 +47,13 @@ export function EventList(props) {
       if (f === "attending") { 
         arr = getAttendingEvents(curUser._id);
         if (arr.includes(ev._id)) {
-          return true
+          return true;
         }
       }
       if (f === "invited") { 
         arr = getInvitedToEvents(curUser._id);
         if (arr.includes(ev._id)) {
-          return true
+          return true;
         }
       }
     }

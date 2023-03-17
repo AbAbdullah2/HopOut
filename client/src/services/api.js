@@ -48,8 +48,18 @@ async function deleteUser(user) {
     return response;
 }
 
-async function getAllEvents() {
+// get all public events
+async function getAllPublicEvents() {
   const response = await axios.get(`${BASE_URL}/events`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// get all private events
+async function getAllPrivateEvents(userId) {
+  const response = await axios.post(`${BASE_URL}/users/privateEvents${userId}`)
     .catch(function (error) {
       console.log(error);
     });
@@ -81,11 +91,11 @@ async function getAttendingEvents(userId) {
 }
 
 async function getInvitedToEvents(userId) {
-  const response = await axios.post(`${BASE_URL}/users/${userId}`)
+  const response = await axios.get(`${BASE_URL}/users/${userId}`)
     .catch(function (error) {
       console.log(error);
     });
   return response.data.data.invited;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, getAttendingEvents, getInvitedToEvents }
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, getAttendingEvents, getInvitedToEvents }
