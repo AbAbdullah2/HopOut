@@ -9,6 +9,7 @@ import CreateEvent from './pages/CreateEvent';
 import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
+import Profile from './pages/Profile';
 
 const App = () => {
   const [curUser, setCurUser] = useState(JSON.parse(window.localStorage.getItem("curUser")) ? JSON.parse(window.localStorage.getItem("curUser")) : null);
@@ -30,6 +31,7 @@ const App = () => {
           <Route path="events" element={<EventList curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="events/:eventid" element={<EventDetail curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="login" element={<Login curUser={curUser} setCurUser={setCurUser} />} />
+          <Route path="profile/:userid" element={<Profile curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="signup" element={<CreateAccount setCurUser={setCurUser}/>} />
           <Route path="account" element={<Account curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="create" element={<CreateEvent curUser={curUser} setCurUser={setCurUser}/>}/>

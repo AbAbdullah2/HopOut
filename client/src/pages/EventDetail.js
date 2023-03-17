@@ -23,9 +23,12 @@ export default function EventDetail(props) {
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (curUser === null) navigate('/login');
+    if (curUser == null) navigate('/login');
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
+      getUser(res.data.data.organizer).then((userRes) => {
+        setHost(userRes.data.data);
+      });
     });  
   }, [curUser, navigate, eventid]);
 

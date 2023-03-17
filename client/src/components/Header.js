@@ -22,10 +22,10 @@ export default function Header(props) {
           <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Create</span>
         </a>
         <Dropdown
-            floatingArrow= {false}
-            arrowIcon={false}
-            inline={true}
-            label={<div className='hover:text-blue-400'><FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Account</span></div>}
+          floatingArrow= {false}
+          arrowIcon={false}
+          inline={true}
+          label={<div className='hover:text-blue-400'><FontAwesomeIcon icon={solid('user')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Account</span></div>}
           class="bg-transparent hover:text-blue-400"
           dismissOnClick={false}
         >

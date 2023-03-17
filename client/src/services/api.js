@@ -89,6 +89,52 @@ async function updateEvent(event) {
   return response;
 }
 
+// Not implemented yet
+async function sendFriendReq(senderId, receiverId) {
+  const response = await axios.put(`${BASE_URL}/friends/sendRequest`, { senderId, receiverId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function acceptFriendReq(acceptorId, requesterId) {
+  const response = await axios.put(`${BASE_URL}/friends/acceptRequest`, { acceptorId, requesterId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function declineFriendReq(declinerId, requesterId) {
+  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { declinerId, requesterId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function removeFriendReq(removerId, otherId) {
+  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { removerId, otherId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function removeFriend(removerId, friendId) {
+  const response = await axios.put(`${BASE_URL}/friends/removeFriend`, { removerId, friendId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+
+
+
+
+// export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend }
 async function deleteEvent(eventId) {
   const response = await axios.delete(`${BASE_URL}/events/${eventId}`)
     .catch(function (error) {
@@ -113,4 +159,4 @@ async function cancelRsvp(userId, eventId) {
   return response;
 }
 
-export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, updateEvent, deleteEvent, rsvpToEvent, cancelRsvp }
+export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, rsvpToEvent, cancelRsvp }
