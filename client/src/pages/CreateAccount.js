@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { register } from '../services/api'
+import { getAllUsers, register } from '../services/api'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
@@ -15,7 +15,8 @@ function CreateAccount(props) {
   const signup = (e) => {
     e.preventDefault();
 
-    if (email.split('@')[1] !== "jhu.edu" && email.split('@')[1] !== "jh.edu") {
+    const [jhed, emailSite] = email.split('@');
+    if (emailSite !== "jhu.edu" && emailSite !== "jh.edu") {
       toast.error("Email must end in @jhu.edu or @jh.edu");
       return;
     }
@@ -36,8 +37,17 @@ function CreateAccount(props) {
       password: password
     }
 
-    // Call register
-    register(signupData).then(data => {
+    // Check if account already exists
+    getAllUsers().then(userData => {
+      let users = userData.data.data;
+      users.forEach(user => {
+        if (jhed === user["email"].split('@')[0]) {
+          toast.error("Email already associated with an account.");
+        }
+      });
+
+      // Call register
+      register(signupData).then(data => {
         if (data.status === 200) {
             setCurUser(data.data.data);
             navigate('/events');
@@ -45,15 +55,8 @@ function CreateAccount(props) {
           const error = 'Could not register user ' + email;
           toast.error(error);
         }
-    }).catch(err => {console.log(err)});
-
-    const signupResponse = null;
-    if (signupResponse) {
-      navigate('/events');
-    } else {
-      const error = 'Could not create user ' + signupData.email;
-      toast.error(error);
-    }
+      }).catch(err => {console.log(err)});
+    })
   }
 
     return (

@@ -11,25 +11,31 @@ import { rsvpToEvent, cancelRsvp } from '../services/api';
 
 export default function EventDetail(props) {
   const {eventid} = useParams();
-  const {curUser} = props;
+  const {curUser, setCurUser} = props;
 
   const [event, setEvent] = useState(null);
-  const [user, setUser] = useState(null);
+  const [host, setHost] = useState(null);
 
   const [rsvp, setRsvp] = useState(0);
 
   const navigate = useNavigate();
   useEffect(() => {
-    if (curUser == null) navigate('/login');
+    if (curUser === null) navigate('/login');
+    getEvent(eventid).then((res) => {
+      setEvent(res.data.data);
+    });  
+  }, [curUser, navigate, eventid]);
+
+  useEffect(() => {
     if (event !== null) {
       getUser(event.organizer).then((res) => {
-        setUser(res.data.data);
+        setHost(res.data.data);
       });
     }  
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
     });  
-  }, []);
+  }, [event]);
 
   const confirmRsvp = () => {
     // set rsvp state to 1, show toast message and rsvp in the backend
@@ -45,18 +51,17 @@ export default function EventDetail(props) {
     cancelRsvp(curUser._id, eventid);
   }
 
-  //conditional rendering, 
   return event === null ? '' : (
     <div className='bg-stone-100 min-h-screen'>
       <Toaster />
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{event.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
-          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address} {event.location.city}, {event.location.state} {event.location.zip}</p>
-          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by {user ? user.name : ''}</p>
+          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address}, {event.location.city}, {event.location.state} {event.location.zip}</p>
+          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
           {
           rsvp ? 
@@ -72,6 +77,11 @@ export default function EventDetail(props) {
             </button>
           </div>
           }
+          <div className="flex items-center justify-center mt-4">
+            {event.categories.map((c, i) => {
+              return <div key={i} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
+            })}
+          </div>
           <hr className='my-4 bg-stone-800 h-1' />
           
           <p className='my-2'>{event.description}</p>    

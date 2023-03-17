@@ -3,14 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
+import CATEGORIES from "../assets/categories";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
+import { Dropdown } from 'flowbite-react';
+import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
+
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
 function CreateEvent(props) {
   const navigate = useNavigate();
 
-  const {curUser} = props
+  const {curUser, setCurUser} = props
+
+  const [validated, setValidated] = useState(false);
 
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -24,11 +31,50 @@ function CreateEvent(props) {
   const [zip, setZip] = useState("");
   const [cover, setCover] = useState(undefined);
   const [thumbnail, setThumbnail] = useState(undefined);
+  const [categories, setCategories] = useState([]);
+  const [visibility, setVisibility] = useState('public');
+  const [capacity, setCapacity] = useState('');
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
+  const [ libraries ] = React.useState(['places']);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: API_KEY,
+    libraries,
+  });
+
+  const [searchBox, setSearchBox] = React.useState(null);
+
+  const loadSearchBox = (searchBox) => {setSearchBox(searchBox)};
+
+  function onPlaceChanged() {
+    try {
+      setAddress(searchBox.getPlace().name);
+      searchBox.getPlace().address_components.forEach((component) => {
+        if (component.types.includes('locality')) {
+          setCity(component.long_name);
+        }
+        if (component.types.includes('administrative_area_level_1')) {
+          setState(component.short_name);
+        }
+        if (component.types.includes('postal_code')) {
+          setZip(component.long_name);
+        }
+      });
+      setValidated(true);
+    } catch (error) { }
+  }
+
   const handleCreateEvent = async (e) => {
     e.preventDefault();
+
+    if (validated === false) {
+      toast.error('Invalid address');
+      return;
+    }
+
     toast.success('Creating event...', {duration: 10000});
     // Upload cover img
 
@@ -67,24 +113,51 @@ function CreateEvent(props) {
       city: city,
       state: state,
       zip: zip,
-      visibility: 'public',
+      visibility: visibility,
+      categories: categories,
+      capacity: capacity,
       organizer: curUser._id,
     };
 
     createNewEvent(newEvent).then((res) => {
-      if (res.status === 200) {
+      if (res.status === 201 || res.status === 200) {
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not create event ' + newEvent.title);
       }
     });
   }
+
+  const setChecked = (v) => {
+    if (categories.includes(v)) {
+      setCategories(categories.filter((f) => {return f !== v}));
+    } else {
+      setCategories([...categories, v]);
+    }
+  }
+
+  const toggleVisibility = () => {
+    if (visibility === 'private') {
+      setVisibility('public');
+    } else {
+      setVisibility('private');
+    }
+  }
+
+  const updateCapacity = (v) => {
+    const parsed = parseInt(v);
+    if (!isNaN(parsed) && parsed > 0) {
+      setCapacity(parsed);
+    } else if (v === '') {
+      setCapacity('');
+    }
+  }
     
-  return (
+  return isLoaded ? (
     <div className='bg-stone-100 min-h-screen'>
       <Toaster/>
       <div className='mx-auto flex flex-col h-full'>
-        <Header icons={true} />
+        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className="m-10 shadow rounded-md">
           <div className="py-5 bg-gray-50 rounded-md px-4">
             <h3 className="text-lg font-medium leading-6 text-gray-700">New Event</h3>
@@ -171,18 +244,29 @@ function CreateEvent(props) {
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Location
                   </label>
-                  <div className="mt-3 flex rounded-md shadow-sm">
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                      placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Autocomplete
+                    onPlaceChanged={
+                      onPlaceChanged
+                    }
+                    onLoad={loadSearchBox}
+                    className='text-center'
+                    types={['address']}
+                    fields={['address_components', 'name']}
+                    restrictions={{country: 'us'}}
+                  >
+                    <div className="mt-3 flex rounded-md shadow-sm">
+                      <input
+                        type="text"
+                        name="address"
+                        id="address"
+                        className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        placeholder="Address"
+                        value={address}
+                        onChange={(e) => {setAddress(e.target.value); setValidated(false)}}
+                        required
+                      />
+                    </div>
+                  </Autocomplete>
                   <div className='flex flex-row space-x-5 w-full'>
                     <div className="mt-3 flex rounded-md shadow-sm w-1/2">
                       <input
@@ -192,7 +276,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="City"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => {setCity(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -202,7 +286,7 @@ function CreateEvent(props) {
                         id="state"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         value={state}
-                        onChange={(e) => setState(e.target.value)}
+                        onChange={(e) => {setState(e.target.value); setValidated(false)}}
                         required
                       >
                       <option value="">State</option>
@@ -221,7 +305,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Zip Code"
                         value={zip}
-                        onChange={(e) => setZip(e.target.value)}
+                        onChange={(e) => {setZip(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -244,6 +328,54 @@ function CreateEvent(props) {
                     required
                   />
                 </div>
+              </div>
+              <div className="flex flex-col">
+                <div>
+                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                    Categories
+                  </label>
+                  <div className="mt-1">
+                    <Dropdown
+                      label={"Select Categories"}
+                      className="bg-gray-50"
+                      dismissOnClick={false}
+                    >
+                    {CATEGORIES.map((f) => (
+                      <Dropdown.Item key={f.key}>
+                        <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                        <span className="pl-2">{f.value}</span>
+                      </Dropdown.Item>
+                    ))}
+                  </Dropdown>
+                </div>
+                <div className="mt-3">
+                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                      Visibility
+                  </label>
+                  <div className="mt-1">
+                  <label className="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
+                  </label>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-3 w-1/4">
+                <label htmlFor="capacity" className="block text-sm font-medium text-gray-700">
+                  Capacity
+                </label>
+                <input
+                  type="text"
+                  name="capacity"
+                  id="capacity"
+                  className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                  placeholder="Capacity"
+                  value={capacity}
+                  onChange={(e) => updateCapacity(e.target.value)}
+                  required
+                />
+              </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
@@ -316,7 +448,7 @@ function CreateEvent(props) {
         </div>
       </div>
     </div>
-  );
+  ) : ('');
 }
 
 export default CreateEvent;
