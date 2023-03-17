@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getUser, addFriend, deleteFriend } from '../services/api';
+import { getUser, updateUser, sendFriendReq, removeFriend, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
 import Header from '../components/Header';
 
 
@@ -15,9 +15,7 @@ export default function Profile(props) {
 
   if (userid === curUser._id) navigate("/account");
 
-  const [friends, setFriends] = useState(false);
-
-  const [friendStatus, setFriendStatus] = useState("none");
+  const [friendStatus, setFriendStatus] = useState("none");  
 
   const renderSwitch = () => {
     switch(friendStatus) {
@@ -28,7 +26,7 @@ export default function Profile(props) {
       case "sent":
         return (<button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleUnsendReq}> Friend request sent <FontAwesomeIcon icon={solid('circle-check')} /> 
         </button> )
-      case "recieved":
+      case "received":
         return (
           <div className="items-center py-5 px-12 lg:px-4" role="alert">
           <div className="bg-blue-900 shadow-md px-7 py-3 rounded-md items-center text-blue-100 leading-none lg:rounded-full flex lg:inline-flex " >
@@ -45,30 +43,104 @@ export default function Profile(props) {
   }
 
   const handleSendReq = (e) => {
-    addFriend(curUser, user);
-    setFriendStatus("sent")
-    // setFriends(true);
+    sendFriendReq(curUser._id, user._id).then((sendRes) => {
+      console.log("sendRes: ", sendRes)
+      console.log("setting sentfriends: ", [...curUser.sentFriends, user._id]);
+      console.log("user._id: ", user._id)
+      updateUser({...curUser, sentFriends: [...curUser.sentFriends, user._id]}).then((updateRes) => {
+        if (updateRes.status === 200 || updateRes.status === 201) {
+          console.log("update sender response: ", updateRes.data.data);
+          setCurUser(updateRes.data.data)
+          console.log("setting curUser:", updateRes.data.data)
+        }
+        updateUser({...user, receivedFriends: [...user.receivedFriends, curUser._id]}).then((updateReceiverRes) => {
+          console.log("update receiver response: ", updateReceiverRes);
+        });  
+      });      
+    });
+    setFriendStatus("sent")  
   }
 
   const handleAcceptFriend = (e) => {
-    // addFriend(curUser, user);
-    // setFriends(true);
-    setFriendStatus("friends");
+    acceptFriendReq(curUser._id, user._id).then((acceptRes) => {
+      console.log("acceptRes: ", acceptRes)
+      console.log("user._id: ", user._id)
+      updateUser({...curUser, 
+        friends: [...curUser.friends, user._id],
+        receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
+      }).then((updateRes) => {
+        if (updateRes.status === 200 || updateRes.status === 201) {
+          setCurUser(updateRes.data.data)
+          console.log("updatign accepter:", updateRes.data.data)
+        }
+        updateUser({...user, 
+          friends: [...user.friends, curUser._id], 
+          sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
+          ).then((updateReceiverRes) => {
+          console.log("update receiver response: ", updateReceiverRes);
+        });  
+      });
+    });
+    setFriendStatus("friends")        
   }
+
   const handleDenyFriend = (e) => {
-    // delete friend request from both users in DB 
+    declineFriendReq(curUser._id, user._id).then((denyRes) => {
+      console.log("denyRes: ", denyRes)
+      updateUser({...curUser, 
+        receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
+      }).then((updateRes) => {
+        if (updateRes.status === 200 || updateRes.status === 201) {
+          setCurUser(updateRes.data.data)
+          console.log("updating denier:", updateRes.data.data)
+        }
+        updateUser({...user, 
+          sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
+          ).then((updateDeniedRes) => {
+          console.log("update denied response: ", updateDeniedRes);
+        });  
+      });
+    });
     setFriendStatus("none");
   }
 
   const handleUnsendReq = (e) => {
-    // delete friend request from both users in DB 
+    removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
+      console.log("removeReqRes: ", removeReqRes)
+      updateUser({...curUser, 
+        receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
+      }).then((updateRes) => {
+        if (updateRes.status === 200 || updateRes.status === 201) {
+          setCurUser(updateRes.data.data)
+          console.log("updating remover:", updateRes.data.data)
+        }
+        updateUser({...user, 
+          sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
+          ).then((updateRemovedRes) => {
+          console.log("update denied response: ", updateRemovedRes);
+        });  
+      });
+    });
     setFriendStatus("none");
-    // setFriends(true);
   }
 
   const handleUnfriend = (e) => {
-    deleteFriend(curUser, user);
-    setFriends(false);
+    removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
+      console.log("removeReqRes: ", removeReqRes)
+      updateUser({...curUser, 
+        receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
+      }).then((updateRes) => {
+        if (updateRes.status === 200 || updateRes.status === 201) {
+          setCurUser(updateRes.data.data)
+          console.log("updating remover:", updateRes.data.data)
+        }
+        updateUser({...user, 
+          sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
+          ).then((updateRemovedRes) => {
+          console.log("update denied response: ", updateRemovedRes);
+        });  
+      });
+    });
     setFriendStatus("none");
   }
 
@@ -76,14 +148,23 @@ export default function Profile(props) {
     if (curUser === null) navigate('/login');
     getUser(userid).then((res) => {
       setUser(res.data.data);
-      // setting friends state
-      // setFriends(curUser._id in res.data.data.friends);
+      curUser.sentFriends.forEach(e => {
+        if (e.user === res.data.data._id) {
+          setFriendStatus("sent");
+        }
+      });
+      curUser.receivedFriends.forEach(e => {
+        if (e.user === res.data.data._id) {
+          setFriendStatus("received");
+        }
+      });
+      curUser.friends.forEach(e => {
+        if (e === res.data.data._id) {
+          setFriendStatus("friends");
+        }
+      });
     });  
   }, []);
-
-  useEffect(() => {
-    // Update friendslist through api call 
-  }, [friends]);
 
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>

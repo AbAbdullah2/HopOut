@@ -30,6 +30,15 @@ async function register(user) {
   return response;
 }
 
+async function updateUser(user) {
+  const response = await axios.put(`${BASE_URL}/users/${user._id}`, user)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
+}
+
+
 // login creds should be object with fields email and password
 async function postLogin(creds) {
   const response = await axios.post(`${BASE_URL}/login`, creds)
@@ -73,18 +82,48 @@ async function createNewEvent(event) {
 }
 
 // Not implemented yet
-async function addFriend(curUser, newFriend) {
-  console.log("adding friend. Curuser: ", curUser);
-  console.log("adding friend. newFriend: ", newFriend);
-  return {};
+async function sendFriendReq(senderId, receiverId) {
+  const response = await axios.put(`${BASE_URL}/friends/sendRequest`, { senderId, receiverId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
 }
 
-// Not implemented yet
-async function deleteFriend(curUser, oldFriend) {
-  console.log("Delete friend called");
-  
-  return {};
+async function acceptFriendReq(acceptorId, requesterId) {
+  const response = await axios.put(`${BASE_URL}/friends/acceptRequest`, { acceptorId, requesterId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function declineFriendReq(declinerId, requesterId) {
+  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { declinerId, requesterId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function removeFriendReq(removerId, otherId) {
+  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { removerId, otherId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+async function removeFriend(removerId, friendId) {
+  const response = await axios.put(`${BASE_URL}/friends/removeFriend`, { removerId, friendId })
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
 }
 
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, addFriend, deleteFriend }
+
+
+
+export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { deleteFriend, getUser } from '../services/api';
+import { removeFriend, getUser } from '../services/api';
 
 export default function FriendsList(props) {
     const fakeFriends = [{
@@ -23,7 +23,7 @@ export default function FriendsList(props) {
 
     const handleUnfriend = (unfriendedId) => {
         console.log("deleting friend", unfriendedId);
-        deleteFriend(curUser, unfriendedId).then((res) => {
+        removeFriend(curUser, unfriendedId).then((res) => {
             console.log("delete response: ", res);
             // not sure if this is right
             // setFriends(res.data.friends);
