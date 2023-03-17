@@ -56,15 +56,14 @@ describe(`Test ${endpoint}`, () => {
       const response2 = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
       expect(response2.status).toBe(400);
     });
-    /*it("receiver sends a friend request to sender after sender's initial request", async () => {
-            let senderId = requesterId;
-            const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
-            senderId = receiverId;
-            receiverId = requesterId;
-            const response2 = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
-            expect(response2.status).toBe();
-
-        });*/
+    it("receiver sends a friend request to sender after sender's initial request", async () => {
+      let senderId = requesterId;
+      const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
+      senderId = receiverId;
+      receiverId = requesterId;
+      const response2 = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
+      expect(response2.status).toBe(400);
+    });
 
     describe('Respond 400', () => {
       it('requester is invalid id', async () => {
