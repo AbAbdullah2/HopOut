@@ -56,10 +56,9 @@ async function getAllPublicEvents() {
     });
   return response;
 }
-
 // get all private events
 async function getAllPrivateEvents(userId) {
-  const response = await axios.post(`${BASE_URL}/users/privateEvents${userId}`)
+  const response = await axios.get(`${BASE_URL}/users/privateEvents/${userId}`)
     .catch(function (error) {
       console.log(error);
     });
@@ -82,20 +81,4 @@ async function createNewEvent(event) {
   return response;
 }
 
-async function getAttendingEvents(userId) {
-  const response = await axios.get(`${BASE_URL}/users/${userId}`)
-    .catch(function (error) {
-      console.log(error);
-    });
-  return response.data.data.attending;
-}
-
-async function getInvitedToEvents(userId) {
-  const response = await axios.get(`${BASE_URL}/users/${userId}`)
-    .catch(function (error) {
-      console.log(error);
-    });
-  return response.data.data.invited;
-}
-
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, getAttendingEvents, getInvitedToEvents }
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent }
