@@ -44,18 +44,11 @@ export default function Profile(props) {
 
   const handleSendReq = (e) => {
     sendFriendReq(curUser._id, user._id).then((sendRes) => {
-      console.log("sendRes: ", sendRes)
-      console.log("setting sentfriends: ", [...curUser.sentFriends, user._id]);
-      console.log("user._id: ", user._id)
       updateUser({...curUser, sentFriends: [...curUser.sentFriends, user._id]}).then((updateRes) => {
         if (updateRes.status === 200 || updateRes.status === 201) {
-          console.log("update sender response: ", updateRes.data.data);
           setCurUser(updateRes.data.data)
-          console.log("setting curUser:", updateRes.data.data)
         }
-        updateUser({...user, receivedFriends: [...user.receivedFriends, curUser._id]}).then((updateReceiverRes) => {
-          console.log("update receiver response: ", updateReceiverRes);
-        });  
+        updateUser({...user, receivedFriends: [...user.receivedFriends, curUser._id]});
       });      
     });
     setFriendStatus("sent")  
@@ -63,21 +56,17 @@ export default function Profile(props) {
 
   const handleAcceptFriend = (e) => {
     acceptFriendReq(curUser._id, user._id).then((acceptRes) => {
-      console.log("acceptRes: ", acceptRes)
-      console.log("user._id: ", user._id)
       updateUser({...curUser, 
         friends: [...curUser.friends, user._id],
         receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
       }).then((updateRes) => {
         if (updateRes.status === 200 || updateRes.status === 201) {
           setCurUser(updateRes.data.data)
-          console.log("updatign accepter:", updateRes.data.data)
         }
         updateUser({...user, 
           friends: [...user.friends, curUser._id], 
           sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
           ).then((updateReceiverRes) => {
-          console.log("update receiver response: ", updateReceiverRes);
         });  
       });
     });
@@ -86,18 +75,15 @@ export default function Profile(props) {
 
   const handleDenyFriend = (e) => {
     declineFriendReq(curUser._id, user._id).then((denyRes) => {
-      console.log("denyRes: ", denyRes)
       updateUser({...curUser, 
         receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
       }).then((updateRes) => {
         if (updateRes.status === 200 || updateRes.status === 201) {
           setCurUser(updateRes.data.data)
-          console.log("updating denier:", updateRes.data.data)
         }
         updateUser({...user, 
           sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
           ).then((updateDeniedRes) => {
-          console.log("update denied response: ", updateDeniedRes);
         });  
       });
     });
@@ -106,7 +92,6 @@ export default function Profile(props) {
 
   const handleUnsendReq = (e) => {
     removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
-      console.log("removeReqRes: ", removeReqRes)
       updateUser({...curUser, 
         receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
       }).then((updateRes) => {
@@ -117,7 +102,6 @@ export default function Profile(props) {
         updateUser({...user, 
           sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
           ).then((updateRemovedRes) => {
-          console.log("update denied response: ", updateRemovedRes);
         });  
       });
     });
@@ -126,18 +110,15 @@ export default function Profile(props) {
 
   const handleUnfriend = (e) => {
     removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
-      console.log("removeReqRes: ", removeReqRes)
       updateUser({...curUser, 
         receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
       }).then((updateRes) => {
         if (updateRes.status === 200 || updateRes.status === 201) {
           setCurUser(updateRes.data.data)
-          console.log("updating remover:", updateRes.data.data)
         }
         updateUser({...user, 
           sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
           ).then((updateRemovedRes) => {
-          console.log("update denied response: ", updateRemovedRes);
         });  
       });
     });

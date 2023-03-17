@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import EditEvent from './pages/EditEvent';
 import EventList from './pages/EventList';
 import Landing from './pages/Landing';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -18,6 +19,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    window.localStorage.removeItem('curUser');
     window.localStorage.setItem('curUser', JSON.stringify(curUser));
   }, [curUser]);
 
@@ -33,6 +35,7 @@ const App = () => {
           <Route path="signup" element={<CreateAccount setCurUser={setCurUser}/>} />
           <Route path="account" element={<Account curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="create" element={<CreateEvent curUser={curUser} setCurUser={setCurUser}/>}/>
+          <Route path="edit/:eventid" element={<EditEvent curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
