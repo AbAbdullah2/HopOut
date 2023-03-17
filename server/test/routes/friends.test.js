@@ -277,13 +277,13 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.receivedFriends.length).toBe(0);
     });
 
-    /*it("friend request was never sent originally", async () => {
-            const response = await request.put(`${endpoint}/declineRequest}`).send({
-                declinerId: receiverId,
-                requesterId
-            });
-            expect(response.status).toBe();
-        });*/
+    it("friend request was never sent originally", async () => {
+      const response = await request.put(`${endpoint}/declineRequest`).send({
+        declinerId: receiverId,
+        requesterId
+      });
+      expect(response.status).toBe(400);
+    });
 
     describe('Respond 400', () => {
       it('requester is invalid id', async () => {
@@ -356,14 +356,14 @@ describe(`Test ${endpoint}`, () => {
       });
       expect(response.status).toBe(400);
     });
-    /*it("not friends originally (friend request sent but not yet accepted)) ", async () => {
-            await request.put(`${endpoint}/sendRequest}`).send({senderId: requesterId, receiverId});
-            const response = await request.put(`${endpoint}/removeFriend}`).send({
-                removerId: receiverId,
-                friendId: requesterId
-            });
-            expect(response.status).toBe();
-        });*/
+    it("not friends originally (friend request sent but not yet accepted)) ", async () => {
+      await request.put(`${endpoint}/sendRequest`).send({senderId: requesterId, receiverId});
+      const response = await request.put(`${endpoint}/removeFriend`).send({
+        removerId: receiverId,
+        friendId: requesterId
+      });
+      expect(response.status).toBe(400);
+    });
 
     describe('Respond 400', () => {
       it('requester is invalid id', async () => {
