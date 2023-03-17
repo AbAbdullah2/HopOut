@@ -4,13 +4,12 @@ import { Card } from 'flowbite-react'
 import { formatEventDates } from '../helpers/FormatDate';
 import { useNavigate } from 'react-router-dom'
 
-
-export default function EventCard({ event }) {
+export default function EventCard({ event, map}) {
   const navigate = useNavigate();
   const start = new Date(event.start);
   const end = new Date(event.end);
   return ( 
-    <Card imgSrc={event.thumbnailId} className='m-3 overflow-hidden hover:bg-blue-400' 
+    <Card imgSrc={event.thumbnailId} className={map ? 'overflow-hidden border-none shadow-none cursor-pointer' : 'm-3 overflow-hidden hover:bg-blue-400'}
     onClick={()=> navigate('/events/'+ event._id)}
     >
       <div className='items-center justify-center text-center'>

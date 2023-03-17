@@ -1,7 +1,7 @@
 import Geocode from "react-geocode";
 import { InfoWindow, Marker } from "@react-google-maps/api";
 import React from "react";
-import MarkerBox from "./MarkerBox";
+import EventCard from "./MarkerBox";
 
 const API_KEY = 'AIzaSyDmxEIHuUqwqwW7gQU0MZh6T8z10Ktgahc';
 Geocode.setApiKey(API_KEY);
@@ -36,7 +36,7 @@ export default function EventMarker({ event }) {
     >
       {visible && 
       <InfoWindow position={coordinates}>
-        <MarkerBox event={event} />
+        <EventCard map={true} event={event} />
       </InfoWindow>
       }
     </Marker>
