@@ -1,11 +1,14 @@
 import Geocode from "react-geocode";
-import { Marker } from "@react-google-maps/api";
+import { InfoWindow, Marker } from "@react-google-maps/api";
 import React from "react";
+import MarkerBox from "./MarkerBox";
 
 const API_KEY = 'AIzaSyDmxEIHuUqwqwW7gQU0MZh6T8z10Ktgahc';
 Geocode.setApiKey(API_KEY);
 
 export default function EventMarker({ event }) {
+
+  const [visible, setVisible] =React.useState(false);
 
   const [coordinates, setCoordinates] = React.useState({
     lat: 39.330420,
@@ -26,6 +29,16 @@ export default function EventMarker({ event }) {
   return ( 
     <Marker 
       position={coordinates}
-    />
+      title={event.name}
+      onClick={() => {
+        setVisible(!visible);
+      }}
+    >
+      {visible && 
+      <InfoWindow position={coordinates}>
+        <MarkerBox event={event} />
+      </InfoWindow>
+      }
+    </Marker>
   );
 }
