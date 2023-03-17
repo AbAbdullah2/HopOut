@@ -8,6 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
 import { Dropdown } from 'flowbite-react';
+import { Combobox } from '@headlessui/react';
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -29,8 +30,23 @@ function CreateEvent(props) {
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState('public');
   const [capacity, setCapacity] = useState('');
+  const [invitees, setInvitees] = useState([]);
+  const [inviteQuery, setInviteQuery] = useState('');
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
+
+  const users = [
+    {id: 1, name: "Billy", email: "billy@jhu.edu"},
+    {id: 2, name: "Bob", email: "bob@jhu.edu"},
+    {id: 3, name: "Joe", email: "joe@jhu.edu"}
+  ];
+
+  const filteredPeople =
+  inviteQuery === ''
+    ? users
+    : users.filter((person) => {
+        return person.name.toLowerCase().includes(inviteQuery.toLowerCase())
+      })
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
@@ -109,6 +125,16 @@ function CreateEvent(props) {
       setCapacity(parsed);
     } else if (v === '') {
       setCapacity('');
+    }
+  }
+
+  const updateInvitees = (e) => {
+    console.log("e", e);
+    const target = e[e.length - 1].id;
+    const ids = e.splice(e.length-1, 1).map((inv) => {return inv.id;});
+    if (!ids.includes(target)) {
+      console.log('hi');
+      setInvitees(e);
     }
   }
     
@@ -277,17 +303,16 @@ function CreateEvent(props) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <div>
-                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
-                    Categories
-                  </label>
-                  <div className="mt-1">
-                    <Dropdown
-                      label={"Select Categories"}
-                      className="bg-gray-50"
-                      dismissOnClick={false}
-                    >
+              <div>
+                <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                  Categories
+                </label>
+                <div className="mt-1">
+                  <Dropdown
+                    label={"Select Categories"}
+                    className="bg-gray-50"
+                    dismissOnClick={false}
+                  >
                     {CATEGORIES.map((f) => (
                       <Dropdown.Item key={f.key}>
                         <input id="checkbox-item-1" type="checkbox" checked={categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
@@ -296,17 +321,22 @@ function CreateEvent(props) {
                     ))}
                   </Dropdown>
                 </div>
-                <div className="mt-3">
-                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
-                      Visibility
-                  </label>
-                  <div className="mt-1">
+                <div>
+                  {categories.map((c, i) => {
+                    return <div key={i} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
+                  })}
+                </div>
+              </div>
+              <div className="mt-3">
+                <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                    Visibility
+                </label>
+                <div className="mt-1">
                   <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
-                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
+                    <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                    <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
                   </label>
-                  </div>
                 </div>
               </div>
               <div className="mt-3 w-1/4">
@@ -324,6 +354,20 @@ function CreateEvent(props) {
                   required
                 />
               </div>
+              <div className="mt-4">
+                <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                  Invitees
+                </label>
+                <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
+                  <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} />
+                  <Combobox.Options>
+                    {filteredPeople.map((person) => (
+                      <Combobox.Option key={person.id} value={person}>
+                        {person.name}
+                      </Combobox.Option>
+                    ))}
+                  </Combobox.Options>
+                </Combobox>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
