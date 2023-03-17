@@ -1,11 +1,13 @@
 import express from 'express';
-import { verifyPassword } from "../util/password.js";
+import { verifyPassword } from '../util/password.js';
 import UserDao from '../data/UserDao.js';
+import EventDao from '../data/EventDao.js';
 
 const router = express.Router();
 export const userDao = new UserDao();
+export const eventDao = new EventDao();
 
-const hidePassword = (user) => {
+export const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
   return rest;
 };
@@ -25,7 +27,7 @@ router.get('/users', async (req, res, next) => {
   }
 });
 
-router.get("/users/:id", async (req, res, next) => {
+router.get('/users/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userDao.read(id);
@@ -40,23 +42,56 @@ router.get("/users/:id", async (req, res, next) => {
   }
 });
 
-router.post('/register', async (req, res, next) => {
-  console.log("posting user ", req.body)
+router.get('/users/privateEvents/:id', async (req, res, next) => {
   try {
-    const { email, name, password } = req.body;
-    
+    const { id } = req.params;
+    console.log("ID", id)
+    const user = await userDao.read(id);
+    let events = [];
+
+    for (const eventId of user.invited) {
+      const event = await eventDao.read(eventId.toString());
+      if (event.visibility === 'private') {
+        events.push({ event });
+      }
+    }
+
+    for (const eventId of user.organizing) {
+      const event = await eventDao.read(eventId.toString());
+      if (event.visibility === 'private') {
+        events.push(event);
+      }
+    }
+
+    return res.json({
+      status: 200,
+      message: `Successfully retrieved the user's private events!`,
+      data: events,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/register', async (req, res, next) => {
+  try {
+    let { email, name, password } = req.body;
+
+    if (email) {
+      email = email.toLowerCase();
+    }
+
     const savedUser = await userDao.create({
-      email: email.toLowerCase(),
+      email,
       name,
       password,
     });
 
-    return res.json({
+    return res.status(201).json({
       status: 201,
       message: `Successfully registered the following user!`,
       data: hidePassword(savedUser),
     });
-
   } catch (err) {
     next(err);
   }
@@ -87,7 +122,14 @@ router.put(`/users/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, password, organizing, attending, invited } = req.body;
-    const user = await userDao.update({ id, name, password, organizing, attending, invited });
+    const user = await userDao.update({
+      id,
+      name,
+      password,
+      organizing,
+      attending,
+      invited,
+    });
 
     res.json({
       status: 200,
@@ -99,7 +141,7 @@ router.put(`/users/:id`, async (req, res, next) => {
   }
 });
 
-router.delete("/users/:id", async (req, res, next) => {
+router.delete('/users/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const user = await userDao.delete(id);
@@ -114,14 +156,13 @@ router.delete("/users/:id", async (req, res, next) => {
   }
 });
 
-
-router.delete("/users", async (req, res, next) => {
+router.delete('/users', async (req, res, next) => {
   try {
     const users = await userDao.deleteAll();
 
     res.json({
       status: 200,
-      message: `Successfully deleted ${users.deletedCount} users!`
+      message: `Successfully deleted ${users.deletedCount} users!`,
     });
   } catch (err) {
     next(err);
