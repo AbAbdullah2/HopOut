@@ -266,15 +266,14 @@ describe(`Test ${endpoint}`, () => {
         organizer,
         categories,
       });
-      console.log(event.body)
-      console.log("USER", user)
-      const response = await request.get(`${endpoint}/privateEvents/?id=${user.id}`);
+      const response = await request.get(`${endpoint}/privateEvents/${user.id}`);
       expect(response.status).toBe(200);
+      console.log(response.body)
       expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
 
     it("Respond 400", async () => {
-      const response = await request.get(`${endpoint}/invalid}`);
+      const response = await request.get(`${endpoint}/invalid`);
       expect(response.status).toBe(400);
     });
 
