@@ -1,15 +1,17 @@
 import { describe, it, expect, beforeEach, afterAll, beforeAll } from "vitest";
-import app from "../../../src/index.js";
+import app from "../../src/index.js";
 import supertest from "supertest";
 import { faker } from "@faker-js/faker";
-import { userDao } from "../../../src/routes/users.js";
-import * as db from "../../../src/data/db.js";
+import { userDao } from "../../src/routes/users.js";
+import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
 import mongoose from "mongoose";
+import EventDao from "../../src/data/EventDao.js";
 
 dotenv.config();
 const endpoint = "/users";
 const request = new supertest(app);
+const eventDao = new EventDao();
 
 describe(`Test ${endpoint}`, () => {
   const numUsers = 5;
@@ -23,7 +25,6 @@ describe(`Test ${endpoint}`, () => {
   beforeEach(async () => {
     await userDao.deleteAll();
     const u = await userDao.readAll({});
-    console.log(u);
     users = [];
     
     for (let index = 0; index < numUsers; index++) {
@@ -49,6 +50,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
+
   });
 
   describe("POST request", () => {
@@ -64,7 +66,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.status).toBe(201);
       expect(response.body.data._id).toBeDefined();
       expect(response.body.data.name).toBe(name);
-      expect(response.body.data.email).toBe(email);
+      expect(response.body.data.email).toBe(email.toLowerCase());
       expect(response.body.data.password).toBeUndefined();
     });
 
@@ -235,8 +237,42 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.password).toBeUndefined();
     });
 
+    it("Respond 200 searching for a users private events", async () => {
+      const index = Math.floor(Math.random() * numUsers);
+      const user = users[index];
+      const name = faker.lorem.words(3);
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
+      const description = faker.lorem.paragraph();
+      const visibility = 'private';
+      const organizer = user.id;
+      const capacity = 3;
+      const categories = ['Sports'];
+      const event = await request.post(`/events`).send({
+        name,
+        start,
+        end,
+        address,
+        city,
+        state,
+        zip,
+        description,
+        visibility,
+        capacity,
+        organizer,
+        categories,
+      });
+      const response = await request.get(`${endpoint}/privateEvents/${user.id}`);
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+    });
+
     it("Respond 400", async () => {
-      const response = await request.get(`${endpoint}/invalid}`);
+      const response = await request.get(`${endpoint}/invalid`);
       expect(response.status).toBe(400);
     });
 
