@@ -82,7 +82,7 @@ class UserDao {
     //validate id
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid User ID!');
     }
 
     //find user
@@ -111,7 +111,7 @@ class UserDao {
     //validate id
     let result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid User ID!');
     }
 
     //validate name
@@ -165,7 +165,7 @@ class UserDao {
     // validate friends invited
     if (friends !== undefined) {
       for (let friend of friends) {
-        const f = await User.findById(friend);
+        const f = await User.findById(friend.user);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
         }
@@ -175,7 +175,7 @@ class UserDao {
     // validate sentFriends invited
     if (sentFriends !== undefined) {
       for (let friend in sentFriends) {
-        const f = await User.findById(sentFriends[friend]);
+        const f = await User.findById(sentFriends[friend].user);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
         }
@@ -185,7 +185,7 @@ class UserDao {
     // validate receivedFriends invited
     if (receivedFriends !== undefined) {
       for (let friend in receivedFriends) {
-        const f = await User.findById(receivedFriends[friend]);
+        const f = await User.findById(receivedFriends[friend].user);
         if (!f) {
           throw new ApiError(400, 'Invalid friend request!');
         }
