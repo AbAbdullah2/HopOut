@@ -9,12 +9,12 @@ import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
-import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
-
-const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 import { Combobox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
+
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -43,6 +43,48 @@ function CreateEvent(props) {
   const [users, setUsers] = useState([]);
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
+
+  useEffect(() => {
+    getAllUsers().then((res) => {
+      setUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
+    });  
+  }, [curUser]);
+
+  const filteredPeople =
+  inviteQuery === ''
+    ? users
+    : users.filter((person) => {
+        return person.name.toLowerCase().includes(inviteQuery.toLowerCase())
+      })
+  const [ libraries ] = React.useState(['places']);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: API_KEY,
+    libraries,
+  });
+
+  const [searchBox, setSearchBox] = React.useState(null);
+
+  const loadSearchBox = (searchBox) => {setSearchBox(searchBox)};
+
+  function onPlaceChanged() {
+    try {
+      setAddress(searchBox.getPlace().name);
+      searchBox.getPlace().address_components.forEach((component) => {
+        if (component.types.includes('locality')) {
+          setCity(component.long_name);
+        }
+        if (component.types.includes('administrative_area_level_1')) {
+          setState(component.short_name);
+        }
+        if (component.types.includes('postal_code')) {
+          setZip(component.long_name);
+        }
+      });
+      setValidated(true);
+    } catch (error) { }
+  }
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
