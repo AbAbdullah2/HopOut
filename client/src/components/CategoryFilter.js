@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dropdown } from 'flowbite-react';
 import categories from "../assets/categories";
 
@@ -14,7 +14,7 @@ export default function CategoryFilter(props) {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mr-4">
       <Dropdown
         label={"Categories"}
         dismissOnClick={false}
