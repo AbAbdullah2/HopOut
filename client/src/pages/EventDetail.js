@@ -19,7 +19,7 @@ export default function EventDetail(props) {
     getEvent(eventid).then((res) => {
       setEvent(res.data.data);
     });  
-  }, []);
+  }, [curUser, navigate, eventid]);
 
   useEffect(() => {
     if (event !== null) {

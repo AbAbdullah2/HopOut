@@ -8,11 +8,16 @@ import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
 import { Dropdown } from 'flowbite-react';
+import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
+
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
 function CreateEvent(props) {
   const navigate = useNavigate();
 
   const {curUser, setCurUser} = props
+
+  const [validated, setValidated] = useState(false);
 
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -32,8 +37,44 @@ function CreateEvent(props) {
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
+  const [ libraries ] = React.useState(['places']);
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: API_KEY,
+    libraries,
+  });
+
+  const [searchBox, setSearchBox] = React.useState(null);
+
+  const loadSearchBox = (searchBox) => {setSearchBox(searchBox)};
+
+  function onPlaceChanged() {
+    try {
+      setAddress(searchBox.getPlace().name);
+      searchBox.getPlace().address_components.forEach((component) => {
+        if (component.types.includes('locality')) {
+          setCity(component.long_name);
+        }
+        if (component.types.includes('administrative_area_level_1')) {
+          setState(component.short_name);
+        }
+        if (component.types.includes('postal_code')) {
+          setZip(component.long_name);
+        }
+      });
+      setValidated(true);
+    } catch (error) { }
+  }
+
   const handleCreateEvent = async (e) => {
     e.preventDefault();
+
+    if (validated === false) {
+      toast.error('Invalid address');
+      return;
+    }
+
     toast.success('Creating event...', {duration: 10000});
     // Upload cover img
 
@@ -112,7 +153,7 @@ function CreateEvent(props) {
     }
   }
     
-  return (
+  return isLoaded ? (
     <div className='bg-stone-100 min-h-screen'>
       <Toaster/>
       <div className='mx-auto flex flex-col h-full'>
@@ -203,18 +244,29 @@ function CreateEvent(props) {
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Location
                   </label>
-                  <div className="mt-3 flex rounded-md shadow-sm">
-                    <input
-                      type="text"
-                      name="address"
-                      id="address"
-                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
-                      placeholder="Address"
-                      value={address}
-                      onChange={(e) => setAddress(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <Autocomplete
+                    onPlaceChanged={
+                      onPlaceChanged
+                    }
+                    onLoad={loadSearchBox}
+                    className='text-center'
+                    types={['address']}
+                    fields={['address_components', 'name']}
+                    restrictions={{country: 'us'}}
+                  >
+                    <div className="mt-3 flex rounded-md shadow-sm">
+                      <input
+                        type="text"
+                        name="address"
+                        id="address"
+                        className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                        placeholder="Address"
+                        value={address}
+                        onChange={(e) => {setAddress(e.target.value); setValidated(false)}}
+                        required
+                      />
+                    </div>
+                  </Autocomplete>
                   <div className='flex flex-row space-x-5 w-full'>
                     <div className="mt-3 flex rounded-md shadow-sm w-1/2">
                       <input
@@ -224,7 +276,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="City"
                         value={city}
-                        onChange={(e) => setCity(e.target.value)}
+                        onChange={(e) => {setCity(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -234,7 +286,7 @@ function CreateEvent(props) {
                         id="state"
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         value={state}
-                        onChange={(e) => setState(e.target.value)}
+                        onChange={(e) => {setState(e.target.value); setValidated(false)}}
                         required
                       >
                       <option value="">State</option>
@@ -253,7 +305,7 @@ function CreateEvent(props) {
                         className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
                         placeholder="Zip Code"
                         value={zip}
-                        onChange={(e) => setZip(e.target.value)}
+                        onChange={(e) => {setZip(e.target.value); setValidated(false)}}
                         required
                       />
                     </div>
@@ -396,7 +448,7 @@ function CreateEvent(props) {
         </div>
       </div>
     </div>
-  );
+  ) : ('');
 }
 
 export default CreateEvent;
