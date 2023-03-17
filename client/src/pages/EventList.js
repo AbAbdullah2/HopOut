@@ -48,7 +48,7 @@ export function EventList(props) {
             })}
           </div>
         ) : (
-          <div className='my-3 w-11/12 items-center justify-center'>
+          <div className='my-3 mb-5 w-11/12 items-center justify-center'>
             <Map events={eventList} />
         </div>
         )}
