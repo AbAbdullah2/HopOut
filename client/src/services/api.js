@@ -72,20 +72,4 @@ async function createNewEvent(event) {
   return response;
 }
 
-async function rsvpToEvent(userId, eventId) {
-  const response = await axios.put(`${BASE_URL}/rsvp/sendRSVP`, userId, eventId)
-    .catch(function (error) {
-      console.log(error);
-    });
-  return response;
-}
-
-async function cancelRsvp(userId, eventId) {
-  const response = await axios.put(`${BASE_URL}/rsvp/removeRSVP`, userId, eventId)
-    .catch(function (error) {
-      console.log(error);
-    });
-  return response;
-}
-
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, rsvpToEvent, cancelRsvp }
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
