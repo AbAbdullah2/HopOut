@@ -37,26 +37,71 @@ const UserSchema = new mongoose.Schema({
     },
   ],
   friends: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
+    {    
+      user: 
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      date: 
+      {
+        type: Date,
+      }
+    }
   ],
   sentFriends: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true,
-    },
-  ],
+    {    
+      user: 
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      date: 
+      {
+        type: Date,
+      }
+    }],
+    // ({
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'User',
+    //   required: true,
+    // },
+    // {
+    //   type: Date,
+    // })
+    // {    
+    //   user: 
+    //   {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true,
+    //   },
+    //   date: 
+    //   {
+    //     type: Date,
+    //   }
+    // }],
+    // {
+    //   type: mongoose.Schema.Types.ObjectId,
+    //   ref: 'User',
+    //   required: true,
+    // },
+  //],
   receivedFriends: [
+  {    
+    user: 
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-  ],
+    date: 
+    {
+      type: Date,
+    }
+  }],
 });
 
 const User = mongoose.model('User', UserSchema);

@@ -30,6 +30,10 @@ class EventDao {
     coverId,
     thumbnailId,
   }) {
+    if (name === null || name === undefined) {
+      throw new ApiError(400, 'Invalid Name!');
+    }
+
     //check name is valid
     let result = validString.safeParse(name);
     if (!result.success) {
@@ -48,7 +52,6 @@ class EventDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid End Date!');
     }
-
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
 
     result = validString.safeParse(address);
@@ -67,7 +70,7 @@ class EventDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid ZIP!');
     }
-    const location = { address, city, state, zip };
+    //const location = { address, city, state, zip };
 
     //check description is valid
     result = validString.safeParse(description);
@@ -115,7 +118,12 @@ class EventDao {
       name,
       start,
       end,
-      location,
+      location: {
+        address,
+        city,
+        state,
+        zip,
+      },
       description,
       visibility,
       organizer,
@@ -126,7 +134,6 @@ class EventDao {
       coverId,
       thumbnailId,
     });
-
     return event;
   }
 
@@ -136,6 +143,8 @@ class EventDao {
     if (name) {
       filter.name = name;
     }
+
+    filter.visibility = 'public';
 
     const events = await Event.find(filter);
     return events;
@@ -147,7 +156,7 @@ class EventDao {
     //validate id
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid Event ID!');
     }
 
     //find event
@@ -239,7 +248,7 @@ class EventDao {
         throw new ApiError(400, 'Invalid ZIP!');
       }
     }
-    const location = { address, city, state, zip };
+    //const location = { address, city, state, zip };
 
     if (description !== undefined) {
       //check description is valid
@@ -307,7 +316,12 @@ class EventDao {
         name,
         start,
         end,
-        location,
+        location: {
+          address,
+          city,
+          state,
+          zip,
+        },
         description,
         visibility,
         categories,
