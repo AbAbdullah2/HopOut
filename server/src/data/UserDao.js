@@ -1,58 +1,58 @@
-import User from '../models/User.js';
-import Event from '../models/Event.js';
-import { hashPassword } from '../util/password.js';
-import mongoose from 'mongoose';
-import ApiError from '../models/ApiError.js';
-import { z } from 'zod';
+import User from "../models/User.js";
+import Event from "../models/Event.js"
+import { hashPassword, verifyPassword } from "../util/password.js";
+import mongoose from "mongoose";
+import ApiError from "../models/ApiError.js";
+import { z } from "zod";
 
 const validObjectId = z
   .string()
-  .refine((id) => mongoose.isValidObjectId(id), 'Invalid ID!');
-const validName = z.string().min(1, 'Missing name attribute!');
-const validEmail = z.string().email('Invalid Email!');
+  .refine((id) => mongoose.isValidObjectId(id), "Invalid ID!");
+const validName = z.string().min(1, "Missing name attribute!");
+const validEmail = z.string().email("Invalid Email!");
 const validPassword = z
   .string()
-  .min(6, 'Password should be at least 6 characters.');
+  .min(6, "Password should be at least 6 characters.");
 
 class UserDao {
+
   // return the created user
   async create({ name, email, password }) {
+    
     //check name is valid
     let result = validName.safeParse(name);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid Name!');
+      throw new ApiError(400, "Invalid Name!");
     }
 
     //check email is undefined
     if (!email) {
-      throw new ApiError(400, 'Undefined Email!');
+      throw new ApiError(400, "Undefined Email!");
     }
-
+    
     //check if user already exists
     result = await User.exists({ email: email.toLowerCase() });
     if (result) {
-      throw new ApiError(
-        400,
-        'this email is already in use. please try a different one.'
-      );
+        throw new ApiError(400, 'this email is already in use. please try a different one.');
     }
 
     //check email is valid
     result = validEmail.safeParse(email);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid Email!');
+      throw new ApiError(400, "Invalid Email!");
     }
 
     //check password is valid
     result = validPassword.safeParse(password);
     if (!result.success) {
-      throw new ApiError(400, 'Password should be at least 6 characters.');
+      throw new ApiError(400, "Password should be at least 6 characters.");
     }
     password = hashPassword(password);
 
     //create user
     const user = await User.create({ name, email, password });
     return user;
+
   }
 
   // return all users
@@ -61,16 +61,17 @@ class UserDao {
     if (name) {
       filter.name = name;
     }
-
+ 
     const users = await User.find(filter);
     return users;
   }
+ 
 
   async readByEmail(email) {
     //find user
-    const user = await User.findOne({ email });
+    const user = await User.findOne({email});
     if (!user) {
-      throw new ApiError(404, 'Resource not found!');
+      throw new ApiError(404, "Resource not found!");
     }
 
     return user;
@@ -79,16 +80,17 @@ class UserDao {
   // return the user with the given ID
   // throws ApiError if id is invalid or resource does not exist in our database
   async read(id) {
-    //validate id
+
+    //validate id 
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid User ID!');
+      throw new ApiError(400, "Invalid ID!");
     }
 
     //find user
     const user = await User.findById(id);
     if (!user) {
-      throw new ApiError(404, 'Resource not found!');
+      throw new ApiError(404, "Resource not found!");
     }
 
     return user;
@@ -97,28 +99,19 @@ class UserDao {
   // update a user given its ID
   // return the updated user
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({
-    id,
-    name,
-    password,
-    organizing,
-    attending,
-    invited,
-    friends,
-    sentFriends,
-    receivedFriends,
-  }) {
+  async update({ id, name, password, organizing, attending, invited }) {
+
     //validate id
     let result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid User ID!');
+      throw new ApiError(400, "Invalid ID!");
     }
 
     //validate name
     if (name !== undefined) {
       result = validName.safeParse(name);
       if (!result.success) {
-        throw new ApiError(400, 'Invalid Name!');
+        throw new ApiError(400, "Invalid Name!");
       }
     }
 
@@ -126,7 +119,7 @@ class UserDao {
     if (password !== undefined) {
       result = validPassword.safeParse(password);
       if (!result.success) {
-        throw new ApiError(400, 'Invalid Password!');
+        throw new ApiError(400, "Invalid Password!");
       }
 
       password = hashPassword(password);
@@ -137,7 +130,7 @@ class UserDao {
       for (const event of organizing) {
         const e = await Event.findById(event);
         if (!e) {
-          throw new ApiError(400, 'User is organizing invalid event!');
+          throw new ApiError(400, "User is organizing invalid event!");
         }
       }
     }
@@ -147,7 +140,7 @@ class UserDao {
       for (const event of attending) {
         const e = await Event.findById(event);
         if (!e) {
-          throw new ApiError(400, 'User is attending invalid event!');
+          throw new ApiError(400, "User is attending invalid event!");
         }
       }
     }
@@ -157,37 +150,7 @@ class UserDao {
       for (const event of invited) {
         const e = await Event.findById(event);
         if (!e) {
-          throw new ApiError(400, 'User is invited to invalid event!');
-        }
-      }
-    }
-
-    // validate friends invited
-    if (friends !== undefined) {
-      for (let friend of friends) {
-        const f = await User.findById(friend.user);
-        if (!f) {
-          throw new ApiError(400, 'Invalid friend request!');
-        }
-      }
-    }
-
-    // validate sentFriends invited
-    if (sentFriends !== undefined) {
-      for (let friend in sentFriends) {
-        const f = await User.findById(sentFriends[friend].user);
-        if (!f) {
-          throw new ApiError(400, 'Invalid friend request!');
-        }
-      }
-    }
-
-    // validate receivedFriends invited
-    if (receivedFriends !== undefined) {
-      for (let friend in receivedFriends) {
-        const f = await User.findById(receivedFriends[friend].user);
-        if (!f) {
-          throw new ApiError(400, 'Invalid friend request!');
+          throw new ApiError(400, "User is invited to invalid event!");
         }
       }
     }
@@ -195,38 +158,30 @@ class UserDao {
     //update user
     const user = await User.findByIdAndUpdate(
       id,
-      {
-        name,
-        password,
-        organizing,
-        attending,
-        invited,
-        friends,
-        sentFriends,
-        receivedFriends,
-      },
+      { name, password, organizing, attending, invited },
       { new: true }
     );
     if (!user) {
-      throw new ApiError(404, 'Resource not found!');
+      throw new ApiError(404, "Resource not found!");
     }
 
     return user;
   }
 
   // delete a user given its ID
-  // return the user
+  // return the user 
   // throws ApiError if id is invalid or resource does not exist
   async delete(id) {
-    //validate id
+
+    //validate id 
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, "Invalid ID!");
     }
 
     const user = await User.findByIdAndDelete(id);
     if (!user) {
-      throw new ApiError(404, 'Resource not found!');
+      throw new ApiError(404, "Resource not found!");
     }
 
     return user;
