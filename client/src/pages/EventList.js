@@ -39,24 +39,26 @@ export function EventList(props) {
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-        <div>
-          <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
-        </div>
-        <div className='mt-5 w-11/12 flex flex-row flex-nowrap justify-end content-end items-end right-0'>
-          <span className='pr-2'>Toggle Map</span>
-          <Switch
-            checked={listActive}
-            onChange={setListActive}
-            className={`${
-              listActive ? 'bg-blue-600' : 'bg-gray-400'
-            } relative inline-flex h-6 w-11 items-center rounded-full`}
-          >
-            <span
+        <div className={'mt-5 w-11/12 flex flex-row flex-nowrap justify-between'}>
+          <div>
+            <Switch
+              checked={listActive}
+              onChange={setListActive}
               className={`${
-                listActive ? 'translate-x-6' : 'translate-x-1'
-              } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-            />
-          </Switch>
+                listActive ? 'bg-blue-600' : 'bg-gray-400'
+              } relative inline-flex h-6 w-11 items-center rounded-full`}
+            >
+              <span
+                className={`${
+                  listActive ? 'translate-x-6' : 'translate-x-1'
+                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+              />
+            </Switch>
+            <span className='pl-2'>Toggle Map</span>
+          </div>
+          <div className='justify-end content-end items-end right-0'>
+            {listActive ? (<CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} /> ) : ( <></> )}
+          </div>
         </div>
         {listActive ? (
           <div className='my-3 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>

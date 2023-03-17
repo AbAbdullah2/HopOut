@@ -2,7 +2,7 @@ import React from 'react'
 import { GoogleMap, useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 import EventMarker from './Marker';
 
-const API_KEY = 'AIzaSyDmxEIHuUqwqwW7gQU0MZh6T8z10Ktgahc';
+const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
 function Map({events}) {
 
