@@ -1,7 +1,7 @@
 import Geocode from "react-geocode";
 import { InfoWindow, Marker } from "@react-google-maps/api";
 import React from "react";
-import EventCard from "./MarkerBox";
+import EventCard from "./EventCard";
 
 const API_KEY = 'AIzaSyDmxEIHuUqwqwW7gQU0MZh6T8z10Ktgahc';
 Geocode.setApiKey(API_KEY);

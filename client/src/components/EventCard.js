@@ -9,7 +9,7 @@ export default function EventCard({ event, map}) {
   const start = new Date(event.start);
   const end = new Date(event.end);
   return ( 
-    <Card imgSrc={event.thumbnailId} className={map ? 'overflow-hidden border-none shadow-none cursor-pointer' : 'm-3 overflow-hidden hover:bg-blue-400'}
+    <Card imgSrc={map ? '' : event.thumbnailId} className={map ? 'border-none shadow-none cursor-pointer' : 'm-3 overflow-hidden hover:bg-blue-400'}
     onClick={()=> navigate('/events/'+ event._id)}
     >
       <div className='items-center justify-center text-center'>
