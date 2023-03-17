@@ -55,7 +55,6 @@ router.post('/events', async (req, res, next) => {
       coverId,
       thumbnailId,
     } = req.body;
-    console.log("USER", organizer)
     const event = await eventDao.create({
       name,
       start,
@@ -76,12 +75,10 @@ router.post('/events', async (req, res, next) => {
     const user = await userDao.read(organizer.toString());
     let newOrganizing = user.organizing;
     newOrganizing.push(event.id);
-    const updatedUser = await userDao.update({
+    await userDao.update({
       id: user.id,
       organizing: newOrganizing,
     });
-
-    console.log(updatedUser)
 
     return res.status(201).json({
       status: 201,
