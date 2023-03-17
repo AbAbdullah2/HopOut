@@ -10,21 +10,13 @@ export default function EventHostView(props) {
   const navigate = useNavigate();
 
   return (
-    <div className="absolute top-0 right-0 text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-2 p-1">
-    <Dropdown
-        floatingArrow= {false}
-        arrowIcon={false}
-        inline={true}
-        label={<div className=''><FontAwesomeIcon icon={solid('ellipsis-vertical')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'></span></div>}
-        dismissOnClick={false}
-    >
-        <Dropdown.Item onClick={() => navigate("/edit/"+eventid)}>
+    <div className="absolute top-0 right-0">
+        <button className="text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-1 py-1 px-3" onClick={() => navigate("/edit/"+eventid)}>
         Edit
-        </Dropdown.Item>
-        <Dropdown.Item onClick={() => setShowConfirm(true)}>
+        </button>
+        <button className="text-white bg-blue-500 hover:bg-blue-600 shadow-md rounded-md m-1 p-1" onClick={() => setShowConfirm(true)}>
         Delete
-        </Dropdown.Item>
-    </Dropdown>
+        </button>
     </div>
   );
 }
