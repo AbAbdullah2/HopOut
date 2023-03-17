@@ -50,13 +50,12 @@ describe(`Test ${endpoint}`, () => {
       expect(receiver.receivedFriends[0].user.toString()).toBe(senderId);
     });
 
-    /*it("sender sends a friend request to receiver twice", async () => {
-            const senderId = requesterId;
-            const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
-            const response2 = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
-            expect(response2.status).toBe();
-
-        });*/
+    it("sender sends a friend request to receiver twice", async () => {
+      const senderId = requesterId;
+      const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
+      const response2 = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
+      expect(response2.status).toBe(400);
+    });
     /*it("receiver sends a friend request to sender after sender's initial request", async () => {
             let senderId = requesterId;
             const response = await request.put(`${endpoint}/sendRequest}`).send({senderId, receiverId});
@@ -119,13 +118,13 @@ describe(`Test ${endpoint}`, () => {
       expect(receiver.receivedFriends.length).toBe(0);
     });
 
-    /*it("friend request was never sent originally", async () => {
-            const response = await request.put(`${endpoint}/removeRequest}`).send({
-                otherId: receiverId,
-                removerId: requesterId
-            });
-            expect(response.status).toBe();       
-        });*/
+    it("friend request was never sent originally", async () => {
+      const response = await request.put(`${endpoint}/removeRequest`).send({
+        otherId: receiverId,
+        removerId: requesterId
+      });
+      expect(response.status).toBe(400);       
+    });
 
     describe('Respond 400', () => {
       it('requester is invalid id', async () => {
@@ -170,14 +169,6 @@ describe(`Test ${endpoint}`, () => {
 
   describe('accept a friend request', () => {
     it('Respond 200 (friend request accepted sucessfully)', async () => {
-      // const senderId = requesterId;
-      // const response = await request.put(`${endpoint}/sendRequest`).send({senderId, receiverId});
-      // expect(response.status).toBe(200);
-      // expect(response.body.data._id).toBe(senderId);
-      // expect(response.body.data.sentFriends[0].user).toBe(receiverId);
-      // const receiver = await userDao.read(receiverId);
-      // expect(receiver.receivedFriends[0].user.toString()).toBe(senderId);
-
       await request
         .put(`${endpoint}/sendRequest`)
         .send({ senderId: requesterId, receiverId });
@@ -200,21 +191,13 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.receivedFriends.length).toBe(0);
     });
 
-    /*it("friend request was never sent originally", async () => {
-            const response = await request.put(`${endpoint}/acceptRequest}`).send({
-                acceptorId: receiverId,
-                requesterId
-            });
-            expect(response.status).toBe();
-        });*/
-
-    /*it("friend request sent and sender tries to accept the request", async () => {
-                const response = await request.put(`${endpoint}/acceptRequest}`).send({
-                acceptorId: requesterId,
-                requesterId: receiverId
-            });
-            expect(response.status).toBe();
-        });*/
+    it("friend request was never sent originally", async () => {
+      const response = await request.put(`${endpoint}/acceptRequest`).send({
+        acceptorId: receiverId,
+        requesterId
+      });
+      expect(response.status).toBe(400);
+    });
 
     describe('Respond 400', () => {
       it('requester is invalid id', async () => {
