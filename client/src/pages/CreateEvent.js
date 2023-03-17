@@ -7,7 +7,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { createNewEvent } from '../services/api';
+import { createNewEvent, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,7 +16,7 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 function CreateEvent(props) {
   const navigate = useNavigate();
 
-  const {curUser, setCurUser} = props
+  const {curUser, setCurUser} = props;
 
   const [title, setTitle] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -41,7 +41,7 @@ function CreateEvent(props) {
 
   useEffect(() => {
     getAllUsers().then((res) => {
-      setUsers(res.data.data);
+      setUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
     });  
   }, []);
 
@@ -81,7 +81,6 @@ function CreateEvent(props) {
   const createEvent = () => {
     const start = new Date(startDate.startDate + ' ' + startTime);
     const end = new Date(endDate.startDate + ' ' + endTime);
-    console.log(invitees.map((inv) => {return inv._id}));
     const newEvent = {
       name: title,
       start: start,
@@ -96,16 +95,19 @@ function CreateEvent(props) {
       visibility: visibility,
       categories: categories,
       capacity: capacity,
-      organizer: curUser._id,
-      invitees: invitees.map((inv) => {return inv._id})
+      organizer: curUser._id
     };
 
     
-    createNewEvent(newEvent).then((res) => {
+    createNewEvent(newEvent).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not create event ' + newEvent.title);
+      }
+      const ids = invitees.map((inv) => {return inv._id});
+      for (const idx in ids) {
+        await sendInvite(res.data.data._id, ids[idx]);
       }
     });
   }
@@ -148,7 +150,6 @@ function CreateEvent(props) {
   }
 
   const removeInvitee = (id) => {
-    console.log('called');
     setInvitees(invitees.filter((inv) => {return inv._id !== id}));
   }
     
@@ -394,7 +395,7 @@ function CreateEvent(props) {
                   {invitees.map((inv) => {
                     return <div key={inv._id} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">
                       <div>{inv.name}<br />{inv.email}</div>
-
+                      <button onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
                     </div>
                   })}
                 </div>
@@ -419,7 +420,7 @@ function CreateEvent(props) {
                         />
                       </svg>
                       <div className="text-sm text-gray-600">
-                        <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
+                        <label className="cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{cover ? cover.name : 'Upload a cover image'}</span>
                             <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={(e) => setCover(e.target.files[0])}/>
                         </label>
@@ -447,7 +448,7 @@ function CreateEvent(props) {
                         />
                       </svg>
                       <div className="text-sm text-gray-600">
-                        <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
+                        <label className="cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{thumbnail ? thumbnail.name : 'Upload a thumbnail'}</span>
                             <input id="thumbnail-upload" name="thumbnail-upload" type="file" className="sr-only" onChange={(e) => setThumbnail(e.target.files[0])} />
                         </label>

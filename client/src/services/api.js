@@ -72,4 +72,13 @@ async function createNewEvent(event) {
   return response;
 }
 
-export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent }
+async function sendInvite(evid, invid) {
+  const body = { eventId: evid, inviteeId: invid };
+  const response = await axios.put(`${BASE_URL}/rsvp/sendInvite`, body)
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
+export { getAllUsers, getUser, register, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, sendInvite }
