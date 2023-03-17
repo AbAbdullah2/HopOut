@@ -97,7 +97,6 @@ function CreateEvent(props) {
       capacity: capacity,
       organizer: curUser._id
     };
-
     
     createNewEvent(newEvent).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
