@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Datepicker from "react-tailwindcss-datepicker"; 
 import Header from '../components/Header';
 import states from '../assets/states';
 import CATEGORIES from "../assets/categories";
+import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
@@ -34,14 +35,15 @@ function CreateEvent(props) {
   const [capacity, setCapacity] = useState('');
   const [invitees, setInvitees] = useState([]);
   const [inviteQuery, setInviteQuery] = useState('');
+  const [users, setUsers] = useState([]);
   let coverUrl = "https://via.placeholder.com/1920x1080";
   let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
-  const users = [
-    {id: 1, name: "Billy", email: "billy@jhu.edu"},
-    {id: 2, name: "Bob", email: "bob@jhu.edu"},
-    {id: 3, name: "Joe", email: "joe@jhu.edu"}
-  ];
+  useEffect(() => {
+    getAllUsers().then((res) => {
+      setUsers(res.data.data);
+    });  
+  }, []);
 
   const filteredPeople =
   inviteQuery === ''
@@ -77,8 +79,9 @@ function CreateEvent(props) {
   }
 
   const createEvent = () => {
-    const start = new Date(startDate.startDate + ' ' + startTime)
-    const end = new Date(endDate.startDate + ' ' + endTime);    
+    const start = new Date(startDate.startDate + ' ' + startTime);
+    const end = new Date(endDate.startDate + ' ' + endTime);
+    console.log(invitees.map((inv) => {return inv._id}));
     const newEvent = {
       name: title,
       start: start,
@@ -94,8 +97,10 @@ function CreateEvent(props) {
       categories: categories,
       capacity: capacity,
       organizer: curUser._id,
+      invitees: invitees.map((inv) => {return inv._id})
     };
 
+    
     createNewEvent(newEvent).then((res) => {
       if (res.status === 201 || res.status === 200) {
         navigate('/events/' + res.data.data._id);
@@ -131,16 +136,20 @@ function CreateEvent(props) {
   }
 
   const updateInvitees = (e) => {
-    const target = e[e.length - 1].id;
-    const ids = e.slice(0, -1).map((inv) => {return inv.id;});
-    if (!ids.includes(target)) {
+    if (e.length > 0) {
+      const target = e[e.length - 1]._id;
+      const ids = e.slice(0, -1).map((inv) => {return inv._id;});
+      if (!ids.includes(target)) {
+        setInvitees(e);
+      }
+    } else {
       setInvitees(e);
     }
   }
 
   const removeInvitee = (id) => {
     console.log('called');
-    setInvitees(invitees.filter((inv) => {return inv.id !== id}));
+    setInvitees(invitees.filter((inv) => {return inv._id !== id}));
   }
     
   return (
@@ -369,7 +378,7 @@ function CreateEvent(props) {
                       <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
                       <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {filteredPeople.map((person) => (
-                          <Combobox.Option key={person.id} value={person} className={({ active }) =>
+                          <Combobox.Option key={person._id} value={person} className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-4 pr-4 ${
                             active ? 'bg-blue-600 text-white' : 'text-gray-900'
                           }`
@@ -383,7 +392,7 @@ function CreateEvent(props) {
                 </div>
                 <div>
                   {invitees.map((inv) => {
-                    return <div key={inv.id} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">
+                    return <div key={inv._id} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">
                       <div>{inv.name}<br />{inv.email}</div>
 
                     </div>
