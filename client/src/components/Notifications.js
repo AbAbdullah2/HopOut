@@ -7,59 +7,21 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Notifications(props) {
   const {curUser} = props;
-  // remove this when user actually has recievedFriends
-  curUser.recievedFriends = [
-      "6403b70b76c36710b19caa6a",
-      "6403e981caf7459f5b6269b2"
-  ];
-  curUser.invited = [
-      "64065ac0a4aac4b29a59ba54", 
-      "64065a69c43001138f1298ef"
-  ];
   const navigate = useNavigate();
   const [allNotifications, setAllNotifications] = useState([]);
 
-  const [friendReqsIds, setFriendReqsIds] = useState(curUser.recievedFriends);
   const [friendReqs, setFriendReqs] = useState([]);
   const [eventInvites, setEventInvites] = useState([]);
 
   useEffect(() => {
-    // get all users and filter by IDs found in friendReqs
     getAllUsers().then(userData => {
-        let users = userData.data.data;
-        users = [{
-            _id: "6403b70b76c36710b19caa6a",
-            name: "John D'Cruz",
-            email: "fefejk@jhu.edu"
-        },
-        {
-            _id: "6403e981caf7459f5b6269b2",
-            name: "Abc",
-            email: "efjkenfe@jhu.edu"
-
-        },
-        ];
-        setFriendReqs(users.filter(function (user) {
-            return (friendReqsIds.includes(user._id));
+        setFriendReqs(userData.data.data.filter(function (user) {
+            return (curUser.receivedFriends.includes(user._id));
         }));
     });
 
     getAllEvents().then(eventData => {
-        let events = eventData.data.data;
-        events = [{
-            _id: "64065ac0a4aac4b29a59ba54",
-            name: "Hop out party",
-            start: "03/02/2023",
-            thumbnailId: "https://picsum.photos/1000/1000"
-        },
-        {
-            _id: "64065a69c43001138f1298ef",
-            name: "Hop out party 2",
-            start: "05/20/2023",
-            thumbnailId: "https://picsum.photos/1000/1000"
-        },
-        ];
-        setEventInvites(events.filter(function (event) {
+        setEventInvites(eventData.data.data.filter(function (event) {
             return (curUser.invited.includes(event._id));
         }));
     });
@@ -82,7 +44,9 @@ export default function Notifications(props) {
           class="bg-transparent hover:text-blue-400"
           dismissOnClick={false}
         >
-          {allNotifications.map((notif) =>{ 
+          {
+            allNotifications.length > 0 ? 
+          allNotifications.map((notif) => { 
               return (<Dropdown.Item>
                 <div className="flex items-center space-x-4">
                     {notif.type === "friend" ? 
@@ -115,7 +79,7 @@ export default function Notifications(props) {
                 </div>
               </Dropdown.Item>)
             }
-          )}
+          ): <Dropdown.Item>No notifications!</Dropdown.Item>}
               
         </Dropdown>
     </div>
