@@ -9,6 +9,8 @@ import uploadImg from '../services/imgbb';
 import { createNewEvent } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -129,13 +131,16 @@ function CreateEvent(props) {
   }
 
   const updateInvitees = (e) => {
-    console.log("e", e);
     const target = e[e.length - 1].id;
-    const ids = e.splice(e.length-1, 1).map((inv) => {return inv.id;});
+    const ids = e.slice(0, -1).map((inv) => {return inv.id;});
     if (!ids.includes(target)) {
-      console.log('hi');
       setInvitees(e);
     }
+  }
+
+  const removeInvitee = (id) => {
+    console.log('called');
+    setInvitees(invitees.filter((inv) => {return inv.id !== id}));
   }
     
   return (
@@ -358,16 +363,32 @@ function CreateEvent(props) {
                 <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
                   Invitees
                 </label>
-                <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
-                  <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} />
-                  <Combobox.Options>
-                    {filteredPeople.map((person) => (
-                      <Combobox.Option key={person.id} value={person}>
-                        {person.name}
-                      </Combobox.Option>
-                    ))}
-                  </Combobox.Options>
-                </Combobox>
+                <div>
+                  <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
+                    <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                      <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
+                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {filteredPeople.map((person) => (
+                          <Combobox.Option key={person.id} value={person} className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                            active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                          }`
+                          }>
+                            {person.name} <br /> {person.email}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </div>
+                  </Combobox>
+                </div>
+                <div>
+                  {invitees.map((inv) => {
+                    return <div key={inv.id} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">
+                      <div>{inv.name}<br />{inv.email}</div>
+
+                    </div>
+                  })}
+                </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
