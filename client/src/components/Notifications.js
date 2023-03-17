@@ -15,9 +15,13 @@ export default function Notifications(props) {
 
   useEffect(() => {
     getAllUsers().then(userData => {
-        setFriendReqs(userData.data.data.filter(function (user) {
-            return (curUser.receivedFriends.includes(user._id));
-        }));
+      let reqs = [];
+      userData.data.data.forEach((user) => {
+        curUser.receivedFriends.forEach(received => {
+          if(received.user === user._id) reqs.push(user);
+        });
+      });
+      setFriendReqs(reqs);
     });
 
     getAllEvents().then(eventData => {

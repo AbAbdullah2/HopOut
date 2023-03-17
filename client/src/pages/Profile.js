@@ -95,7 +95,7 @@ export default function Profile(props) {
       updateUser({...curUser, 
         receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
       }).then((updateRes) => {
-        if (updateRes.status === 200 || updateRes.status === 201) {
+        if (updateRes.data.data) {
           setCurUser(updateRes.data.data)
           console.log("updating remover:", updateRes.data.data)
         }
