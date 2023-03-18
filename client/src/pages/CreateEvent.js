@@ -54,7 +54,7 @@ function CreateEvent(props) {
   inviteQuery === ''
     ? users
     : users.filter((person) => {
-        return person.name.toLowerCase().includes(inviteQuery.toLowerCase())
+        return person.name.toLowerCase().includes(inviteQuery.toLowerCase()) || person.email.toLowerCase().includes(inviteQuery.toLowerCase())
       })
   const [ libraries ] = React.useState(['places']);
 
@@ -137,7 +137,6 @@ function CreateEvent(props) {
       capacity: capacity,
       organizer: curUser._id
     };
-    
     createNewEvent(newEvent).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
         navigate('/events/' + res.data.data._id);
