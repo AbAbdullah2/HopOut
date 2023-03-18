@@ -29,8 +29,48 @@ const UserSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Event',
     required: true,
-  }]
-})
+  }],
+  friends: [
+    {    
+      user: 
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      date: 
+      {
+        type: Date,
+      }
+    }
+  ],
+  sentFriends: [
+    {    
+      user: 
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      date: 
+      {
+        type: Date,
+      }
+    }],
+  receivedFriends: [
+  {    
+    user: 
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
+    date: 
+    {
+      type: Date,
+    }
+  }],
+});
 
 const User = mongoose.model("User", UserSchema);
 

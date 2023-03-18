@@ -47,6 +47,10 @@ const EventSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     },
+    capacity: {
+      type: Number,
+      required: true,
+    },
     attendees: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

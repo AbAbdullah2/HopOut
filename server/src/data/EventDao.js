@@ -14,7 +14,7 @@ const visibilityEnum = z.enum(["public", "private"]);
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories, coverId, thumbnailId }) {
+  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories, coverId, thumbnailId }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -79,6 +79,10 @@ class EventDao {
     if (!org) {
       throw new ApiError(400, "Invalid Organizer!");
     }
+    result = validNumber.safeParse(capacity);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid capacity!');
+    }
 
     //check categories array has valid categories
     categories ? categories.forEach((t) => { 
@@ -89,7 +93,7 @@ class EventDao {
     }) : categories = [];
 
     //create event
-    const event = await Event.create({ name, start, end, location, description, visibility, organizer, categories, 
+    const event = await Event.create({ name, start, end, location, description, visibility, organizer, capacity, categories, 
         attendees: [], invitees: [], coverId, thumbnailId});
     
     return event;
@@ -102,6 +106,7 @@ class EventDao {
       filter.name = name;
     }
  
+    filter.visibility = 'public';
     const events = await Event.find(filter);
     return events;
   }
@@ -128,8 +133,21 @@ class EventDao {
   // update an event given its ID
   // return the updated event
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({ id, name, start, end, address, city, state, zip, description, visibility, categories, attendees, invitees, coverId, thumbnailId }) {
-
+  async update({
+    id,
+    name,
+    start,
+    end,
+    location,
+    description,
+    visibility,
+    categories,
+    capacity,
+    attendees,
+    invitees,
+    coverId,
+    thumbnailId,
+  }) {
     //validate id
     let result = validObjectId.safeParse(id);
     if (!result.success) {
@@ -163,34 +181,34 @@ class EventDao {
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-    
-    if (address !== undefined) {
-      result = validString.safeParse(address)
-      if (!result.success) {
-        throw new ApiError(400, "Invalid Street Address!");
+    if (location) {
+      if (location.address !== undefined) {
+        result = validString.safeParse(location.address);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid Street Address!');
+        }
+      }
+  
+      if (location.city !== undefined) {
+        result = validString.safeParse(location.city);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid City!');
+        }
+      }
+      if (location.state !== undefined) {
+        result = validString.safeParse(location.state);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid State!');
+        }
+      }
+      if (location.zip !== undefined) {
+        result = validString.safeParse(location.zip);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid ZIP!');
+        }
       }
     }
-
-    if (city !== undefined) {
-      result = validString.safeParse(city);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid City!");
-      }
-    }
-    if (state !== undefined) {
-      result = validString.safeParse(state);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid State!");
-      }
-    }
-    if (zip !== undefined) {
-      result = validString.safeParse(zip);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid ZIP!");
-      }
-    }
-    const location = { address, city, state, zip };
-    
+    //const location = { address, city, state, zip };
 
     if (description !== undefined) {
       //check description is valid
@@ -218,12 +236,23 @@ class EventDao {
       })
     }
 
+    if (capacity !== undefined) {
+      result = validNumber.safeParse(capacity);
+      if (!result.success || capacity <= 0) {
+        throw new ApiError(400, 'Invalid capacity!');
+      }
+    }
     //check attendees list has valid attendees
     if (attendees !== undefined) {
+      let count = 0;
       for (const user of attendees) {
         const u = await User.findById(user);
         if (!u) {
-          throw new ApiError(400, "Invalid attendee in attendees list!");
+          throw new ApiError(400, 'Invalid attendee in attendees list!');
+        }
+        count++;
+        if (count > capacity) {
+          throw new ApiError(400, 'Attendees exceed capacity!');
         }
       }
     }
@@ -241,7 +270,20 @@ class EventDao {
     //update event
     const event = await Event.findByIdAndUpdate(
       id,
-      { name, start, end, location, description, visibility, categories, attendees, invitees, coverId, thumbnailId },
+      {
+        name,
+        start,
+        end,
+        location,
+        description,
+        visibility,
+        categories,
+        capacity,
+        attendees,
+        invitees,
+        coverId,
+        thumbnailId,
+      },
       { new: true }
     );
     if (!event) {

@@ -99,7 +99,7 @@ class UserDao {
   // update a user given its ID
   // return the updated user
   // throws ApiError if id is invalid or resource does not exist in our database
-  async update({ id, name, password, organizing, attending, invited }) {
+  async update({ id, name, password, organizing, attending, invited, friends, sentFriends, receivedFriends }) {
 
     //validate id
     let result = validObjectId.safeParse(id);
@@ -155,10 +155,40 @@ class UserDao {
       }
     }
 
+    // validate friends invited
+    if (friends !== undefined) {
+      for (let friend of friends) {
+        const f = await User.findById(friend.user);
+        if (!f) {
+          throw new ApiError(400, 'Invalid friend request!');
+        }
+      }
+    }
+
+    // validate sentFriends invited
+    if (sentFriends !== undefined) {
+      for (let friend in sentFriends) {
+        const f = await User.findById(sentFriends[friend].user);
+        if (!f) {
+          throw new ApiError(400, 'Invalid friend request!');
+        }
+      }
+    }
+
+    // validate receivedFriends invited
+    if (receivedFriends !== undefined) {
+      for (let friend in receivedFriends) {
+        const f = await User.findById(receivedFriends[friend].user);
+        if (!f) {
+          throw new ApiError(400, 'Invalid friend request!');
+        }
+      }
+    }
+
     //update user
     const user = await User.findByIdAndUpdate(
       id,
-      { name, password, organizing, attending, invited },
+      { name, password, organizing, attending, invited, friends, sentFriends, receivedFriends },
       { new: true }
     );
     if (!user) {
