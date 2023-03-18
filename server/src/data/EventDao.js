@@ -176,10 +176,7 @@ class EventDao {
     name,
     start,
     end,
-    address,
-    city,
-    state,
-    zip,
+    location,
     description,
     visibility,
     categories,
@@ -222,30 +219,31 @@ class EventDao {
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-
-    if (address !== undefined) {
-      result = validString.safeParse(address);
-      if (!result.success) {
-        throw new ApiError(400, 'Invalid Street Address!');
+    if (location) {
+      if (location.address !== undefined) {
+        result = validString.safeParse(location.address);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid Street Address!');
+        }
       }
-    }
-
-    if (city !== undefined) {
-      result = validString.safeParse(city);
-      if (!result.success) {
-        throw new ApiError(400, 'Invalid City!');
+  
+      if (location.city !== undefined) {
+        result = validString.safeParse(location.city);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid City!');
+        }
       }
-    }
-    if (state !== undefined) {
-      result = validString.safeParse(state);
-      if (!result.success) {
-        throw new ApiError(400, 'Invalid State!');
+      if (location.state !== undefined) {
+        result = validString.safeParse(location.state);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid State!');
+        }
       }
-    }
-    if (zip !== undefined) {
-      result = validString.safeParse(zip);
-      if (!result.success) {
-        throw new ApiError(400, 'Invalid ZIP!');
+      if (location.zip !== undefined) {
+        result = validString.safeParse(location.zip);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid ZIP!');
+        }
       }
     }
     //const location = { address, city, state, zip };
@@ -316,12 +314,7 @@ class EventDao {
         name,
         start,
         end,
-        location: {
-          address,
-          city,
-          state,
-          zip,
-        },
+        location,
         description,
         visibility,
         categories,

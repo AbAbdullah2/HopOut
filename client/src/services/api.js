@@ -65,8 +65,17 @@ async function createNewEvent(event) {
   return response;
 }
 
-async function getAllEvents() {
+// get all public events
+async function getAllPublicEvents() {
   const response = await axios.get(`${BASE_URL}/events`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+// get all private events
+async function getAllPrivateEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/privateEvents/${userId}`)
     .catch(function (error) {
       console.log(error);
     });
@@ -144,19 +153,22 @@ async function deleteEvent(eventId) {
 }
 
 async function rsvpToEvent(userId, eventId) {
-  const response = await axios.put(`${BASE_URL}/rsvp/sendRSVP`, userId, eventId)
+  const body = { senderId: userId, eventId };
+  const response = await axios.put(`${BASE_URL}/rsvp/sendRSVP`, body)
     .catch(function (error) {
       console.log(error);
     });
   return response;
-}
-
-async function cancelRsvp(userId, eventId) {
-  const response = await axios.put(`${BASE_URL}/rsvp/removeRSVP`, userId, eventId)
+ }
+ 
+ 
+ async function cancelRsvp(userId, eventId) {
+  const body = { removerId: userId, eventId };
+  const response = await axios.put(`${BASE_URL}/rsvp/removeRSVP`, body)
     .catch(function (error) {
       console.log(error);
     });
   return response;
-}
+ }
 
-export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, rsvpToEvent, cancelRsvp }
+export { rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent }
