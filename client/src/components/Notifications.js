@@ -30,7 +30,7 @@ export default function Notifications(props) {
         }));
     });
 
-  }, []);
+  }, [curUser]);
 
   useEffect(() => {
     const friendReqsMap = friendReqs.map(obj => ({ ...obj, type: "friend" }));
@@ -66,7 +66,7 @@ export default function Notifications(props) {
                         </p>
                     </div> : 
                     <div className="flex" onClick={() => navigate("/events/" + notif._id)}>
-                        <img className="w-9 h-9 mr-2 rounded-full" src={notif.thumbnailId} alt="Event image" />
+                        <img className="w-9 h-9 mr-2 rounded-full" src={notif.thumbnailId} alt="" />
                         <div className="min-w-100">
                         <p className="font-bold text-slate-800 truncate dark:text-white">
                             Event invitation

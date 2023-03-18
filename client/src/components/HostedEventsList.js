@@ -1,7 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { deleteFriend, getUser } from '../services/api';
+import React from 'react';
 
 export default function MyEventsList(props) {
     const {curUser} = props;    

@@ -1,8 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Dropdown } from 'flowbite-react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 export default function EventHostView(props) {
   const { eventid, setShowConfirm} = props;

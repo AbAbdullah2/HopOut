@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getUser, updateUser, sendFriendReq, removeFriend, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
+import { getUser, updateUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
 import Header from '../components/Header';
 
 
@@ -145,7 +145,7 @@ export default function Profile(props) {
         }
       });
     });  
-  }, []);
+  }, [curUser, userid, navigate]);
 
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Dropdown } from 'flowbite-react';
 import friendCategories from '../assets/friendCategories';
 

@@ -47,7 +47,7 @@ function EditEvent(props) {
 
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
-  }, []);
+  }, [curUser, navigate, eventid]);
 
 
   const handleUpdateEvent = async (e) => {

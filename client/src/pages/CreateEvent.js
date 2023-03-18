@@ -35,7 +35,7 @@ function CreateEvent(props) {
     zip: "",
     visibility: "public",
     categories: [],
-    capacity: 1000,
+    capacity: 5,
     organizer: curUser._id,
   });
 
@@ -46,8 +46,6 @@ function CreateEvent(props) {
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [visibility, setVisibility] = useState('public');
   const [invitees, setInvitees] = useState([]);
   const [inviteQuery, setInviteQuery] = useState('');
   const [users, setUsers] = useState([]);
@@ -148,15 +146,6 @@ function CreateEvent(props) {
 
     } else {
       setEvent(event => ({ ...event, visibility: 'private'}));
-    }
-  }
-
-  const updateCapacity = (v) => {
-    const parsed = parseInt(v);
-    if (!isNaN(parsed) && parsed > 0) {
-      setEvent({...event, capacity: parsed});
-    } else if (v === '') {
-      setEvent({...event, capacity: 1000});
     }
   }
 
@@ -388,7 +377,7 @@ function CreateEvent(props) {
                       </Dropdown.Item>
                     ))}
                   </Dropdown>
-                  {categories.map((c, i) => {
+                  {event.categories.map((c, i) => {
                     return <div key={i} className="bg-gray-100 p-2 ml-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10 ">{c}</div>
                   })}
                 </div>
@@ -399,9 +388,9 @@ function CreateEvent(props) {
                 </label>
                 <div className="mt-1">
                   <label className="relative inline-flex items-center cursor-pointer">
-                    <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                    <input type="checkbox" value="" className="sr-only peer" checked={event.visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
                     <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
+                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{event.visibility === 'public' ? "Public" : "Private"}</span>
                   </label>
                 </div>
               </div>
