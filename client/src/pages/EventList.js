@@ -23,8 +23,6 @@ export function EventList(props) {
     if (curUser == null) navigate('/login');
     getAllPublicEvents().then((res) => {
       setEventList(res.data.data);
-      // console.log("1");
-      // console.log(res.data.data);
     })
 
   }, [curUser, navigate]);
@@ -32,49 +30,46 @@ export function EventList(props) {
   useEffect(() => {
     getAllPrivateEvents(curUser._id).then((resp) => {
       setPrivateEventList(resp.data.data);
-      // console.log("2")
-      // console.log(resp.data.data);
     });
   }, [curUser, navigate]);
 
-  console.log("yellow", eventList);
-
   const toDisplayEvent = (ev) => {
-    if (selectedFilters.length === 0) {
-      if (friendFilters.length === 0) {
-        return true;
-      }
+    let filtered = false;
+    if (selectedFilters.length === 0 && friendFilters.length === 0) {
+      return true;
     }
 
     for (const f in selectedFilters) {
-      for (const cat in ev) {
-        if (f === cat) {
-          return true;
+      for (const cat in ev.categories) {
+        if (selectedFilters[f] === ev.categories[cat]) {
+          filtered = true;
         }
       }
     }
 
-    let arr = [];
-    for (const f in friendFilters) {
-      if (f === "attending") { 
-        arr = curUser.attending;
-        console.log("attending:");
-        console.log(arr);
-        if (arr.includes(ev._id)) {
-          return true;
+    if (filtered || selectedFilters.length === 0) {
+      let arr = [];
+      for (const f in friendFilters) {
+        if (friendFilters[f] === "attending") { 
+          arr = curUser.attending;
+          if (arr.includes(ev._id)) {
+            filtered = true;
+          } else {
+            filtered = false;
+          }
         }
-      }
-      if (f === "invited") { 
-        arr = curUser.invited;
-        console.log("invited:");
-        console.log(arr);
-        if (arr.includes(ev._id)) {
-          return true;
+        if (friendFilters[f] === "invited") { 
+          arr = curUser.invited;
+          if (arr.includes(ev._id)) {
+            filtered = true;
+          } else {
+            filtered = false;
+          }
         }
       }
     }
 
-    return false;
+    return filtered;
   }
 
   return (
@@ -99,11 +94,13 @@ export function EventList(props) {
             <span className='pl-2'>Toggle Map</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
-            {listActive ? (<CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} /> ) : ( <></> )}
+            {listActive ? (
+              <div className='flex flew-row flex-nowrap'>
+                <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+                <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
+              </div>
+            ) : ( <></> )}
           </div>
-        </div>
-        <div>
-          <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
         </div>
         {listActive ? (
           <div className='my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>

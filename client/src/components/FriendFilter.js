@@ -14,7 +14,7 @@ export default function FriendFilter(props) {
   }
 
   return (
-    <div className="mt-2">
+    <div className="mr-2">
       <Dropdown
         label={"Event Status"}
         dismissOnClick={false}
