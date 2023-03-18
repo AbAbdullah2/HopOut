@@ -55,7 +55,6 @@ router.post('/events', async (req, res, next) => {
       coverId,
       thumbnailId,
     } = req.body;
-    console.log("USER", organizer)
     const event = await eventDao.create({
       name,
       start,
@@ -76,12 +75,10 @@ router.post('/events', async (req, res, next) => {
     const user = await userDao.read(organizer.toString());
     let newOrganizing = user.organizing;
     newOrganizing.push(event.id);
-    const updatedUser = await userDao.update({
+    await userDao.update({
       id: user.id,
       organizing: newOrganizing,
     });
-
-    console.log(updatedUser)
 
     return res.status(201).json({
       status: 201,
@@ -110,6 +107,8 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity,
       attendees,
       invitees,
+      coverId, 
+      thumbnailId
     } = req.body;
     // call read, get capacity if original capity is undefined
     const eventBefore = await eventDao.read(id);
@@ -130,6 +129,8 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity: updatedCapacity,
       attendees,
       invitees,
+      coverId, 
+      thumbnailId
     });
 
     res.json({

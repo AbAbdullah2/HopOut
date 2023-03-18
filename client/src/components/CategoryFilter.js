@@ -16,7 +16,7 @@ export default function CategoryFilter(props) {
   return (
     <div className="mr-4">
       <Dropdown
-        label={"Filters"}
+        label={"Categories"}
         dismissOnClick={false}
       >
       {categories.map((f) => (
