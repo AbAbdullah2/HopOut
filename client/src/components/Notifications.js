@@ -1,6 +1,6 @@
 import { Dropdown } from 'flowbite-react'
 import { useState, useEffect } from 'react';
-import { getAllUsers, getAllEvents } from '../services/api'
+import { getAllUsers, getAllPublicEvents } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { useNavigate } from 'react-router-dom'
@@ -24,7 +24,7 @@ export default function Notifications(props) {
       setFriendReqs(reqs);
     });
 
-    getAllEvents().then(eventData => {
+    getAllPublicEvents().then(eventData => {
         setEventInvites(eventData.data.data.filter(function (event) {
             return (curUser.invited.includes(event._id));
         }));
