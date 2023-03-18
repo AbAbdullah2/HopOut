@@ -28,5 +28,5 @@ To run backend tests:
 cd client
 yarn test
 ```
-Our frontend is deployed to [hopout.vercel.app](https://hopout.vercel.app/).
+Our frontend is deployed to [hopout.onrender.com](https://hopout.onrender.com/).
 Our backend is deployed to https://hopout.herokuapp.com/.
