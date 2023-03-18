@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -13,8 +12,6 @@ import uploadImg from '../services/imgbb';
 import { createNewEvent, sendInvite, updateUser } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
@@ -49,21 +46,11 @@ function CreateEvent(props) {
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [description, setDescription] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [cover, setCover] = useState(undefined);
-  const [thumbnail, setThumbnail] = useState(undefined);
   const [categories, setCategories] = useState([]);
   const [visibility, setVisibility] = useState('public');
-  const [capacity, setCapacity] = useState('');
   const [invitees, setInvitees] = useState([]);
   const [inviteQuery, setInviteQuery] = useState('');
   const [users, setUsers] = useState([]);
-  let coverUrl = "https://via.placeholder.com/1920x1080";
-  let thumbnailUrl = "https://via.placeholder.com/1000x1000";
 
   useEffect(() => {
     getAllUsers().then((res) => {
@@ -130,7 +117,7 @@ function CreateEvent(props) {
     const end = new Date(endDate + ' ' + endTime);    
 
     console.log("creating event", {...event, start: start, end: end});
-    createNewEvent({...event, start: start, end: end}).then((res) => {
+    createNewEvent({...event, start: start, end: end}).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
         curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
         : setCurUser({...curUser, organizing: [res.data.data._id]})
@@ -499,8 +486,13 @@ function CreateEvent(props) {
                       </svg>
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
-                          <span>{cover ? cover.name : 'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" onChange={(e) => setCover(e.target.files[0])}/>
+                          <span>{'Upload a cover image'}</span>
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only"
+                              onChange={ (e) => {
+                                uploadImg(e.target.files[0]).then(data => {
+                                  if (data.status === 200) setEvent({...event, coverId: data.data.data.display_url})
+                                });
+                              }} />
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
