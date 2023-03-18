@@ -6,10 +6,12 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Header from '../components/Header';
 import states from '../assets/states';
 import CATEGORIES from "../assets/categories";
+import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { createNewEvent, updateUser } from '../services/api';
+import { createNewEvent, sendInvite, updateUser } from '../services/api';
 import { Dropdown } from 'flowbite-react';
+import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
@@ -44,7 +46,24 @@ function CreateEvent(props) {
   const [endDate, setEndDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [visibility, setVisibility] = useState('public');
+  const [invitees, setInvitees] = useState([]);
+  const [inviteQuery, setInviteQuery] = useState('');
+  const [users, setUsers] = useState([]);
 
+  useEffect(() => {
+    getAllUsers().then((res) => {
+      setUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
+    });  
+  }, [curUser]);
+
+  const filteredPeople =
+  inviteQuery === ''
+    ? users
+    : users.filter((person) => {
+        return person.name.toLowerCase().includes(inviteQuery.toLowerCase()) || person.email.toLowerCase().includes(inviteQuery.toLowerCase())
+      })
   const [ libraries ] = React.useState(['places']);
 
   const { isLoaded } = useJsApiLoader({
@@ -98,7 +117,7 @@ function CreateEvent(props) {
     const end = new Date(endDate + ' ' + endTime);    
 
     console.log("creating event", {...event, start: start, end: end});
-    createNewEvent({...event, start: start, end: end}).then((res) => {
+    createNewEvent({...event, start: start, end: end}).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
         curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
         : setCurUser({...curUser, organizing: [res.data.data._id]})
@@ -107,6 +126,10 @@ function CreateEvent(props) {
         });
       } else {
         toast.error('Could not create event ' + event.title);
+      }
+      const ids = invitees.map((inv) => {return inv._id});
+      for (const idx in ids) {
+        await sendInvite(res.data.data._id, ids[idx]);
       }
     });
   }
@@ -135,6 +158,22 @@ function CreateEvent(props) {
     } else if (v === '') {
       setEvent({...event, capacity: 1000});
     }
+  }
+
+  const updateInvitees = (e) => {
+    if (e.length > 0) {
+      const target = e[e.length - 1]._id;
+      const ids = e.slice(0, -1).map((inv) => {return inv._id;});
+      if (!ids.includes(target)) {
+        setInvitees(e);
+      }
+    } else {
+      setInvitees(e);
+    }
+  }
+
+  const removeInvitee = (id) => {
+    setInvitees(invitees.filter((inv) => {return inv._id !== id}));
   }
     
   return isLoaded ? (
@@ -332,17 +371,16 @@ function CreateEvent(props) {
                   />
                 </div>
               </div>
-              <div className="flex flex-col">
-                <div>
-                  <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
-                    Categories
-                  </label>
-                  <div className="mt-1">
-                    <Dropdown
-                      label={"Select Categories"}
-                      className="bg-gray-50"
-                      dismissOnClick={false}
-                    >
+              <div>
+                <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
+                  Categories
+                </label>
+                <div className="mt-1 flex flex-row">
+                  <Dropdown
+                    label={"Select Categories"}
+                    className="bg-gray-50"
+                    dismissOnClick={false}
+                  >
                     {CATEGORIES.map((f) => (
                       <Dropdown.Item key={f.key}>
                         <input id="checkbox-item-1" type="checkbox" checked={event.categories.includes(f.value)} onChange={(e) => {setChecked(f.value)}} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
@@ -350,18 +388,21 @@ function CreateEvent(props) {
                       </Dropdown.Item>
                     ))}
                   </Dropdown>
+                  {categories.map((c, i) => {
+                    return <div key={i} className="bg-gray-100 p-2 ml-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10 ">{c}</div>
+                  })}
                 </div>
-                <div className="mt-3">
-                  <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
-                      Visibility
-                  </label>
-                  <div className="mt-1">
+              </div>
+              <div className="mt-3">
+                <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                    Visibility
+                </label>
+                <div className="mt-1">
                   <label className="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" value="" className="sr-only peer" checked={event.visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
-                  <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{event.visibility === 'public' ? "Public" : "Private"}</span>
+                    <input type="checkbox" value="" className="sr-only peer" checked={visibility === 'private'} onChange={(e) => {toggleVisibility()}} />
+                    <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-400 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">{visibility === 'public' ? "Public" : "Private"}</span>
                   </label>
-                  </div>
                 </div>
               </div>
               <div className="mt-3 w-1/4">
@@ -382,6 +423,39 @@ function CreateEvent(props) {
                 required
                 />
               </div>
+              <div className="mt-4">
+                <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
+                  Invitees
+                </label>
+                <div className='mb-4'>
+                  <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
+                    <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+                      <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
+                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                        {filteredPeople.map((person) => (
+                          <Combobox.Option key={person._id} value={person} className={({ active }) =>
+                          `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                            active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                          }`
+                          }>
+                            {person.name} <br /> {person.email}
+                          </Combobox.Option>
+                        ))}
+                      </Combobox.Options>
+                    </div>
+                  </Combobox>
+                </div>
+                <div>
+                  {invitees.map((inv) => {
+                    return <div key={inv._id} className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10">
+                      <div className='space-y-1'>
+                        <p className='font-semibold'>{inv.name}</p>
+                        <p className='italic'>{inv.email}</p>
+                      </div>
+                      <button className='ml-4' onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
+                    </div>
+                  })}
+                </div>
               </div>
               <div className='flex flex-row w-full space-x-5'>
                 <div className='w-2/3'>
@@ -413,13 +487,12 @@ function CreateEvent(props) {
                       <div className="text-sm text-gray-600">
                         <label className="relative cursor-pointer rounded-md bg-white font-medium text-blue-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-blue-500 focus-within:ring-offset-2 hover:text-blue-500" >
                           <span>{'Upload a cover image'}</span>
-                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only" 
+                            <input id="cover-upload" name="cover-upload" type="file" className="sr-only"
                               onChange={ (e) => {
-                                  uploadImg(e.target.files[0]).then(data => {
-                                    if (data.status === 200) setEvent({...event, coverId: data.data.data.display_url})
-                                  });
-                                }}
-                            />
+                                uploadImg(e.target.files[0]).then(data => {
+                                  if (data.status === 200) setEvent({...event, coverId: data.data.data.display_url})
+                                });
+                              }} />
                         </label>
                       </div>
                       <p className="text-xs text-gray-500">{'PNG, JPG, GIF up to 10MB'}</p>
