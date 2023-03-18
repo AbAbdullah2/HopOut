@@ -371,7 +371,7 @@ function CreateEvent(props) {
                 <label htmlFor="categories" className="block text-sm font-medium text-gray-700">
                   Categories
                 </label>
-                <div className="mt-1">
+                <div className="mt-1 flex flex-row">
                   <Dropdown
                     label={"Select Categories"}
                     className="bg-gray-50"
@@ -384,10 +384,8 @@ function CreateEvent(props) {
                       </Dropdown.Item>
                     ))}
                   </Dropdown>
-                </div>
-                <div>
                   {categories.map((c, i) => {
-                    return <div key={i} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
+                    return <div key={i} className="bg-gray-100 p-2 ml-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10 ">{c}</div>
                   })}
                 </div>
               </div>
@@ -422,7 +420,7 @@ function CreateEvent(props) {
                 <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
                   Invitees
                 </label>
-                <div>
+                <div className='mb-4'>
                   <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
                     <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
@@ -442,9 +440,12 @@ function CreateEvent(props) {
                 </div>
                 <div>
                   {invitees.map((inv) => {
-                    return <div key={inv._id} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">
-                      <div>{inv.name}<br />{inv.email}</div>
-                      <button onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
+                    return <div key={inv._id} className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10">
+                      <div className='space-y-1'>
+                        <p className='font-semibold'>{inv.name}</p>
+                        <p className='italic'>{inv.email}</p>
+                      </div>
+                      <button className='ml-4' onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
                     </div>
                   })}
                 </div>
