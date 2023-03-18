@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
+import EventHostView from '../components/EventHostView';
+import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -16,7 +18,6 @@ export default function EventDetail(props) {
  const [host, setHost] = useState(null);
 
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
- console.log(curUser, rsvp);
 
  const navigate = useNavigate();
  useEffect(() => {

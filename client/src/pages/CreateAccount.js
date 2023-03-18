@@ -48,7 +48,7 @@ function CreateAccount(props) {
 
       // Call register
       register(signupData).then(data => {
-        if (data.status === 200) {
+        if (data.status === 200 || data.status === 201) {
             setCurUser(data.data.data);
             navigate('/events');
         } else {

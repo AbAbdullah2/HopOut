@@ -15,6 +15,8 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
     const receiver = await userDao.read(receiverId);
 
     let sender1 = false;
+    let sender2 = false;
+    let receiver1 = false;
     let receiver2 = false;
 
     sender.sentFriends.forEach((e) => {
@@ -25,11 +27,23 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
 
     receiver.receivedFriends.forEach((e) => {
       if (e.user.toString() === senderId) {
+        receiver1 = true;
+      }
+    });
+
+    sender.receivedFriends.forEach((e) => {
+      if (e.user.toString() === receiverId) {
+        sender2 = true;
+      }
+    });
+
+    receiver.sentFriends.forEach((e) => {
+      if (e.user.toString() === senderId) {
         receiver2 = true;
       }
     });
 
-    if (sender1 || receiver2) {
+    if (sender1 || sender2 || receiver2 || receiver2) {
       throw new ApiError(400, 'User has already requested this friend!');
     }
 
