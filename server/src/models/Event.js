@@ -1,80 +1,76 @@
 import mongoose from 'mongoose';
 
-const EventSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-  },
-  start: {
-    type: String,
-    required: true,
-  },
-  end: {
-    type: String,
-    required: true,
-  },
-  location: {
-    address: {
+const EventSchema = new mongoose.Schema(
+  {
+    name: {
       type: String,
       required: true,
     },
-    city: {
+    start: {
       type: String,
       required: true,
     },
-    state: {
+    end: {
       type: String,
       required: true,
     },
-    zip: {
+    location: {
+      address: {
+        type: String,
+        required: true
+      },
+      city: {
+        type: String,
+        required: true,
+        },
+      state: {
+        type: String,
+        required: true
+      },
+      zip: {
+        type: String,
+        required: true
+      }
+    },
+    description: {
       type: String,
       required: true,
     },
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  visibility: {
-    type: String,
-    enum: ['public', 'private'],
-    default: 'private',
-    required: true,
-  },
-  organizer: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
-  capacity: {
-    type: Number,
-    required: true,
-  },
-  attendees: [
-    {
+    visibility: {
+      type: String,
+      enum: ["public", "private"],
+      default: "private",
+      required: true,
+    },
+    organizer: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
     },
-  ],
-  categories: [
-    {
-      type: String,
+    capacity: {
+      type: Number,
+      required: true,
     },
-  ], //consider making categories an enum type with certain catgeory options (including an 'other' option)
-  invitees: [
-    {
+    attendees: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
+      required: true,
+    }],
+    categories: [{
+      type: String,
+    }], //consider making categories an enum type with certain catgeory options (including an 'other' option)
+    invitees: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    }],
+    coverId: {
+      type: String,
     },
-  ],
-  coverId: {
-    type: String,
-  },
-  thumbnailId: {
-    type: String,
-  },
-});
+    thumbnailId: {
+      type: String
+    }
+  }
+);
 
 const Event = mongoose.model('Event', EventSchema);
 

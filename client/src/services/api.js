@@ -98,7 +98,6 @@ async function updateEvent(event) {
   return response;
 }
 
-// Not implemented yet
 async function sendFriendReq(senderId, receiverId) {
   const response = await axios.put(`${BASE_URL}/friends/sendRequest`, { senderId, receiverId })
   .catch(function (error) {

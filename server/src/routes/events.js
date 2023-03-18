@@ -2,9 +2,11 @@ import express from 'express';
 import EventDao from '../data/EventDao.js';
 import UserDao from '../data/UserDao.js';
 
+
 const router = express.Router();
 export const eventDao = new EventDao();
 export const userDao = new UserDao();
+
 
 router.get('/events', async (req, res, next) => {
   try {
@@ -83,7 +85,7 @@ router.post('/events', async (req, res, next) => {
     return res.status(201).json({
       status: 201,
       message: `Successfully created the following event!`,
-      data: event,
+      data: event
     });
   } catch (err) {
     next(err);
@@ -136,7 +138,7 @@ router.put(`/events/:id`, async (req, res, next) => {
     res.json({
       status: 200,
       message: `Successfully updated the following event!`,
-      data: event,
+      data: event
     });
   } catch (err) {
     next(err);
@@ -164,7 +166,7 @@ router.delete('/events', async (req, res, next) => {
 
     res.json({
       status: 200,
-      message: `Successfully deleted ${events.deletedCount} events!`,
+      message: `Successfully deleted ${events.deletedCount} events!`
     });
   } catch (err) {
     next(err);
