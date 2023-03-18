@@ -5,11 +5,8 @@ import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { getEvent, getUser } from '../services/api';
-<<<<<<< HEAD
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
-=======
->>>>>>> main
 
 export default function EventDetail(props) {
  const {eventid} = useParams();

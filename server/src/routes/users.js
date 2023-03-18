@@ -9,7 +9,7 @@ export const userDao = new UserDao();
 export const eventDao = new EventDao();
 
 
-const hidePassword = (user) => {
+export const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
   return rest;
 };
