@@ -138,11 +138,6 @@ async function removeFriend(removerId, friendId) {
   return response;
 }
 
-
-
-
-
-// export { getAllUsers, getUser, register, updateUser, postLogin, deleteUser, getAllEvents, getEvent, createNewEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend }
 async function deleteEvent(eventId) {
   const response = await axios.delete(`${BASE_URL}/events/${eventId}`)
     .catch(function (error) {

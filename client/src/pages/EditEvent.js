@@ -29,7 +29,6 @@ function EditEvent(props) {
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
-      console.log("got event: ", res.data.data)
       const start = new Date(res.data.data.start);
       const end = new Date(res.data.data.end);
       setStartTime(start.toTimeString().substring(0, 5));
@@ -56,10 +55,8 @@ function EditEvent(props) {
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime); 
     if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
-    console.log("Updating event: ", event)
     updateEvent({...event, start: start, end: end}).then((res) => {
       if (res.status === 200) {                
-        console.log("Successfully updated event. received res: ", res);
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not update event ' + event.name);

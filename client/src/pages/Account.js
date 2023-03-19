@@ -7,7 +7,6 @@ import NotFound from './NotFound';
 export default function Account(props) {
   const {curUser, setCurUser} = props;
 
-  console.log("curUser: ", curUser);
   return curUser === null ? <NotFound /> : (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col h-full items-center'>

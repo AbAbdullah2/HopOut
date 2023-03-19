@@ -37,7 +37,7 @@ exports[`matches snapshot 1`] = `
         <span
           className="text-4xl"
         >
-          opout
+          opOut
         </span>
       </a>
     </div>

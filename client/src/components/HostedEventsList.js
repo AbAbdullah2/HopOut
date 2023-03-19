@@ -2,7 +2,6 @@ import React from 'react';
 
 export default function MyEventsList(props) {
     const {curUser} = props;    
-    console.log("cur user organizing: ", curUser.organizing);
     return (
     <div>
     <ul className="max-w-md divide-y divide-gray-200 dark:divide-gray-700">

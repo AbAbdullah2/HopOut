@@ -11,11 +11,8 @@ export default function FriendsList(props) {
     const [friends, setFriends] = useState(curUser.friends);
 
     const handleUnfriend = (unfriendedId) => {
-        console.log("deleting friend", unfriendedId);
         removeFriend(curUser, unfriendedId).then((res) => {
-            console.log("delete response: ", res);
-            // not sure if this is right
-            // setFriends(res.data.friends);
+            setFriends(res.data.friends);
         });
     }
     

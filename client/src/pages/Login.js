@@ -35,7 +35,7 @@ function Login(props) {
     }).catch(err => {
       const error = 'Could not login user ' + loginData.email;
       toast.error(error);
-      console.log(err)});
+      });
   }
 
   return (

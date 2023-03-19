@@ -70,10 +70,6 @@ function CreateEvent(props) {
     libraries,
   });
 
-  useEffect(() => {
-    console.log("event being set", event);
-  }, [event])
-
   const [searchBox, setSearchBox] = React.useState(null);
 
   const loadSearchBox = (searchBox) => {setSearchBox(searchBox)};
@@ -82,7 +78,6 @@ function CreateEvent(props) {
     try {
       // setEvent({...event, address: searchBox.getPlace().name})
       let tEvent = {...event, address: searchBox.getPlace().name}
-      console.log("setting event", {...event, address: searchBox.getPlace().name})
       // setAddress(searchBox.getPlace().name);
       searchBox.getPlace().address_components.forEach((component) => {
         if (component.types.includes('locality')) {
@@ -95,9 +90,7 @@ function CreateEvent(props) {
           tEvent = {...tEvent, zip: component.long_name}
         }
       });
-      console.log("tevent: ", tEvent)
       setEvent(tEvent);
-      console.log("on place changed", event);
       setValidated(true);
     } catch (error) { }
   }
@@ -114,7 +107,6 @@ function CreateEvent(props) {
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime);    
 
-    console.log("creating event", {...event, start: start, end: end});
     createNewEvent({...event, start: start, end: end}).then(async (res) => {
       if (res.status === 201 || res.status === 200) {
         curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
@@ -420,7 +412,7 @@ function CreateEvent(props) {
                   <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
                     <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
                       <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
-                      <Combobox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      <Combobox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                         {filteredPeople.map((person) => (
                           <Combobox.Option key={person._id} value={person} className={({ active }) =>
                           `relative cursor-default select-none py-2 pl-4 pr-4 ${
