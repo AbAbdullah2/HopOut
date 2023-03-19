@@ -75,17 +75,17 @@ router.get('/users/privateEvents/:id', async (req, res, next) => {
 });
 
 router.post('/register', async (req, res, next) => {
-  console.log("posting user ", req.body)
   try {
-    const { email, name, password } = req.body;
-    
+    let { email, name, password } = req.body;
+    if (email) {
+      email = email.toLowerCase()
+    }
     const savedUser = await userDao.create({
-      email: email.toLowerCase(),
+      email,
       name,
       password,
     });
-
-    return res.json({
+    return res.status(201).json({
       status: 201,
       message: `Successfully registered the following user!`,
       data: hidePassword(savedUser),
