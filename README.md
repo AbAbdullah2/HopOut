@@ -23,7 +23,7 @@ cd server
 yarn test
 ```
 We are using Jest as our frontend testing framework.
-To run backend tests:
+To run frontend tests:
 ```shell
 cd client
 yarn test
