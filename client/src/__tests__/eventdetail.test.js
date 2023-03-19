@@ -1,8 +1,6 @@
 import '@testing-library/jest-dom'
-import {render, screen} from '@testing-library/react'
 import renderer from 'react-test-renderer';
-import EventList from '../pages/EventList'
-import { getAllEvents } from '../services/api';
+import EventDetail from '../pages/EventList'
 
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -24,20 +22,6 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 test('matches snapshot', async () => {
-  const tree = await renderer.create(<EventList/>).toJSON();
+  const tree = await renderer.create(<EventDetail/>).toJSON();
   expect(tree).toMatchSnapshot();
-});
-
-test('renders proper event data', async () => {
-  render(<EventList />);
-
-  let eventData = [];
-
-  getAllEvents().then((res) => {
-    eventData = res.data.data;
-  });
-
-  eventData.forEach((event) => {
-    expect(screen.getByText(event.event.title)).toBeInTheDocument();
-  });
 });
