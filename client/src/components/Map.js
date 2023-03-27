@@ -67,7 +67,7 @@ function Map({events}) {
         <input
           type="text"
           placeholder="Enter a location"
-          className=' box-border border border-solid border-transparent rounded drop-shadow w-1/5 h-10 px-3 text-md overflow-ellipsis mt-2'
+          className='box-border border border-solid rounded drop-shadow w-11/12 h-10 px-3 text-md overflow-ellipsis mt-4 font-semibold'
         />
       </Autocomplete>
 
