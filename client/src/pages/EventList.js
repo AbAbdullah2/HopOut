@@ -91,7 +91,7 @@ export function EventList(props) {
                 } inline-block h-4 w-4 transform rounded-full bg-white transition`}
               />
             </Switch>
-            <span className='pl-2'>Toggle Map</span>
+            <span className='pl-2'>Toggle List View</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
             {listActive ? (
