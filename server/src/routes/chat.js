@@ -1,5 +1,5 @@
 import express from 'express';
-import MessageDao from '../data/ChatDao.js';
+import ChatDao from '../data/ChatDao.js';
 import UserDao from '../data/UserDao.js';
 
 const router = express.Router();
