@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
+import EventHostView from '../components/EventHostView';
+import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -14,6 +16,7 @@ export default function EventDetail(props) {
 
  const [event, setEvent] = useState(null);
  const [host, setHost] = useState(null);
+ const [showConfirm, setShowConfirm] = useState(false);
 
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
 
@@ -61,8 +64,16 @@ export default function EventDetail(props) {
    <div className='bg-stone-100 min-h-screen'>
      <Toaster />
      <div className='mx-auto flex flex-col h-full'>
+       <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-       <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
+       {/* <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' /> */}
+       <div className="relative">
+          <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
+          { curUser.organizing && curUser.organizing.includes(eventid) ? 
+            <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
+            <></> }
+        </div>
+
        <div className='m-5'>
          <p className='text-4xl font-extrabold text-center'>{event.name}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>

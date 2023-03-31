@@ -36,6 +36,8 @@ function CreateEvent(props) {
     visibility: "public",
     categories: [],
     capacity: 5,
+    attendees: [],
+    invitees: [],
     organizer: curUser._id,
   });
 
@@ -107,8 +109,10 @@ function CreateEvent(props) {
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime);    
 
-    createNewEvent({...event, start: start, end: end}).then(async (res) => {
-      if (res.status === 201 || res.status === 200) {
+    console.log("event: ", event);
+    console.log("posting event: ", {...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})});
+    createNewEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then(async (res) => {
+      if (res && (res.status === 201 || res.status === 200)) {
         curUser.organizing ? setCurUser({...curUser, organizing: [...curUser.organizing, res.data.data._id]})
         : setCurUser({...curUser, organizing: [res.data.data._id]})
         updateUser(curUser).then(() => {
@@ -142,19 +146,23 @@ function CreateEvent(props) {
   }
 
   const updateInvitees = (e) => {
+    console.log("update invitees, e: ", e);
     if (e.length > 0) {
       const target = e[e.length - 1]._id;
       const ids = e.slice(0, -1).map((inv) => {return inv._id;});
       if (!ids.includes(target)) {
         setInvitees(e);
+        // setEvent({...event, invitees: e});
       }
     } else {
       setInvitees(e);
+      // setEvent({...event, invitees: e});
     }
   }
 
   const removeInvitee = (id) => {
     setInvitees(invitees.filter((inv) => {return inv._id !== id}));
+    // setEvent({...event, invitees: event.invitees.filter((inv) => {return inv._id !== id})});
   }
     
   return isLoaded ? (
