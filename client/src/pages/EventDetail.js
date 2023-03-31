@@ -17,6 +17,7 @@ export default function EventDetail(props) {
 
  const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
+ const [attendeesCount, setAttendeesCount] = useState(0);
 
  const navigate = useNavigate();
  useEffect(() => {
@@ -24,6 +25,7 @@ export default function EventDetail(props) {
    getEvent(eventid).then((res) => {
      setEvent(res.data.data);
      setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);
+     setAttendeesCount(res.data.data.attendees.length);
    }); 
  }, [curUser, navigate, eventid]);
  
@@ -48,6 +50,7 @@ export default function EventDetail(props) {
    rsvpToEvent(curUser._id, eventid);
    toast.success('Successfully RSVP\'d to this event!');
    curUser.attending.push(eventid);
+   setAttendeesCount(attendeesCount + 1);
  }
 
  const cancelRsvpHelper = () => {
@@ -56,6 +59,7 @@ export default function EventDetail(props) {
    cancelRsvp(curUser._id, eventid);
    toast.error('Your RSVP has been cancelled!');
    curUser.attending.pop(eventid);
+   setAttendeesCount(attendeesCount - 1);
  }
 
 
@@ -71,6 +75,8 @@ export default function EventDetail(props) {
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address}, {event.location.city}, {event.location.state} {event.location.zip}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
+         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('users')} /> {attendeesCount} attending</p>
+         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('circle-exclamation')} /> {event.capacity - attendeesCount} spots remaining</p>
          {
          event.organizer === curUser._id ?
          <div></div> :
