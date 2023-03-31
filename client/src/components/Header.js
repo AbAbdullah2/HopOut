@@ -16,6 +16,9 @@ export default function Header(props) {
         <span className='text-4xl font-extrabold italic text-blue-400 mr-1'>H</span><span className='text-4xl'>opOut</span>
       </a>
       {icons ? (<div className='flex justify-end content-end items-end right-0 text-2xl font-semibold space-x-4 mx-2 mr-4'>
+        <a href='/addFriends' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('user-group')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Friends</span>
+        </a>
         <a href='/events' className='hover:text-blue-400'>
           <FontAwesomeIcon icon={solid('calendar')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Events</span>
         </a>
