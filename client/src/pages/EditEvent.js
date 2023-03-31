@@ -36,8 +36,9 @@ function EditEvent(props) {
     zip: "",
     visibility: "public",
     categories: [],
-    invitees: [],
     capacity: 5,
+    attendees: [],
+    invitees: [],
     organizer: curUser._id,
   });
 
