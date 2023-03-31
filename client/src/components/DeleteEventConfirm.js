@@ -10,17 +10,17 @@ export default function DeleteEventConfirm(props) {
 
     const handleDelete = () => {
         let organizing = curUser.organizing
-        const index = organizing.indexOf(5);
+        const index = organizing.indexOf(eventid);
         if (index > -1) { // only splice array when item is found
             organizing.splice(index, 1); // 2nd parameter means remove one item only
-        }
+        }          
 
         setCurUser({...curUser, 
-            organizing: [...curUser.organizing.filter(id =>
-                id !== eventid
-            )]
+            organizing: organizing
         });
-        updateUser(curUser).then(() => {
+        updateUser({...curUser, 
+            organizing: organizing
+        }).then(() => {
             deleteEvent(eventid).then((deleteRes) => {
                 if (deleteRes.status === 200) {  
                     navigate('/events');

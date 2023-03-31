@@ -15,7 +15,7 @@ const validNumber = z.number().positive('Invalid capacity!');
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories, coverId, thumbnailId }) {
+  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories, attendees, invitees, coverId, thumbnailId }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -95,8 +95,7 @@ class EventDao {
 
     //create event
     const event = await Event.create({ name, start, end, location, description, visibility, organizer, capacity, categories, 
-        attendees: [], invitees: [], coverId, thumbnailId});
-    
+        attendees: attendees, invitees: invitees, coverId, thumbnailId});
     return event;
   }
 
