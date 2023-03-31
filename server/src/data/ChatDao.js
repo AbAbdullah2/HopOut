@@ -1,16 +1,13 @@
 import mongoose from 'mongoose';
 import ApiError from '../models/ApiError.js';
 import { z } from 'zod';
-import Message from '../models/Chat.js';
+import Chat from '../models/Chat.js';
 import User from '../models/User.js';
 
 const validObjectId = z
   .string()
   .refine((id) => mongoose.isValidObjectId(id), 'Invalid ID!');
 const validString = z.string().min(1, 'Missing attribute!');
-const validDate = z.string().datetime('Invalid Date!');
-const visibilityEnum = z.enum(['public', 'private']);
-const validNumber = z.number().positive('Invalid capacity!');
 
 class ChatDao {
   // check if chat already exits between users
@@ -42,7 +39,7 @@ class ChatDao {
       throw new ApiError(400, 'Invalid Chatter!');
     }
 
-    const users = [];
+    // const users = [];
 
     // if (person2 < person1) {
     //   users = [person2, person1]
@@ -107,11 +104,30 @@ class ChatDao {
     const updatedChat = await Chat.findByIdAndUpdate(chatId, {
       messages: chat.messages.push({ sender, receiver, message }),
     });
+
+    return updatedChat;
   }
 
-  // return all chats
-  async readAllChats() {
-    const chats = await Chat.find();
+  // return all chats for user
+  async readAllChats(id) {
+    //validate id
+    const result = validObjectId.safeParse(id);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid ID!');
+    }
+
+    //check user is valid
+    const user = await User.findById(id);
+    if (!user) {
+      throw new ApiError(400, 'Invalid User!');
+    }
+
+    const chats = await Chat.find({
+      users: {
+        $all: [id],
+      },
+    });
+
     if (!chats) {
       throw new ApiError(404, 'Resource not found!');
     }
@@ -119,17 +135,17 @@ class ChatDao {
     return chats;
   }
 
-  // return the chat with the given ID
+  // return a specific chat between two users
   // throws ApiError if id is invalid or resource does not exist in our database
   async readChat(id) {
-    //validate id
+    //validate person1
     const result = validObjectId.safeParse(id);
     if (!result.success) {
       throw new ApiError(400, 'Invalid ID!');
     }
 
     //find chat
-    const chat = await Chat.findById(id);
+    const chat = await Chat.findById(id);    
     if (!chat) {
       throw new ApiError(404, 'Resource not found!');
     }
@@ -138,15 +154,15 @@ class ChatDao {
   }
 
   async deleteChat(id) {
-    //validate id
+    //validate id 
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, "Invalid ID!");
     }
 
     const chat = await Chat.findByIdAndDelete(id);
     if (!chat) {
-      throw new ApiError(404, 'Resource not found!');
+      throw new ApiError(404, "Resource not found!");
     }
 
     return chat;
