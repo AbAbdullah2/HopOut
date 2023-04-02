@@ -16,12 +16,13 @@ export default function Account(props) {
           <p className='text-4xl font-extrabold text-center'>{curUser.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {curUser.email}</p>
         </div>
-        <div className="grid grid-flow-row-dense grid-cols-4 overflow-hidden break-all"> 
-          <div className="m-auto bg-blue col-span-3 ">
+        <div className=" align-top my-5 w-11/12 md:grid md:grid-cols-4 overflow-hidden break-all"> 
+          <div className="m-auto col-span-3 p-2 align-top w-full h-full">
             <HostedEventsList curUser={curUser} />
           </div>
-          <div className="m-auto bg-blue col-span-1">
+          <div className="m-auto col-span-1 p-2 align-top w-full h-full">
             <FriendsList curUser={curUser} setCurUser={setCurUser}/>
+            
           </div>
         </div>
       </div>

@@ -36,7 +36,7 @@ export default function FriendsList(props) {
     }, [curUser]); 
     
     return (
-    <div className="m-2 rounded overflow-hidden shadow break-all	">
+    <div className="rounded overflow-hidden shadow break-all	">
     <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Friends</div>
 
     <div className="p-5">
@@ -60,15 +60,11 @@ export default function FriendsList(props) {
                 </div>
             </li>
         ) :
-        <div className="flex-1 min-w-0">
+        <div className="flex-1">
 
             <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                 No friends yet! 
             </p>
-            <p className="text-sm font-medium text-gray-500 truncate dark:text-white">
-                Search for users or see event invitees to add friends. 
-            </p>
-
         </div>
         }
         
