@@ -16,15 +16,13 @@ export default function Account(props) {
           <p className='text-4xl font-extrabold text-center'>{curUser.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {curUser.email}</p>
         </div>
-        <div className="flex">
-        <div className="grid grid-flow-row-dense grid-cols-2"> 
-          <div className="m-auto bg-blue">
-              <FriendsList curUser={curUser} setCurUser={setCurUser}/>
+        <div className="grid grid-flow-row-dense grid-cols-4 overflow-hidden break-all"> 
+          <div className="m-auto bg-blue col-span-3 ">
+            <HostedEventsList curUser={curUser} />
           </div>
-          <div className="m-auto bg-blue">
-              <HostedEventsList curUser={curUser} />
+          <div className="m-auto bg-blue col-span-1">
+            <FriendsList curUser={curUser} setCurUser={setCurUser}/>
           </div>
-        </div>
         </div>
       </div>
     </div>

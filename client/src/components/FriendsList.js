@@ -33,10 +33,10 @@ export default function FriendsList(props) {
             setFriends(users.filter((u) => {return friendsIds.indexOf(u._id) != -1}));
         });
         console.log("friends;", friends);
-      }, [curUser]); 
+    }, [curUser]); 
     
     return (
-    <div className="m-2 rounded overflow-hidden shadow">
+    <div className="m-2 rounded overflow-hidden shadow break-all	">
     <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Friends</div>
 
     <div className="p-5">
