@@ -6,7 +6,7 @@ import User from '../models/User.js';
 
 const validObjectId = z
   .string()
-  .refine((id) => mongoose.isValidObjectId(id), 'Invalid ID!');
+  .refine((id) => mongoose.isValidObjectId(id), "Invalid ID!");
 const validString = z.string().min(1, 'Missing attribute!');
 
 class ChatDao {
@@ -15,6 +15,7 @@ class ChatDao {
 
   // return the created chat
   async createChat({ person1, person2 }) {
+    let result;
     //check person1 ID is valid
     result = validObjectId.safeParse(person1);
     if (!result.success) {
@@ -53,13 +54,13 @@ class ChatDao {
       },
     });
 
-    if (chatExists) {
+
+    if (chatExists[0]) {
       throw new ApiError(400, 'Chat already exists between users!');
     }
 
     //create chat
     const chat = await Chat.create({ users: [person1, person2] });
-
     return chat;
   }
 
@@ -97,20 +98,33 @@ class ChatDao {
 
     const chat = await Chat.findById(chatId);
 
+
     if (!chat.users.includes(sender) || !chat.users.includes(receiver)) {
       throw new ApiError(400, 'Invalid Chat Users!');
     }
 
-    const updatedChat = await Chat.findByIdAndUpdate(chatId, {
-      messages: chat.messages.push({ sender, receiver, message }),
+    const sendMessage = { sender: sender, receiver: receiver, message: message }
+    console.log("s", chat.messages)
+    // const updatedChat = await Chat.findByIdAndUpdate(chatId, {
+    //   messages: chat.messages[0].push({ sender, receiver, message }),
+    // });
+    chat.messages.push(sendMessage)
+    chat.save(function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Success!');
+      }
     });
 
-    return updatedChat;
+
+    return chat;
   }
 
   // return all chats for user
   async readAllChats(id) {
     //validate id
+    console.log("id", id)
     const result = validObjectId.safeParse(id);
     if (!result.success) {
       throw new ApiError(400, 'Invalid ID!');

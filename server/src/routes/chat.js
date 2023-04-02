@@ -10,7 +10,7 @@ router.post('/chat', async (req, res, next) => {
   try {
     const { person1, person2 } = req.body;
 
-    chat = chatDao.createChat({ person1, person2 });
+    const chat = await chatDao.createChat({ person1, person2 });
 
     res.json({
       status: 201,
@@ -26,7 +26,7 @@ router.post('/message', async (req, res, next) => {
   try {
     const { chatId, senderId, receiverId, message } = req.body;
 
-    chat = chatDao.createMessage({
+    const chat = await chatDao.createMessage({
       chatId,
       sender: senderId,
       receiver: receiverId,
@@ -46,7 +46,7 @@ router.post('/message', async (req, res, next) => {
 router.get('/getAllChats/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const chats = await chatDao.readAllChats({ id });
+    const chats = await chatDao.readAllChats( id );
 
     res.json({
       status: 200,
@@ -58,11 +58,13 @@ router.get('/getAllChats/:id', async (req, res, next) => {
   }
 });
 
-router.get('/getChat/:id', async (req, res, next) => {
+router.get('/getChat/', async (req, res, next) => {
   try {
-    const { id } = req.params;
+    // :userId
+    //const { userId } = req.params;
+    const { chatId } = req.body;
 
-    const chat = await chatDao.readChat({ id });
+    const chat = await chatDao.readChat(chatId);
 
     res.json({
       status: 200,
@@ -74,11 +76,11 @@ router.get('/getChat/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/deleteChat/:id', async (req, res, next) => {
+router.delete('/deleteChat/:chatId', async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { chatId } = req.params;
 
-    const chat = await chatDao.deleteChat({ id });
+    const chat = await chatDao.deleteChat(chatId);
 
     res.json({
       status: 200,
