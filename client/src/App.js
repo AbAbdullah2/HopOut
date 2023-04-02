@@ -21,6 +21,7 @@ const App = () => {
   useEffect(() => {
     window.localStorage.removeItem('curUser');
     window.localStorage.setItem('curUser', JSON.stringify(curUser));
+    console.log("global curUser callback. localstorage being set to", curUser);
   }, [curUser]);
 
   return (
