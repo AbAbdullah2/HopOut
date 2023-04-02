@@ -6,9 +6,10 @@ import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getEvent, getUser } from '../services/api';
+import { getEvent, getUser, getAllUsers } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
+import { Table } from 'flowbite-react';
 
 export default function EventDetail(props) {
  const {eventid} = useParams();
@@ -21,6 +22,7 @@ export default function EventDetail(props) {
  const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
  const [attendeesCount, setAttendeesCount] = useState(0);
+ const [attendees, setAttendees] = useState([]);
 
  const navigate = useNavigate();
  useEffect(() => {
@@ -37,6 +39,16 @@ export default function EventDetail(props) {
     setRsvp(userData.data.data.attending.includes(eventid));
 })
 }, [curUser, eventid]);
+
+useEffect(() => {
+  const getAttendees = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+    const att = users.filter((user) => {return user.attending.includes(eventid)});
+    setAttendees(att);
+  }
+  getAttendees();
+}, [curUser, eventid, attendees]);
 
  useEffect(() => {
    if (event !== null) {
@@ -124,6 +136,32 @@ export default function EventDetail(props) {
          <hr className='my-4 bg-stone-800 h-1' />
         
          <p className='my-2'>{event.description}</p>   
+         <div>
+          <p>Attendees</p>
+         <Table striped={true}>
+          <Table.Head>
+            <Table.HeadCell>
+              Name
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Email
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {attendees.map((attendee) => {
+              return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {attendee.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {attendee.email}
+                </Table.Cell>
+              </Table.Row>);
+            })}
+          </Table.Body>
+        </Table>
+         </div>
+         
        </div>
      </div>
    </div>
