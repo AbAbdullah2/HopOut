@@ -36,7 +36,7 @@ export default function FriendsList(props) {
     }, [curUser]); 
     
     return (
-    <div className="rounded overflow-hidden shadow break-all	">
+    <div className="rounded overflow-hidden shadow break-all bg-white">
     <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Friends</div>
 
     <div className="p-5">

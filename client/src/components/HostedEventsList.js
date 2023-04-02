@@ -18,7 +18,7 @@ export default function MyEventsList(props) {
 
 
     return (
-    <div className="m-2 rounded overflow-hidden shadow">
+    <div className="rounded overflow-hidden shadow bg-white">
     <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Hosted Events</div>
 
     <div className='my-5 w-11/12 md:grid md:grid-cols-2 items-center justify-center'>
