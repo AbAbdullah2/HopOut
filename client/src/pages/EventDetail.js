@@ -18,13 +18,17 @@ export default function EventDetail(props) {
  const [host, setHost] = useState(null);
  const [showConfirm, setShowConfirm] = useState(false);
 
+ const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
+ const [attendeesCount, setAttendeesCount] = useState(0);
 
  const navigate = useNavigate();
  useEffect(() => {
    if (curUser === null) navigate('/login');
    getEvent(eventid).then((res) => {
      setEvent(res.data.data);
+     setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);
+     setAttendeesCount(res.data.data.attendees.length);
    }); 
  }, [curUser, navigate, eventid]);
  
@@ -49,6 +53,7 @@ export default function EventDetail(props) {
    rsvpToEvent(curUser._id, eventid);
    toast.success('Successfully RSVP\'d to this event!');
    curUser.attending.push(eventid);
+   setAttendeesCount(attendeesCount + 1);
  }
 
  const cancelRsvpHelper = () => {
@@ -57,6 +62,7 @@ export default function EventDetail(props) {
    cancelRsvp(curUser._id, eventid);
    toast.error('Your RSVP has been cancelled!');
    curUser.attending.pop(eventid);
+   setAttendeesCount(attendeesCount - 1);
  }
 
 
@@ -80,18 +86,34 @@ export default function EventDetail(props) {
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address}, {event.location.city}, {event.location.state} {event.location.zip}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
+         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('users')} /> {attendeesCount} attending</p>
+         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('circle-exclamation')} /> {event.capacity - attendeesCount} spots remaining</p>
          {
-         rsvp ?
-         <div className='flex flex-col items-center'>
-           <button className="text-2xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={cancelRsvpHelper}>
-             Cancel RSVP
-           </button>
-         </div>
-         :
-         <div className='flex flex-col items-center'>
-           <button className="text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={confirmRsvp}>
-             RSVP
-           </button>
+         event.organizer === curUser._id ?
+         <div></div> :
+         <div>
+          {
+          rsvp ?
+            <div className='flex flex-col items-center'>
+            <button className="text-2xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={cancelRsvpHelper}>
+              Cancel RSVP
+            </button>
+            </div>     
+          :
+          <div>
+            { !atCapacity ?
+              <div className='flex flex-col items-center'>
+                <button className="text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={confirmRsvp}>
+                  RSVP
+                </button>
+              </div>
+              :
+              <div className='flex flex-col items-center'>
+                <p>This Event Has Reached Its Capacity!</p>
+              </div>
+            }
+            </div>
+          }
          </div>
          }
          <div className="flex items-center justify-center mt-4">
