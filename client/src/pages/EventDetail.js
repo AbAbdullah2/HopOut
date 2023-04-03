@@ -23,6 +23,7 @@ export default function EventDetail(props) {
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
  const [attendeesCount, setAttendeesCount] = useState(0);
  const [attendees, setAttendees] = useState([]);
+ const [attendeesAndInvitees, setAttendeesAndInvitees] = useState([]);
 
  const navigate = useNavigate();
  useEffect(() => {
@@ -49,6 +50,16 @@ useEffect(() => {
   }
   getAttendees();
 }, [curUser, eventid, attendees]);
+
+useEffect(() => {
+  const getPeople = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+    const ppl = users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)});
+    setAttendeesAndInvitees(ppl);
+  }
+  getPeople();
+}, [curUser, eventid, attendeesAndInvitees]);
 
  useEffect(() => {
    if (event !== null) {
@@ -136,7 +147,8 @@ useEffect(() => {
          <hr className='my-4 bg-stone-800 h-1' />
         
          <p className='my-2'>{event.description}</p>   
-         <div>
+         {event.organizer !== curUser._id ? 
+          <div>
           <p>Attendees</p>
          <Table striped={true}>
           <Table.Head>
@@ -160,8 +172,46 @@ useEffect(() => {
             })}
           </Table.Body>
         </Table>
-         </div>
-         
+        </div>
+        :
+        <div>
+         <p>Attendees and Invitees</p>
+         <Table striped={true}>
+          <Table.Head>
+            <Table.HeadCell>
+              Name
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Email
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Attending?
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Invited?
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {attendeesAndInvitees.map((person) => {
+              return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {person.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {person.email}
+                </Table.Cell>
+                <Table.Cell>
+                  Yes
+                </Table.Cell>
+                <Table.Cell>
+                  No
+                </Table.Cell>
+              </Table.Row>);
+            })}
+          </Table.Body>
+        </Table>
+        </div>
+        }
        </div>
      </div>
    </div>
