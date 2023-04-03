@@ -17,7 +17,7 @@ function Chat(props) {
     getAllChats(curUser._id).then((res) => {
       setChats(res.data.data);
     });
-  }, [curUser, navigate, chats]);
+  }, [curUser]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);

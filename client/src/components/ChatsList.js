@@ -6,24 +6,42 @@ function ChatsList(props) {
   const { chats, curUser, changeChat } = props;
   const [chatters, setChatters] = useState([]);
 
-  console.log(chats);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
-    for (let chat in chats) {
-      console.log('chatters', chat[0]);
-      // getUser(chat.users[0]._id).then((res) => {
-      //   setChatters(res);
-      // });
+    if (chats) {
+      const getChatters = [];
+      for (var j = 0; j < chats.length; j++) {
+        getUser(chats[j].users[0]).then((res) => {
+          const name = res.data.data.name;
+          getChatters.push(name);
+        });
+      }
+      console.log(
+        'getChatter',
+        getChatters,
+        typeof getChatters,
+        getChatters.length
+      );
+
+      setChatters(getChatters);
+      console.log(
+        'chatter',
+        chatters,
+        typeof chatters,
+        chatters.length,
+        chatters[0]
+      );
     }
-  }, [curUser, navigate, chats, chatters]);
+  }, [curUser, chats]);
 
   return (
     <div>
-      {chatters.map((chat, index) => {
-        return <p key={index}>{chat}</p>;
+      {chatters.map((contact, index) => {
+        return <p key={index}>{contact}</p>;
       })}
+      <p>fjewksd</p>
     </div>
   );
 }

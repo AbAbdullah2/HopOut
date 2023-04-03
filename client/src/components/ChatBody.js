@@ -1,9 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 function ChatBody() {
-  return (
-    <div>ChatBody</div>
-  )
+  return <div></div>;
 }
 
-export default ChatBody
+export default ChatBody;
