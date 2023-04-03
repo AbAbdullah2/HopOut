@@ -86,8 +86,6 @@ function Map({events}) {
       setLocations(tempLocations);
     });
   }, [events]);
-
-  const [activeInfoBox, setActiveInfoBox] = React.useState(null);
   
   return isLoaded ? (
     <div>
@@ -99,9 +97,6 @@ function Map({events}) {
         options={{
           disableDefaultUI: true,
           zoomControl: true,
-        }}
-        onClick={closeBox => {
-          setActiveInfoBox(null);
         }}
       >
         <Autocomplete
@@ -124,8 +119,6 @@ function Map({events}) {
               events={location.events}
               lat={location.lat}
               lng={location.lng}
-              activeInfoBox={activeInfoBox}
-              setActiveInfoBox={setActiveInfoBox}
             />
           );
         })}
