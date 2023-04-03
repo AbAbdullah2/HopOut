@@ -62,7 +62,7 @@ export default function EventDetail(props) {
      <Toaster />
      <div className='mx-auto flex flex-col h-full'>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-       <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
+       <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
        <div className='m-5'>
          <p className='text-4xl font-extrabold text-center'>{event.name}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>

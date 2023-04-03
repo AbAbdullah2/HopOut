@@ -94,25 +94,15 @@ export function EventList(props) {
             <span className='pl-2'>Toggle List View</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
-            {listActive ? (
-              <div className='flex flew-row flex-nowrap'>
-                <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
-                <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
-              </div>
-            ) : ( <></> )}
+            <div className='flex flew-row flex-nowrap'>
+              <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+              <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
+            </div>
           </div>
         </div>
         {listActive ? (
           <div className='my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>
-            {eventList.filter((ev) => {
-              return toDisplayEvent(ev);
-            })
-            .map((event) => {
-              return (
-                <EventCard key={event._id} event={event}/>
-              );
-            })}
-            {privateEventList.filter((ev) => {
+            {[...eventList, ...privateEventList].filter((ev) => {
               return toDisplayEvent(ev);
             })
             .map((event) => {
@@ -122,9 +112,10 @@ export function EventList(props) {
             })}
           </div>
           ) : (
-
           <div className='my-3 mb-5 w-11/12 items-center justify-center'>
-            <Map events={eventList} />
+            <Map events={[...eventList, ...privateEventList].filter((ev) => {
+              return toDisplayEvent(ev);
+            })} />
         </div>
         )}
       </div>
