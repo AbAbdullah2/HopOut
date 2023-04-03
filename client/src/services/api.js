@@ -82,6 +82,15 @@ async function getAllPrivateEvents(userId) {
   return response;
 }
 
+// get all hosted events
+async function getAllHostedEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/hostedEvents/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
 async function getEvent(eventId) {
   const response = await axios.get(`${BASE_URL}/events/${eventId}`)
     .catch(function (error) {
@@ -174,4 +183,4 @@ async function rsvpToEvent(userId, eventId) {
   return response;
  }
 
-export { sendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }
+export { sendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getAllHostedEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }

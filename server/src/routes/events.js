@@ -28,7 +28,7 @@ router.get('/events/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.read(id);
-
+    
     res.json({
       status: 200,
       message: `Successfully retrieved the following event!`,
@@ -52,8 +52,10 @@ router.post('/events', async (req, res, next) => {
       description,
       visibility,
       organizer,
-      capacity,
       categories,
+      capacity,
+      attendees,
+      invitees,
       coverId,
       thumbnailId,
     } = req.body;
@@ -68,12 +70,14 @@ router.post('/events', async (req, res, next) => {
       description,
       visibility,
       organizer,
-      capacity,
       categories,
+      capacity,
+      attendees,
+      invitees,
       coverId,
       thumbnailId,
     });
-    
+
     const user = await userDao.read(organizer.toString());
     let newOrganizing = user.organizing;
     newOrganizing.push(event.id);
@@ -105,6 +109,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       zip,
       description,
       visibility,
+      organizer,
       categories,
       capacity,
       attendees,
@@ -127,6 +132,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       zip,
       description,
       visibility,
+      organizer, 
       categories,
       capacity: updatedCapacity,
       attendees,
