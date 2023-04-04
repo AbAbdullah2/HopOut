@@ -14,8 +14,17 @@ function Chat(props) {
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
+    console.log("curUser", curUser)
     getAllChats(curUser._id).then((res) => {
+      let chatters = [];
+      for (let i = 0; i < (res.data.data.length); i++) {
+        chatters.push(res.data.data[i.toString()])
+      }
+
+      // console.log("res", res.data.data)
+      // console.log("chat", chatters)
       setChats(res.data.data);
+      // console.log("chats", chats)
     });
   }, [curUser]);
 
