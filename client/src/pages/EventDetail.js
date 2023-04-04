@@ -201,10 +201,10 @@ useEffect(() => {
                   {person.email}
                 </Table.Cell>
                 <Table.Cell>
-                  Yes
+                  {person.attending.includes(event._id) ? 'Yes' : 'No'}
                 </Table.Cell>
                 <Table.Cell>
-                  No
+                  {person.invited.includes(event._id) ? 'Yes' : 'No'}
                 </Table.Cell>
               </Table.Row>);
             })}
