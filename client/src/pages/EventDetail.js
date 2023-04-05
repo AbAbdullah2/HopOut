@@ -24,7 +24,7 @@ export default function EventDetail(props) {
 
  const navigate = useNavigate();
  useEffect(() => {
-   if (curUser === null) navigate('/login');
+   if (!curUser || curUser === null) navigate('/login');
    getEvent(eventid).then((res) => {
      setEvent(res.data.data);
      setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);

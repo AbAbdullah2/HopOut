@@ -156,6 +156,38 @@ router.delete('/events/:id', async (req, res, next) => {
     const { id } = req.params;
     const event = await eventDao.delete(id);
 
+    // Delete from invited users 
+    for (const userId of event.invitees) {
+      const user = await userDao.read(userId.toString);
+      let invited = user.invited
+      const index = invited.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        invited.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await userDao.update({...user._doc, id: user._doc._id.toString(), invited: invited});
+    }
+
+    // Delete from attending users 
+    for (const userId of event.attendees) {
+      const user = await userDao.read(userId.toString());
+      let attending = user.attending
+      const index = attending.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        attending.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await userDao.update({...user._doc, id: user._doc._id.toString(), attending: attending});
+    }
+
+    // Delete from host 
+    const host = await userDao.read(event.organizer.toString());
+    let organizing = host.organizing
+    const index = organizing.indexOf(id);
+    if (index > -1) { // only splice array when item is found
+        organizing.splice(index, 1); // 2nd parameter means remove one item only
+    }
+
+    await userDao.update({...host._doc, id: host._doc._id.toString(), organizing: organizing});
+
     res.json({
       status: 200,
       message: `Successfully deleted the following event!`,

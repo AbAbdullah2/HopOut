@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { deleteEvent, updateUser } from '../services/api';
+import { deleteEvent, getUser } from '../services/api';
 import { Modal } from 'flowbite-react'
 
 export default function DeleteEventConfirm(props) {
@@ -9,25 +9,17 @@ export default function DeleteEventConfirm(props) {
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        let organizing = curUser.organizing
-        const index = organizing.indexOf(eventid);
-        if (index > -1) { // only splice array when item is found
-            organizing.splice(index, 1); // 2nd parameter means remove one item only
-        }          
-
-        setCurUser({...curUser, 
-            organizing: organizing
+        deleteEvent(eventid).then((deleteRes) => {
+            if (deleteRes.status === 200) {  
+                console.log("getting user");
+                getUser(curUser._id).then((res) => {
+                    console.log("got user response:", res);
+                    setCurUser(res.data.data);
+                }); 
+                navigate('/events');
+            } else console.log("Could not delete event: ", deleteRes);
         });
-        updateUser({...curUser, 
-            organizing: organizing
-        }).then(() => {
-            deleteEvent(eventid).then((deleteRes) => {
-                if (deleteRes.status === 200) {  
-                    navigate('/events');
-                } else console.log("Could not delete event: ", deleteRes);
-            });
-        });
-      }
+    }
     
     return (<div>
         <Modal
