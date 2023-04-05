@@ -32,6 +32,7 @@ router.post('/message', async (req, res, next) => {
       receiver: receiverId,
       message,
     });
+    console.log(chat);
 
     res.json({
       status: 201,
@@ -46,7 +47,7 @@ router.post('/message', async (req, res, next) => {
 router.get('/getAllChats/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const chats = await chatDao.readAllChats( id );
+    const chats = await chatDao.readAllChats(id);
 
     res.json({
       status: 200,

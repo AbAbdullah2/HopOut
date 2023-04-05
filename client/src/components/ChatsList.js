@@ -16,7 +16,7 @@ function ChatsList(props) {
       for (let k = 0; k < users.length; k++) {
         if (users[k] !== curUser._id) {
           const response = await getUser(users[k]);
-          const user = [response.data.data.name, chats[j.toString()]._id]; ///// ONLY GRABBING NAMES, chatid RN
+          const user = [response.data.data.name, chats[j.toString()]._id];
           getChatters.push(user);
         }
       }
@@ -73,12 +73,8 @@ function ChatsList(props) {
     changeChat(chat);
   };
 
-  // useEffect(() => {
-  //   console.log(chatters);
-  // }, [chatters]);
-
   return (
-    <div>
+    <div className="border-solid border-r border-slate-800">
       {chatters.map((name, index) => {
         return (
           <div key={index}>
@@ -89,10 +85,11 @@ function ChatsList(props) {
               onClick={() => changeCurrentChat(index, name)}
             >
               <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
-                <p>{name[0][0]}</p>
+                <p className="uppercase">{name[0][0]}</p>
               </div>
               <div className="grid place-items-center">{name[0]}</div>
             </div>
+            <hr className="h-px bg-slate-800 border-0"></hr>
           </div>
         );
       })}

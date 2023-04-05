@@ -6,7 +6,7 @@ import User from '../models/User.js';
 
 const validObjectId = z
   .string()
-  .refine((id) => mongoose.isValidObjectId(id), "Invalid ID!");
+  .refine((id) => mongoose.isValidObjectId(id), 'Invalid ID!');
 const validString = z.string().min(1, 'Missing attribute!');
 
 class ChatDao {
@@ -54,7 +54,6 @@ class ChatDao {
       },
     });
 
-
     if (chatExists[0]) {
       throw new ApiError(400, 'Chat already exists between users!');
     }
@@ -98,25 +97,24 @@ class ChatDao {
 
     const chat = await Chat.findById(chatId);
 
-
     if (!chat.users.includes(sender) || !chat.users.includes(receiver)) {
       throw new ApiError(400, 'Invalid Chat Users!');
     }
 
-    const sendMessage = { sender: sender, receiver: receiver, message: message }
-    console.log("s", chat.messages)
+    const sendMessage = {
+      sender: sender,
+      receiver: receiver,
+      message: message,
+    };
     // const updatedChat = await Chat.findByIdAndUpdate(chatId, {
     //   messages: chat.messages[0].push({ sender, receiver, message }),
     // });
-    chat.messages.push(sendMessage)
+    chat.messages.push(sendMessage);
     chat.save(function (err) {
       if (err) {
         console.log(err);
-      } else {
-        console.log('Success!');
       }
     });
-
 
     return chat;
   }
@@ -124,7 +122,7 @@ class ChatDao {
   // return all chats for user
   async readAllChats(id) {
     //validate id
-    console.log("id", id)
+    console.log('id', id);
     const result = validObjectId.safeParse(id);
     if (!result.success) {
       throw new ApiError(400, 'Invalid ID!');
@@ -159,7 +157,7 @@ class ChatDao {
     }
 
     //find chat
-    const chat = await Chat.findById(id);    
+    const chat = await Chat.findById(id);
     if (!chat) {
       throw new ApiError(404, 'Resource not found!');
     }
@@ -168,15 +166,15 @@ class ChatDao {
   }
 
   async deleteChat(id) {
-    //validate id 
+    //validate id
     const result = validObjectId.safeParse(id);
     if (!result.success) {
-      throw new ApiError(400, "Invalid ID!");
+      throw new ApiError(400, 'Invalid ID!');
     }
 
     const chat = await Chat.findByIdAndDelete(id);
     if (!chat) {
-      throw new ApiError(404, "Resource not found!");
+      throw new ApiError(404, 'Resource not found!');
     }
 
     return chat;

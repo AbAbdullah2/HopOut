@@ -213,6 +213,18 @@ async function getChat(chatId) {
   return response;
 }
 
+// send message to chat
+async function sendMessage(chatId, senderId, receiverId, message) {
+  const body = { chatId, senderId, receiverId, message };
+  const response = await axios
+    .post(`${BASE_URL}/message/`, body)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+
 export {
   sendInvite,
   rsvpToEvent,
@@ -236,4 +248,5 @@ export {
   updateUser,
   getAllChats,
   getChat,
+  sendMessage
 };

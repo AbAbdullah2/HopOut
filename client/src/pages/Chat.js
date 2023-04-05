@@ -43,11 +43,15 @@ function Chat(props) {
             changeChat={handleChatChange}
           ></ChatsList>
           <div className="col-span-4">
-            <ChatBody
-              curChat={currentChat}
-              curUser={curUser}
-              key={currentChat}
-            ></ChatBody>
+            {currentChat === undefined ? (
+              <div />
+            ) : (
+              <ChatBody
+                curChat={currentChat}
+                curUser={curUser}
+                key={currentChat}
+              />
+            )}
           </div>
         </div>
       </div>
