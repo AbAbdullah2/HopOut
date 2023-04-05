@@ -203,6 +203,16 @@ async function getAllChats(userId) {
   return response;
 }
 
+// get all of user's chats by userid
+async function getChat(chatId) {
+  const response = await axios
+    .get(`${BASE_URL}/getChat/${chatId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
 export {
   sendInvite,
   rsvpToEvent,
@@ -225,4 +235,5 @@ export {
   removeFriend,
   updateUser,
   getAllChats,
+  getChat,
 };

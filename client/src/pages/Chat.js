@@ -8,7 +8,7 @@ import { getAllChats } from '../services/api';
 function Chat(props) {
   const { curUser, setCurUser } = props;
   const [chats, setChats] = useState([]);
-  const [currentChat, setCurrentChat] = useState(0);
+  const [currentChat, setCurrentChat] = useState(undefined);
 
   const navigate = useNavigate();
 
@@ -28,6 +28,10 @@ function Chat(props) {
     setCurrentChat(chat);
   };
 
+  useEffect(() => {
+    console.log(currentChat);
+  }, [currentChat]);
+
   return (
     <div className="bg-stone-100 min-h-screen">
       <div className="mx-auto flex flex-col h-full">
@@ -40,8 +44,9 @@ function Chat(props) {
           ></ChatsList>
           <div className="col-span-4">
             <ChatBody
-              currentChat={currentChat}
-              currentUser={curUser}
+              curChat={currentChat}
+              curUser={curUser}
+              key={currentChat}
             ></ChatBody>
           </div>
         </div>

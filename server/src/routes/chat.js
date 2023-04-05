@@ -58,11 +58,11 @@ router.get('/getAllChats/:id', async (req, res, next) => {
   }
 });
 
-router.get('/getChat/', async (req, res, next) => {
+router.get('/getChat/:chatId', async (req, res, next) => {
   try {
     // :userId
     //const { userId } = req.params;
-    const { chatId } = req.body;
+    const { chatId } = req.params;
 
     const chat = await chatDao.readChat(chatId);
 

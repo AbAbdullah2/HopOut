@@ -5,7 +5,7 @@ import { getUser } from '../services/api';
 function ChatsList(props) {
   const { chats, curUser, changeChat } = props;
   const [chatters, setChatters] = useState([]);
-  const [selected, setSelected] = useState(0);
+  const [selected, setSelected] = useState(undefined);
 
   const navigate = useNavigate();
 
@@ -16,7 +16,7 @@ function ChatsList(props) {
       for (let k = 0; k < users.length; k++) {
         if (users[k] !== curUser._id) {
           const response = await getUser(users[k]);
-          const user = response.data.data.name; ///// ONLY GRABBING NAMES RN
+          const user = [response.data.data.name, chats[j.toString()]._id]; ///// ONLY GRABBING NAMES, chatid RN
           getChatters.push(user);
         }
       }
@@ -73,20 +73,26 @@ function ChatsList(props) {
     changeChat(chat);
   };
 
+  // useEffect(() => {
+  //   console.log(chatters);
+  // }, [chatters]);
+
   return (
     <div>
       {chatters.map((name, index) => {
         return (
-          <div
-            className={`flex ${
-              selected === index ? 'bg-blue-500' : 'bg-stone-100'
-            }`}
-            onClick={() => changeCurrentChat(index, name)}
-          >
-            <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
-              <p>{name[0]}</p>
+          <div key={index}>
+            <div
+              className={`flex ${
+                selected === index ? 'bg-blue-500' : 'bg-stone-100'
+              }`}
+              onClick={() => changeCurrentChat(index, name)}
+            >
+              <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
+                <p>{name[0][0]}</p>
+              </div>
+              <div className="grid place-items-center">{name[0]}</div>
             </div>
-            <div className="grid place-items-center">{name}</div>
           </div>
         );
       })}
