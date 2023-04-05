@@ -265,7 +265,6 @@ function CreateEvent(props) {
                     <div className="mt-3 flex rounded-md shadow-sm">
                       <input
                         autoComplete="none"
-                        autocomplete="off"
                         type="text"
                         name="address"
                         id="address"

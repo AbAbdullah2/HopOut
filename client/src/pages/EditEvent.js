@@ -291,6 +291,7 @@ function EditEvent(props) {
                   >
                     <div className="mt-3 flex rounded-md shadow-sm">
                       <input
+                        autoComplete="none"
                         type="text"
                         name="address"
                         id="address"
