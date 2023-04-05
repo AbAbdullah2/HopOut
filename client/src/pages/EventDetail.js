@@ -72,8 +72,8 @@ export default function EventDetail(props) {
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-       <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
        <div className="relative">
+          <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
           { curUser.organizing && curUser.organizing.includes(eventid) ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
             <></> }
