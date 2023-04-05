@@ -9,13 +9,14 @@ function ChatBody(props) {
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
+    console.log("cur chat", curChat)
     
     const currentChat = async () => {
       if (curChat) {
         const getMessages = []
         await getChat(curChat[1].toString()).then((res) => {
           for (let i = 0; i < res.data.data.messages.length; i++) {
-            const message = res.data.data.messages[i.toString()].message; // NEED EMI AND JOHN TO HELP FIGURE OUT HOW TO MAP OBJECTS
+            const message = (res.data.data.messages[i.toString()].message, res.data.data.messages[i.toString()]); // NEED EMI AND JOHN TO HELP FIGURE OUT HOW TO MAP OBJECTS
             getMessages.push(message)
           }
           
@@ -32,7 +33,7 @@ function ChatBody(props) {
   useEffect(() => {
     // const messageVal = Object.values(messages)
     // console.log("values", messageVal)
-    console.log("after setting", messages['0'])
+    console.log("after setting", messages)
     console.log("length", messages.length)
     for (let i = 0; i < messages.length; i++) {
        console.log("message", messages[i.toString()])
@@ -51,9 +52,9 @@ function ChatBody(props) {
               //onClick={() => changeCurrentChat(index, name)}
             >
               <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
-                <p>{index}</p>
+                <p>{curChat[0][0]}</p>
               </div>
-              <div className="grid place-items-center">{message}</div>
+              <div className="grid place-items-center">{message['message']}</div>
             </div>
           </div>
         );
