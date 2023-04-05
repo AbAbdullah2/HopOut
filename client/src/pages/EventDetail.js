@@ -74,7 +74,6 @@ export default function EventDetail(props) {
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
        <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
        <div className="relative">
-          <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
           { curUser.organizing && curUser.organizing.includes(eventid) ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
             <></> }
