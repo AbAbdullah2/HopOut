@@ -265,12 +265,282 @@ exports[`matches snapshot 1`] = `
         <span
           className="pl-2"
         >
-          Toggle Map
+          Toggle List View
         </span>
       </div>
       <div
         className="justify-end content-end items-end right-0"
-      />
+      >
+        <div
+          className="flex flew-row flex-nowrap"
+        >
+          <div
+            className="mr-4"
+          >
+            <div
+              className="w-fit"
+              data-testid="flowbite-tooltip-target"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onPointerDown={[Function]}
+            >
+              <button
+                className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
+                disabled={false}
+                type="button"
+              >
+                <span
+                  className="flex items-center rounded-md text-sm px-4 py-2"
+                >
+                  Categories
+                  <svg
+                    aria-hidden="true"
+                    className="ml-2 h-4 w-4"
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 9l-7 7-7-7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+              data-testid="flowbite-tooltip"
+              id=":r5:"
+              role="tooltip"
+              style={
+                Object {
+                  "left": " ",
+                  "position": "absolute",
+                  "top": " ",
+                }
+              }
+              tabIndex={-1}
+            >
+              <div
+                className="py-1 text-sm text-gray-700 dark:text-gray-200"
+              >
+                <ul
+                  className="py-1"
+                >
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      academics
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      sports
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      arts
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      fun
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      other
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div
+            className="mr-2"
+          >
+            <div
+              className="w-fit"
+              data-testid="flowbite-tooltip-target"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onKeyUp={[Function]}
+              onMouseDown={[Function]}
+              onMouseLeave={[Function]}
+              onPointerDown={[Function]}
+            >
+              <button
+                className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
+                disabled={false}
+                type="button"
+              >
+                <span
+                  className="flex items-center rounded-md text-sm px-4 py-2"
+                >
+                  Event Status
+                  <svg
+                    aria-hidden="true"
+                    className="ml-2 h-4 w-4"
+                    fill="none"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    style={
+                      Object {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 24 24"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M19 9l-7 7-7-7"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+            <div
+              className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+              data-testid="flowbite-tooltip"
+              id=":r7:"
+              role="tooltip"
+              style={
+                Object {
+                  "left": " ",
+                  "position": "absolute",
+                  "top": " ",
+                }
+              }
+              tabIndex={-1}
+            >
+              <div
+                className="py-1 text-sm text-gray-700 dark:text-gray-200"
+              >
+                <ul
+                  className="py-1"
+                >
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      attending
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      invited
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div
       className="my-3 mb-5 w-11/12 items-center justify-center"
