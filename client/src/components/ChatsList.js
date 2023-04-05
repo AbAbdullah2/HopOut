@@ -5,6 +5,7 @@ import { getUser } from '../services/api';
 function ChatsList(props) {
   const { chats, curUser, changeChat } = props;
   const [chatters, setChatters] = useState([]);
+  const [selected, setSelected] = useState(0);
 
   const navigate = useNavigate();
 
@@ -14,26 +15,21 @@ function ChatsList(props) {
       const users = chats[j.toString()].users;
       for (let k = 0; k < users.length; k++) {
         if (users[k] !== curUser._id) {
-          const response = await getUser(users[k])
-          const user = response.data.data.name ///// ONLY GRABBING NAMES RN
-          console.log("chatting user", user)
-          getChatters.push(user)
+          const response = await getUser(users[k]);
+          const user = response.data.data.name; ///// ONLY GRABBING NAMES RN
+          getChatters.push(user);
         }
       }
     }
-    console.log("chatters gotten", getChatters)
-    setChatters((getChatters))
-    console.log("chatters assigned", chatters)
-    //console.log("chatters", chatters)
-  }
+    setChatters(getChatters);
+  };
 
   useEffect(() => {
-    const getChatters = []
+    //const getChatters = [];
     if (curUser === null) navigate('/login');
     if (chats) {
       setUsersChats();
-      console.log("current user", curUser)
-      
+
       // const fetchData = async () => {
       //   const data = await getUser();
       // }
@@ -46,11 +42,11 @@ function ChatsList(props) {
       //   }
       // }
       // console.log("chatters", getIds)
-      
+
       //   for (let i = 0; i < getIds.length; i++) {
       //     let user = async () => {
       //       const user = await getUser(getIds[i])
-      //     } 
+      //     }
       //     console.log("user", user)
       // }
       // user();
@@ -72,10 +68,27 @@ function ChatsList(props) {
     }
   }, [curUser, chats]);
 
+  const changeCurrentChat = (index, chat) => {
+    setSelected(index);
+    changeChat(chat);
+  };
+
   return (
     <div>
       {chatters.map((name, index) => {
-        return <p key={index}>{name}</p>;
+        return (
+          <div
+            className={`flex ${
+              selected === index ? 'bg-blue-500' : 'bg-stone-100'
+            }`}
+            onClick={() => changeCurrentChat(index, name)}
+          >
+            <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
+              <p>{name[0]}</p>
+            </div>
+            <div className="grid place-items-center">{name}</div>
+          </div>
+        );
       })}
     </div>
   );
