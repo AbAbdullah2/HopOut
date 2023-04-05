@@ -1,115 +1,154 @@
-import toast, { Toaster } from 'react-hot-toast';
 import Header from '../components/Header';
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { getAllUsers, sendFriendReq } from "../services/api.js";
-import { Dropdown } from 'flowbite-react';
-import { Combobox } from '@headlessui/react';
-
 
 function AddFriends(props) {
     
     const {curUser, setCurUser} = props
-    const [invitees, setInvitees] = useState([]);
-    const [inviteQuery, setInviteQuery] = useState('');
+    const [results, setResults] = useState([]);
     const [users, setUsers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(9);
 
     useEffect(() => {
         getAllUsers().then((res) => {
           setUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
         });  
-      }, [curUser]);
+    }, [curUser]);
     
-      const filteredPeople =
-      inviteQuery === ''
-        ? users
-        : users.filter((person) => {
-            return person.name.toLowerCase().includes(inviteQuery.toLowerCase()) || person.email.toLowerCase().includes(inviteQuery.toLowerCase())
-          })
-    const handleSendFriendRequests = async (e) => {
+    const handleSearch = async (e) => {
         e.preventDefault();
-
-        const ids = invitees.map((inv) => {return inv._id});
-        for (const idx in ids) {
-            await sendFriendReq(curUser._id, ids[idx]);
-        }
-
-      }
-
-
-  const updateInvitees = (e) => {
-    if (e.length > 0) {
-      const target = e[e.length - 1]._id;
-      const ids = e.slice(0, -1).map((inv) => {return inv._id;});
-      if (!ids.includes(target)) {
-        setInvitees(e);
-      }
-    } else {
-      setInvitees(e);
+        const searchInput = document.querySelector('input[type="search"]');
+        const filteredPeople = users.filter((user) => {
+            return user.name.toLowerCase().includes(searchInput.value.toLowerCase()) || user.email.toLowerCase().includes(searchInput.value.toLowerCase())});
+        setResults((prevResults) =>
+    filteredPeople.map((user) => {
+      const prevUser = prevResults.find((u) => u._id === user._id) || {};
+      //NOTE: the current user's sentFriends isn't updated but the friend's receivedFriends is
+      //const isFriend = curUser.friends.some((friend) => friend._id === user._id);
+      //const hasSentRequest = curUser.sentFriends.some((friend) => friend._id === user._id);
+      //const hasReceivedRequest = curUser.receivedFriends.some((friend) => friend._id === user._id);
+        const isFriend = user.friends.some((friend) => friend.user === curUser._id);
+        const hasSentRequest = user.sentFriends.some((friend) => friend.user === curUser._id);
+        const hasReceivedRequest = user.receivedFriends.some((friend) => friend.user === curUser._id);
+      const isDisabled = isFriend || hasSentRequest || hasReceivedRequest || prevUser.isDisabled;
+      return {
+        ...user,
+        isDisabled,
+      };
+    })
+  );
+        const searchResults = users.filter((user) => {
+            return user.name.toLowerCase().includes(searchInput.value.toLowerCase()) || user.email.toLowerCase().includes(searchInput.value.toLowerCase())
+        });
     }
-  }
 
-  const removeInvitee = (id) => {
-    setInvitees(invitees.filter((inv) => {return inv._id !== id}));
-  }
+    async function handleFriendReq(receiverId) {
+        const response = await sendFriendReq(curUser._id, receiverId);
+        setResults(results.map(user => {
+            if (user._id === receiverId) {
+              return {
+                ...user,
+                isDisabled: true,
+              };
+            }
+            return user;
+        }));
+
+    }
+
+    const handleNextPage = () => {
+        setCurrentPage(currentPage + 1);
+      };
+    
+      const handlePreviousPage = () => {
+        setCurrentPage(currentPage - 1);
+      };
+    
+      const resultsToDisplay = results.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
+
     return(
         <div className='bg-stone-100 min-h-screen'>
-            <Toaster/>
-            <div className='mx-auto flex flex-col h-full'>
+            <div className='mx-auto flex flex-col h-full space-y-4'>
                 <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-                <div className="m-10 shadow rounded-md">
-                    <div className="py-5 bg-gray-50 rounded-md px-4">
-                        <h3 className="text-lg font-medium leading-6 text-gray-700">Add Friends</h3>
-                    </div>  
-                    <form onSubmit={handleSendFriendRequests}>
-                        <div className="mt-4 ">
-                        <label htmlFor="visibility" className="block text-sm font-medium text-gray-700">
-                            Search Users
-                        </label> 
-                        <div className='mb-4'>
-                            <Combobox value={invitees} onChange={(e) => {updateInvitees(e)}} multiple>
-                                <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
-                                    <Combobox.Input onChange={(event) => setInviteQuery(event.target.value)} className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0" />
-                                    <Combobox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                        {filteredPeople.map((person) => (
-                                            <Combobox.Option key={person._id} value={person} className={({ active }) =>
-                                            `relative cursor-default select-none py-2 pl-4 pr-4 ${
-                                                active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                                            }`
-                                            }>
-                                                {person.name} <br /> {person.email}
-                                            </Combobox.Option>
-                                        ))}
-                                    </Combobox.Options>
-                                </div>
-                            </Combobox>
+                    <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                    <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg aria-hidden="true" 
+                                className="w-5 h-5 text-gray-500 dark:text-gray-400" 
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24" 
+                                xmlns="http://www.w3.org/2000/svg">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                            </svg>
                         </div>
-                        <div>
-                            {invitees.map((inv) => {
-                                return <div key={inv._id} className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10">
-                                    <div className='space-y-1'>
-                                        <p className='font-semibold'>{inv.name}</p>
-                                        <p className='italic'>{inv.email}</p>
+                        <input type="search" id="default-search" 
+                                className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+                                placeholder="Search Users" 
+                        required/>
+                        <button type="button" 
+                                className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" 
+                                onClick={handleSearch}>Search</button>
+                    </div>
+                    <div className="my-5 w-11/12 mx-auto md:grid md:grid-cols-3 gap-4">
+                    {resultsToDisplay.map(user => {
+                        return (
+                            <div key={user._id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                <div className="flex flex-col items-center pb-10">
+                                    <div className="w-24 h-24 mb-3 mt-4 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 14c3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6 2.69 6 6 6zm0 2c-3.87 0-11 1.94-11 5.82v2.18h22v-2.18c0-3.88-7.13-5.82-11-5.82z" />
+                                        </svg>
                                     </div>
-                                    <button className='ml-4' onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
+                                    <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">{user.name}</h5>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">{user.email}</span>
+                                    <div className="flex mt-4 space-x-3 md:mt-6">
+                                        <button type="button"
+                                                className={`inline-flex items-center px-4 py-2 text-sm font-medium text-center rounded-lg focus:ring-4 focus:outline-none
+                                                ${user.isDisabled ? 'bg-gray-400 cursor-not-allowed text-gray-600 dark:bg-gray-500 dark:text-gray-400' : 'text-white bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'}`}
+                                                onClick={() => {
+                                                    handleFriendReq(user._id); 
+                                                }}
+                                                disabled={user.isDisabled}>
+                                                    Add friend
+                                        </button>
+                                        <a href={(user ? "/profile/"+user._id : "/profile/")} 
+                                            className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700">
+                                                View Profile
+                                        </a>
+                                    </div>
                                 </div>
-                            })}
-                        </div>
+                            </div>
+                        );
+                    })}
                 </div>
-                <div className="rounded-md px-4 py-3 text-right">
-                <button
-                    type="submit"
-                    className="inline-flex justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    Send Friend Request
-                </button>
+                <div className="flex flex-col mx-auto mt-4">
+                    <span className="text-sm text-gray-700 dark:text-gray-400">
+                        Showing <span className="font-semibold text-gray-900 dark:text-white">{(currentPage-1)*itemsPerPage+1}</span> to <span className="font-semibold text-gray-900 dark:text-white">{Math.min(currentPage*itemsPerPage, results.length)}</span> of <span className="font-semibold text-gray-900 dark:text-white">{results.length}</span> Entries
+                    </span>
+                    <div className="inline-flex justify-center mt-2 xs:mt-0">
+                        <button className="inline-flex items-center px-4 py-2 mr-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}>
+                            <svg aria-hidden="true" className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z" clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+                        <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        onClick={handleNextPage}
+                        disabled={currentPage === Math.ceil(results.length / itemsPerPage)}>
+                            <svg aria-hidden="true" className="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd"></path>
+                            </svg>
+                        </button>
+                    </div>
                 </div>
-            </form>
+            </div>
         </div>
-      </div>
-    </div>
     );
 }
 
