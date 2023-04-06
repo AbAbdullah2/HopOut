@@ -12,7 +12,7 @@ router.post('/chat', async (req, res, next) => {
 
     const chat = await chatDao.createChat({ person1, person2 });
 
-    res.json({
+    res.status(201).json({
       status: 201,
       message: `Successfully created chat!`,
       data: chat,
@@ -34,7 +34,7 @@ router.post('/message', async (req, res, next) => {
     });
     console.log(chat);
 
-    res.json({
+    res.status(201).json({
       status: 201,
       message: `Successfully sent message!`,
       data: chat,
@@ -61,8 +61,6 @@ router.get('/getAllChats/:id', async (req, res, next) => {
 
 router.get('/getChat/:chatId', async (req, res, next) => {
   try {
-    // :userId
-    //const { userId } = req.params;
     const { chatId } = req.params;
 
     const chat = await chatDao.readChat(chatId);

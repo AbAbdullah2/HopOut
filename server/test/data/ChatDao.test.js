@@ -50,6 +50,29 @@ describe("Test ChatDao", () => {
       expect(formMessage.messages[0].message).toBe(text);
     });
 
+    it("test user2 is not in database", async () => {
+      try {
+        user2 = {
+          name: 'test',
+          email: 'testingtesting12@jhu.com',
+          password: '$2a$10$3aQk4galRRINr4Z5KrpLMuMgA/4mfBHPUTCA0wDvxg5ZM5P3HIOeW',
+          organizing: [],
+          attending: [],
+          invited: [],
+          _id: "642f32484ed78b03bc796f51",
+          friends: [],
+          sentFriends: [],
+          receivedFriends: [],
+          __v: 0
+        };
+        const curchat = await Chat.create({ users: [user1, user2] });
+        console.log("curchat", curchat)
+      } catch (err) {
+        console.log("invalid user error", err)
+        expect(err).toBeDefined();
+      }
+    });
+
     // describe("test create() throws error", () => {
     //   it("empty name", async () => {
     //     try {
