@@ -86,11 +86,25 @@ function Map({events}) {
       setLocations(tempLocations);
     });
   }, [events]);
-  
+
+  const [mapInstance, setMapInstance] = React.useState(null);
+  const [activeMarker, setActiveMarker] = React.useState(null);
+
+  React.useEffect(() => {
+    if (mapInstance && activeMarker) {
+      mapInstance.panTo({
+        lat: activeMarker.lat,
+        lng: activeMarker.lng
+      });
+      mapInstance.setZoom(15);
+    }
+  }, [activeMarker, mapInstance]);
+    
   return isLoaded ? (
     <div>
       <GoogleMap
         mapContainerClassName='rounded-lg shadow-lg w-full h-screen'
+        onLoad={(map) => setMapInstance(map)}
         center={currentLocation}
         zoom={15}
         clickableIcons={false}
@@ -119,6 +133,8 @@ function Map({events}) {
               events={location.events}
               lat={location.lat}
               lng={location.lng}
+              activeMarker={activeMarker}
+              setActiveMarker={setActiveMarker}
             />
           );
         })}
