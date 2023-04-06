@@ -132,7 +132,7 @@ async function declineFriendReq(declinerId, requesterId) {
 }
 
 async function removeFriendReq(removerId, otherId) {
-  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { removerId, otherId })
+  const response = await axios.put(`${BASE_URL}/friends/removeRequest`, { removerId, otherId })
   .catch(function (error) {
     console.log(error);
   });

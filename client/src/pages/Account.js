@@ -1,16 +1,45 @@
+import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Header from '../components/Header';
 import FriendsList from '../components/FriendsList';
 import HostedEventsList from '../components/HostedEventsList';
 import NotFound from './NotFound';
+import { getUser } from '../services/api';
+import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
 
 export default function Account(props) {
   const {curUser, setCurUser} = props;
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [unfriended, setUnfriended] = useState(null);
 
-  return curUser === null ? <NotFound /> : (
+  const triggerShow = (toUnfriend) => {
+    console.log('trigger show clicked. unfriended: ', toUnfriend);
+    setShowConfirm(true);
+    console.log('showConfirm: ', showConfirm);
+    console.log('curUser: ', curUser);
+
+    setUnfriended(toUnfriend);
+    console.log('unfriended: ', unfriended);
+
+  }
+  
+  useEffect(() => {
+    getUser(curUser._id).then((res) => {
+      setCurUser(res.data.data);
+    });
+  }, []);
+
+  console.log("!curUser || curUser == null", !curUser || curUser === null);
+
+  if (!curUser || curUser === null) {
+    console.log("curUser is null: ", curUser);
+    return <NotFound />
+  }
+  return (
     <div className='bg-stone-100 min-h-screen'> 
       <div className='mx-auto flex flex-col h-full items-center'>
+        <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={() => setShowConfirm(false)} unfriended={unfriended} /> 
         <Header icons={true} curUser={curUser} setCurUser={setCurUser} />
         <div className='m-5'>
           <p className='text-4xl font-extrabold text-center'>{curUser.name}</p>
@@ -21,8 +50,7 @@ export default function Account(props) {
             <HostedEventsList curUser={curUser} />
           </div>
           <div className="m-auto col-span-1 p-2 align-top w-full h-full">
-            <FriendsList curUser={curUser} setCurUser={setCurUser}/>
-            
+            <FriendsList curUser={curUser} triggerShow={triggerShow}/>
           </div>
         </div>
       </div>

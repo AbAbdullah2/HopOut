@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
 import { deleteEvent, getUser } from '../services/api';
@@ -11,9 +10,7 @@ export default function DeleteEventConfirm(props) {
     const handleDelete = () => {
         deleteEvent(eventid).then((deleteRes) => {
             if (deleteRes.status === 200) {  
-                console.log("getting user");
                 getUser(curUser._id).then((res) => {
-                    console.log("got user response:", res);
                     setCurUser(res.data.data);
                 }); 
                 navigate('/events');
@@ -45,8 +42,6 @@ export default function DeleteEventConfirm(props) {
             </button>
             </Modal.Footer>
         </Modal>
-
-
     </div>
     );
 }

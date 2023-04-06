@@ -1,26 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { removeFriend, getUser, getAllUsers } from '../services/api';
+import { getAllUsers } from '../services/api';
 
 export default function FriendsList(props) {
-
-    const {curUser, setCurUser} = props;
-
+    const {curUser, triggerShow} = props;
+    const navigate = useNavigate();
     const [friends, setFriends] = useState([]);
-
-    const handleUnfriend = (unfriended) => {
-        removeFriend(curUser._id, unfriended._id).then((res) => {
-            console.log("response: ", res);
-            if (res.status === 201 || res.status === 200) {
-                setCurUser(res.data.data);
-            } else {
-              console.log('Could not unfriend user ' + unfriended.name);
-            }
-    
-        });
-        
-    }  
 
     useEffect(() => {
         // Update friend IDs
@@ -44,9 +31,9 @@ export default function FriendsList(props) {
         { 
         friends.length > 0 ? 
         friends.map((friend) => 
-            <li className="pb-3 sm:pb-4">
+            <li className="p-3 sm:pb-4 hover:bg-stone-100 hover:shadow-md">
                 <div className="flex items-center space-x-4">
-                    <div className="flex-1 min-w-0">
+                    <div className="flex-1 min-w-0" onClick={() => navigate('/profile/'+friend._id)}>
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                             {friend.name}
                         </p>
@@ -54,20 +41,18 @@ export default function FriendsList(props) {
                             {friend.email}
                         </p>
                     </div>
-                    <button className="inline-flex font-bold py-2 px-4 rounded-full" onClick={() => handleUnfriend(friend)}>
+                    <button className="inline-flex font-bold py-2 px-4 rounded-full" onClick={() => triggerShow(friend)}>
                         <FontAwesomeIcon icon={solid('xmark')} />
                     </button>
                 </div>
             </li>
         ) :
         <div className="flex-1">
-
             <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
                 No friends yet! 
             </p>
         </div>
         }
-        
     </ul>
     </div>
     </div>
