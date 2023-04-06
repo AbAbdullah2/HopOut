@@ -17,7 +17,7 @@ export default function EventInfoBox({events}) {
           <div className='px-2 w-full'>
             <p className='text-2xl'>{event.name}</p>
             <p className='my-2'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
-            <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.location.address}</p>
+            <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.locationName ? event.locationName : event.location.address}</p>
           </div>
         </div>
       )}
