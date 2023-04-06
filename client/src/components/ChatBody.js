@@ -4,9 +4,11 @@ import { getChat, sendMessage } from '../services/api';
 import ChatInput from './ChatInput';
 
 function ChatBody(props) {
-  const { curChat, curUser } = props;
+  const { curChat, curUser, socket } = props;
   const [messages, setMessages] = useState([]);
   const [receiver, setReceiver] = useState([]);
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,21 +38,30 @@ function ChatBody(props) {
     }
   };
 
-  // useEffect(() => {
-  //   console.log('after setting', messages);
-  //   console.log('length', messages.length);
-  //   for (let i = 0; i < messages.length; i++) {
-  //     console.log('message', messages[i.toString()]);
-  //   }
-  // }, [messages]);
-
   const handleSendMsg = async (msg) => {
     sendMessage(curChat[1].toString(), curUser._id, receiver, msg).then(
       (res) => {
         currentChat().catch(console.error);
       }
     );
+    socket.current.emit('send-msg', {
+      to: receiver,
+      from: curUser._id,
+      message: msg,
+    });
   };
+
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on('msg-recieved', (msg) => {
+        setArrivalMessage({ message: msg,  receiver: curUser._id});
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
 
   return (
     <div className="h-screen bg-stone-100">

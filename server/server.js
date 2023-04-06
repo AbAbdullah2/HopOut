@@ -22,11 +22,14 @@ global.onlineUsers = new Map();
 io.on('connection', (socket) => {
   global.chatSocket = socket;
   socket.on('add-user', (userId) => {
+    console.log("USER ADDED")
     onlineUsers.set(userId, socket.id);
   });
   socket.on('send-msg', (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
+        console.log("RECEIEVED MESG")
+
       socket.to(sendUserSocket).emit('msg-recieved', data.message);
     }
   });

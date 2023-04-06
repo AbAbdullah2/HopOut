@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ChatsList from '../components/ChatsList';
 import ChatBody from '../components/ChatBody';
 import { getAllChats } from '../services/api';
+import { io } from 'socket.io-client';
 
 function Chat(props) {
   const { curUser, setCurUser } = props;
@@ -11,6 +12,7 @@ function Chat(props) {
   const [currentChat, setCurrentChat] = useState(undefined);
 
   const navigate = useNavigate();
+  const socket = useRef();
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
@@ -50,6 +52,7 @@ function Chat(props) {
                 curChat={currentChat}
                 curUser={curUser}
                 key={currentChat}
+                socket={socket}
               />
             )}
           </div>
