@@ -1,837 +1,271 @@
-import { describe, beforeAll, afterAll, expect, it } from "vitest";
+import { describe, beforeAll, expect, it, beforeEach } from "vitest";
 import Chat from "../../src/models/Chat.js";
-import { faker } from "@faker-js/faker";
 import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
-import mongoose from "mongoose";
 import UserDao from "../../src/data/UserDao.js";
-
 
 dotenv.config();
 
 const userDao = new UserDao();
-let user1, user2;
+let user1, user2, chat;
 
-describe("Test Chat Schema & Model", () => {
+describe("Test Message Schema & Chat Schema & Model", () => {
   beforeAll(async () => {
     db.connect(process.env.TEST_DB);
     await Chat.deleteMany({});
+    
+  });
+
+  beforeEach(async () => {
     await userDao.deleteAll();
     user1 = await userDao.create({name: "test", email: "testingtesting12@jhu.com", password: "1234567"});
     user2 = await userDao.create({name: "test2", email: "testingtesting123@jhu.com", password: "1234567"});
-  });
+  })
 
   it("test create chat", async () => {
-    const chat = await Chat.create({ person1: user1, person2: user2 });
+    chat = await Chat.create({ users: [user1, user2] });
     expect(chat.id).toBeDefined();
-    expect(chat.users).toBeDefined();
-    console.log("chat", chat)
+    expect(chat.users[0]).toBe(user1);
+    expect(chat.users[1]).toBe(user2);
+  });
+
+  describe("test users are required", () => {
+    it("test user1 is null", async () => {
+      try {
+        user1 = null;
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
+    it("test user1 is undefined", async () => {
+      try {
+        user1 = undefined;
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
+    it("test user1 is empty", async () => {
+      try {
+        user1 = "";
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
+    it("test user2 is null", async () => {
+      try {
+        user2 = null;
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
+    it("test user2 is undefined", async () => {
+      try {
+        user2 = undefined;
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
+    it("test user2 is empty", async () => {
+      try {
+        user2 = "";
+        await Chat.create({ users: [user1, user2] });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+
   });
 
   it("test create message", async () => {
-    const name = faker.lorem.words(3);
-    const start = faker.date.future(1);
-    const end = faker.date.soon(1, start);  
-    const address = faker.address.streetAddress();
-    const city = faker.address.cityName();
-    const state = faker.address.countryCode();
-    const zip = faker.address.zipCode(); 
-    const description = faker.lorem.paragraph();
-    const visibility = "private";
-    const capacity = 3;
-    const organizer = mongoose.Types.ObjectId();
-    const categories = ["Sports"];
-    const event = await Event.create({ name, start, end, location: {address, city, state, zip}, description, visibility, capacity, organizer, categories });
-    expect(event.name).toBe(name);
-    expect(new Date(event.start).toString()).toBe(new Date(start).toString());
-    expect(new Date(event.end).toString()).toBe(new Date(end).toString());
-    expect(event.location.address).toBe(address);
-    expect(event.location.city).toBe(city);
-    expect(event.location.state).toBe(state);
-    expect(event.location.zip).toBe(zip);
-    expect(event.description).toBe(description);
-    expect(event.visibility).toBe(visibility)
-    expect(event.capacity).toBe(capacity)
-    expect(event.organizer).toBe(organizer);
-    expect(event.categories).toStrictEqual(categories);
+    const message = "how are you";
+    const sendMessage = {
+      sender: user1,
+      receiver: user2,
+      message: message,
+    };
+
+    chat.messages.push(sendMessage);
+    chat.save(function (err) {
+      if (err) {
+        console.log(err);
+      }
+    });
   });
 
-  // describe("test name is required", () => {
-  //   it("test name is null", async () => {
-  //     try {
-  //       const name = null;
-  //       const start = faker.date.future(1);
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
+  describe("test sender is required", () => {
+    it("test sender is null", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: null,
+          receiver: user2,
+          message: message,
+        };
 
-  //   it("test name is undefined", async () => {
-  //     try {
-  //       const name = undefined;
-  //       const start = faker.date.future(1);
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
 
-  //   it("test name is empty", async () => {
-  //     try {
-  //       const name = null;
-  //       const start = faker.date.future(1);
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
-  // });
+    it("test sender is undefined", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: undefined,
+          receiver: user2,
+          message: message,
+        };
 
-  // describe("test start is required", () => {
-  //   it("test start is null", async () => {
-  //     try {
-  //       const name = faker.lorem.words(3);
-  //       const start = null;
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
 
-  //   it("test start is undefined", async () => {
-  //     try {
-  //       const name = faker.lorem.words(3);
-  //       const start = undefined;
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
+    it("test sender is empty", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: "",
+          receiver: user2,
+          message: message,
+        };
 
-  //   it("test start is empty", async () => {
-  //     try {
-  //       const name = faker.lorem.words(3);
-  //       const start = "";
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+  });
 
-  //   // it("test start is in past", async () => {
-  //   //   try {
-  //   //     const name = faker.lorem.words(3);
-  //   //     const start = faker.date.past(1);
-  //   //     const end = faker.date.soon(1, start);
-  //   //     const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-  //   //     const description = faker.lorem.paragraph();
-  //   //     const visibility = "private";
-  //   //     const organizer = mongoose.Types.ObjectId();
-  //   //     const categories = ["Sports"];
-  //   //     await Event.create({ name, start, end, location, description, visibility, organizer, categories });
-  //   //   } catch (err) {
-  //   //     expect(err).toBeDefined();
-  //   //   }
-  //   // });
+  describe("test receiver is required", () => {
+    it("test receiver is null", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: user1,
+          receiver: null,
+          message: message,
+        };
 
-  //   // it("test start after end", async () => {
-  //   //   try {
-  //   //     const name = faker.lorem.words(3);
-  //   //     const end = faker.date.soon(1);
-  //   //     const start = faker.date.soon(1, end);
-  //   //     const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-  //   //     const description = faker.lorem.paragraph();
-  //   //     const visibility = "private";
-  //   //     const organizer = mongoose.Types.ObjectId();
-  //   //     const categories = ["Sports"];
-  //   //     await Event.create({ name, start, end, location, description, visibility, organizer, categories });
-  //   //   } catch (err) {
-  //   //     expect(err).toBeDefined();
-  //   //   }
-  //   // });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
 
-  //   it("test start is invalid", async () => {
-  //     try {
-  //       const name = faker.lorem.words(3);
-  //       const start = faker.lorem.words(3);
-  //       const end = faker.date.soon(1, start);
-  //       const address = faker.address.streetAddress();
-  //       const city = faker.address.cityName();
-  //       const state = faker.address.countryCode();
-  //       const zip = faker.address.zipCode();         
-  //       const description = faker.lorem.paragraph();
-  //       const visibility = "private";
-  //       const organizer = mongoose.Types.ObjectId();
-  //       const categories = ["Sports"];
-  //       await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //     } catch (err) {
-  //       expect(err).toBeDefined();
-  //     }
-  //   });
-  // });
+    it("test receiver is undefined", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: user1,
+          receiver: undefined,
+          message: message,
+        };
 
-  //   describe("test end is required", () => {
-  //     it("test end is null", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.soon(1);
-  //         const end = null;
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = faker.lorem.paragraph();
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  
-  //     it("test end is undefined", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.soon(1);
-  //         const end = undefined;
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = faker.lorem.paragraph();
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  
-  //     it("test end is empty", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.soon(1);
-  //         const end = "";
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = faker.lorem.paragraph();
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  //   });
-  
-  //     // it("test end is in past", async () => {
-  //     //   try {
-  //     //     const name = faker.lorem.words(3);
-  //     //     const start = faker.date.soon(1);
-  //     //     const end = faker.date.past(1);
-  //     //     const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-  //     //     const description = faker.lorem.paragraph();
-  //     //     const visibility = "private";
-  //     //     const organizer = mongoose.Types.ObjectId();
-  //     //     const categories = ["Sports"];
-  //     //     await Event.create({ name, start, end, location, description, visibility, organizer, categories });
-  //     //   } catch (err) {
-  //     //     expect(err).toBeDefined();
-  //     //   }
-  //     // });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
 
-  //     //it("test end before start", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const end = faker.date.soon(1);
-  //       //     const start = faker.date.soon(1, end);
-  //       //     const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, location, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-  
-  //     it("test end is invalid", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.soon(1);
-  //         const end = faker.lorem.words(3);
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = faker.lorem.paragraph();
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
+    it("test receiver is empty", async () => {
+      try {
+        const message = "how are you";
+        console.log("sender", user1)
+        const sendMessage = {
+          sender: user1,
+          receiver: "",
+          message: message,
+        };
 
-  //     // describe("test location is required", () => {
-  //       // it("test location is null", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = null;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is undefined", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = undefined;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is empty", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = "";
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-     
-    
-  //       // it("test location is invalid", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = faker.lorem.words(3);
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-  //       // it("test location is null", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = null;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is undefined", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = undefined;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is empty", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = "";
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-     
-    
-  //       // it("test location is invalid", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = faker.lorem.words(3);
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-  //       // it("test location is null", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = null;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is undefined", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = undefined;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is empty", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = "";
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-     
-    
-  //       // it("test location is invalid", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = faker.lorem.words(3);
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-  //       // it("test location is null", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = null;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is undefined", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = undefined;
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-    
-  //       // it("test location is empty", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const location = "";
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-     
-    
-  //       // it("test zip is invalid", async () => {
-  //       //   try {
-  //       //     const name = faker.lorem.words(3);
-  //       //     const start = faker.date.future(1);
-  //       //     const end = faker.date.soon(1, start);
-  //       //     const address = faker.address.streetAddress();
-  //       //     const city = faker.address.cityName();
-  //       //     const state = faker.address.countryCode();
-  //       //     const zip = faker.address.zipCode();             
-  //       //     const description = faker.lorem.paragraph();
-  //       //     const visibility = "private";
-  //       //     const organizer = mongoose.Types.ObjectId();
-  //       //     const categories = ["Sports"];
-  //       //     await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       //   } catch (err) {
-  //       //     expect(err).toBeDefined();
-  //       //   }
-  //       // });
-  //   // });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+  });
 
-  //   describe("test description is required", () => {
-  //     it("test description is null", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.future(1);
-  //         const end = faker.date.soon(1, start);
-  //         const description = null;
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();   
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  
-  //     it("test description is undefined", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.future(1);
-  //         const end = faker.date.soon(1, start);
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = undefined;
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  
-  //     it("test description is empty", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.future(1);
-  //         const end = faker.date.soon(1, start);
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode();           
-  //         const description = "";
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-    
-  
-  //     it("test description is invalid", async () => {
-  //       try {
-  //         const name = faker.lorem.words(3);
-  //         const start = faker.date.future(1);
-  //         const end = faker.date.soon(1, start);
-  //         const address = faker.address.streetAddress();
-  //         const city = faker.address.cityName();
-  //         const state = faker.address.countryCode();
-  //         const zip = faker.address.zipCode(); 
-  //         const description = mongoose.Types.ObjectId();
-  //         const visibility = "private";
-  //         const organizer = mongoose.Types.ObjectId();
-  //         const categories = ["Sports"];
-  //         await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //       } catch (err) {
-  //         expect(err).toBeDefined();
-  //       }
-  //     });
-  //   });
+  describe("test message is required", () => {
+    it("test message is null", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: user1,
+          receiver: user2,
+          message: null,
+        };
 
-  //     describe("test visibility is required", () => {
-  //       it("test visibility is null", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = null;
-  //           const organizer = mongoose.Types.ObjectId();
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-    
-  //       it("test visibility is undefined", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = undefined;
-  //           const organizer = mongoose.Types.ObjectId();
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-    
-  //       it("test visibility is empty", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = "";
-  //           const organizer = mongoose.Types.ObjectId();
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-      
-    
-  //       it("test visibility is invalid", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = faker.lorem.words(3);
-  //           const organizer = mongoose.Types.ObjectId();
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-  //     });
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
 
-  //     describe("test organizer is required", () => {
-  //       it("test organizer is null", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = "private";
-  //           const organizer = null;
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-    
-  //       it("test organizer is undefined", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = "private";
-  //           const organizer = undefined;
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-    
-  //       it("test organizer is empty", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode();               
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = "private";
-  //           const organizer = "";
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-      
-    
-  //       it("test organizer is invalid", async () => {
-  //         try {
-  //           const name = faker.lorem.words(3);
-  //           const start = faker.date.future(1);
-  //           const end = faker.date.soon(1, start);
-  //           const address = faker.address.streetAddress();
-  //           const city = faker.address.cityName();
-  //           const state = faker.address.countryCode();
-  //           const zip = faker.address.zipCode(); 
-  //           const description = faker.lorem.paragraph();
-  //           const visibility = "private";
-  //           const organizer = faker.lorem.words(3);
-  //           const categories = ["Sports"];
-  //           await Event.create({ name, start, end, address, city, state, zip, description, visibility, organizer, categories });
-  //         } catch (err) {
-  //           expect(err).toBeDefined();
-  //         }
-  //       });
-  //     });
+    it("test message is undefined", async () => {
+      try {
+        const message = "how are you";
+        const sendMessage = {
+          sender: user1,
+          receiver: user2,
+          message: undefined,
+        };
 
+        chat.messages.push(sendMessage);
+        chat.save(function (err) {
+        if (err) {
+          console.log(err)
+        }
+        });
+      } catch (err) {
+        expect(err).toBeDefined();
+      }
+    });
+  });
 });
