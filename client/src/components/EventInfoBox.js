@@ -10,7 +10,7 @@ export default function EventInfoBox({events}) {
       <p className='text-lg font-bold'>{events.length} event{events.length > 1 ? 's' : ''} at this location</p>
       <hr className='my-2'/>
       {events.map(event =>
-        <div className='my-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center flex flex-row space-x-2 p-2 rounded-md' onClick={()=> navigate('/events/'+ event._id)} >
+        <div key={event._id} className='my-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center flex flex-row space-x-2 p-2 rounded-md' onClick={()=> navigate('/events/'+ event._id)} >
           <div>
             <img src={event.thumbnailId} alt={event.name} className='w-36 h-36 object-cover rounded-md' />
           </div>
