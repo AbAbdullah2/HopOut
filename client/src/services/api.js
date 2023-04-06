@@ -250,3 +250,5 @@ export {
   getChat,
   sendMessage
 };
+
+export const host = `http://localhost:6002/`; // NEED TO CHANGE

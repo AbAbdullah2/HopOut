@@ -54,7 +54,8 @@ function ChatBody(props) {
   useEffect(() => {
     if (socket.current) {
       socket.current.on('msg-recieved', (msg) => {
-        setArrivalMessage({ message: msg,  receiver: curUser._id});
+        alert(msg)
+        setArrivalMessage({ message: msg, receiver: curUser._id });
       });
     }
   }, [socket]);

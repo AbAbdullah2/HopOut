@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ChatsList from '../components/ChatsList';
 import ChatBody from '../components/ChatBody';
-import { getAllChats } from '../services/api';
+import { getAllChats, host } from '../services/api';
 import { io } from 'socket.io-client';
 
 function Chat(props) {
@@ -33,6 +33,13 @@ function Chat(props) {
   useEffect(() => {
     console.log(currentChat);
   }, [currentChat]);
+
+  useEffect(() => {
+    if (curUser) {
+      socket.current = io(host);
+      socket.current.emit('add-user', curUser._id);
+    }
+  }, [curUser]);
 
   return (
     <div className="bg-stone-100 min-h-screen">
