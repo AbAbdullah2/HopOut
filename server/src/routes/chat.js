@@ -1,6 +1,7 @@
 import express from 'express';
 import ChatDao from '../data/ChatDao.js';
 import UserDao from '../data/UserDao.js';
+import ApiError from '../models/ApiError.js';
 
 const router = express.Router();
 export const chatDao = new ChatDao();
@@ -60,7 +61,9 @@ router.get('/getAllChats/:id', async (req, res, next) => {
 router.get('/getChat/:chatId', async (req, res, next) => {
   try {
     const { chatId } = req.params;
-
+    if (!chatId) {
+      throw new ApiError(400, "No chatId")
+    }
     const chat = await chatDao.readChat(chatId);
 
     res.json({
@@ -76,6 +79,9 @@ router.get('/getChat/:chatId', async (req, res, next) => {
 router.delete('/deleteChat/:chatId', async (req, res, next) => {
   try {
     const { chatId } = req.params;
+    if (!chatId) {
+      throw new ApiError(400, "No chatId")
+    }
     
     
     //verify that user deleting chat is in the chat

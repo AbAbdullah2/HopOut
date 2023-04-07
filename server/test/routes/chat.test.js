@@ -393,15 +393,15 @@ describe(`Test chat routes`, () => {
         expect(response.body.data.users).toContain(user2._id.toString())
       });
       describe('Respond 400', () => {
-        // it('Empty chatId', async () => {
-        //   try {
-        //     const response = await request.get(`/getChat/${""}`);
-        //   }
-        //   catch (err) {
-        //     expect(err.message).toBe('Invalid ID!')
-        //     expect(err.status).toBe(400)
-        //   }
-        // });
+        it('Empty chatId', async () => {
+          try {
+            const response = await request.get(`/getChat/${""}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
         it('Null chatId', async () => {
           try {
             const response = await request.get(`/getChat/${null}`);
@@ -436,17 +436,17 @@ describe(`Test chat routes`, () => {
   describe('DELETE request', () => {
     describe('/deleteChat/:chatId', () => {
       describe('Respond 400', () => {
-        // it('Empty chatId', async () => {
-        //   try {
-        //     console.log("trying to delete with empty chatid")
-        //     const chat = await request.delete(`/deleteChat/`);
-        //     console.log("delete empty", chat.body)
-        //   }
-        //   catch (err) {
-        //     expect(err.message).toBe('Invalid ID!')
-        //     expect(err.status).toBe(400)
-        //   }
-        // });
+        it('Empty chatId', async () => {
+          try {
+            console.log("trying to delete with empty chatid")
+            const chat = await request.delete(`/deleteChat/`);
+            console.log("delete empty", chat.body)
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
         it('Null chatId', async () => {
           try {
             await request.delete(`/deleteChat/${null}`);
@@ -475,15 +475,15 @@ describe(`Test chat routes`, () => {
             expect(err.status).toBe(404)
           }
         });
-        // it('Invalid chat: user not in chat', async () => {
-        //   try {
-        //     await request.get(`/deleteChat/${chatId}`);
-        //   }
-        //   catch (err) {
-        //     expect(err.message).toBe('Resource not found!')
-        //     expect(err.status).toBe(404)
-        //   }
-        // });
+        it('Invalid chat: user not in chat', async () => {
+          try {
+            await request.get(`/deleteChat/${chatId}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Resource not found!')
+            expect(err.status).toBe(404)
+          }
+        });
       });
       it('Respond 200', async () => {
         const response = await request.delete(`/deleteChat/${chatId}`);

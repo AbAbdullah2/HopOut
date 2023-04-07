@@ -15,7 +15,7 @@ const userDao = new UserDao();
 
 describe("Test ChatDao", () => {
     const numChats = 5
-    let chats, user1, user2;
+    let chat, user1, user2, user3, text, chatId;
     
 
     beforeAll(async () => {
@@ -24,12 +24,12 @@ describe("Test ChatDao", () => {
         await userDao.deleteAll()
         user1 = await userDao.create({name: "test", email: "te12@jhu.com", password: "1234567"});
         user2 = await userDao.create({name: "test2", email: "te123@jhu.com", password: "1234567"});
+        user3 = await userDao.create({name: "test3", email: "te1234@jhu.com", password: "1234567"});
 
     });
 
     beforeEach(async () => {
       await chatDao.deleteAll();
-      chats = [];
     });
 
     it("test createChat()", async () => {
@@ -37,478 +37,221 @@ describe("Test ChatDao", () => {
       expect(chat.id).toBeDefined();
       expect(chat.users[0].toString()).toBe(user1.id);
       expect(chat.users[1].toString()).toBe(user2.id);
-      
+    });
+
+    describe("test createChat() throws error", async () => {
+      it("empty person1", async () => {
+        try {
+          await chatDao.createChat({ person1: "", person2: user2.id });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("null person1", async () => {
+        try {
+          await chatDao.createChat({ person1: null, person2: user2.id });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("undefined person1", async () => {
+        try {
+          await chatDao.createChat({ person1: undefined, person2: user2.id });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid person1", async () => {
+        try {
+          await chatDao.createChat({ person1: mongoose.Types.ObjectId(), person2: user2.id });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("empty person2", async () => {
+        try {
+          await chatDao.createChat({ person1: user1.id, person2: "" });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("null person2", async () => {
+        try {
+          await chatDao.createChat({ person1: user1.id, person2: null });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("undefined person2", async () => {
+        try {
+          await chatDao.createChat({ person1: user1.id, person2: undefined });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid person2", async () => {
+        try {
+          await chatDao.createChat({ person1: user1.id, person2: mongoose.Types.ObjectId() });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
     });
 
     it("test createMessage()", async () => {
-      const text = "hi how are you";
-      const chat = await chatDao.createChat({ person1: user1.id, person2: user2.id });
-      console.log("chat", chat.users)
+      text = "hi how are you";
+      chat = await chatDao.createChat({ person1: user1.id, person2: user2.id });
+      chatId = chat._id
       const formMessage = await chatDao.createMessage({chatId: chat._id, sender: user1.id, receiver: user2.id, message: text})
       expect(formMessage.messages[0].id).toBeDefined();
       expect(formMessage.messages[0].sender.toString()).toBe(user1.id);
       expect(formMessage.messages[0].receiver.toString()).toBe(user2.id);
       expect(formMessage.messages[0].message).toBe(text);
     });
-
-    // it("test user2 is not in database", async () => {
-    //   try {
-    //     user2 = "642f32484ed78b03bc796f51"
-    //     const curchat = await Chat.create({ users: [user1, user2] });
-    //     console.log("curchat", curchat)
-    //   } catch (err) {
-    //     console.log("invalid user error", err)
-    //     expect(err).toBeDefined();
-    //   }
-    // });
-
-    // describe("test create() throws error", () => {
-    //   it("empty name", async () => {
-    //     try {
-    //       const name = "";
-    //       const start = faker.date.future(1);
-    //       const end = faker.date.soon(1, start);
-    //       const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //       const description = faker.lorem.paragraph();
-    //       const visibility = "private";
-    //       const organizer = mongoose.Types.ObjectId();
-    //       const categories = ["Sports"];
-    //       await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //     } catch (err) {
-    //       expect(err.status).toBe(400);
-    //     }
-    //   });
-
-    //   it("null name", async () => {
-    //     try {
-    //       const name = null;
-    //       const start = faker.date.future(1);
-    //       const end = faker.date.soon(1, start);
-    //       const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //       const description = faker.lorem.paragraph();
-    //       const visibility = "private";
-    //       const organizer = mongoose.Types.ObjectId();
-    //       const categories = ["Sports"];
-    //       await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //     } catch (err) {
-    //       expect(err.status).toBe(400);
-    //     }
-    //   });
-
-    //   it("undefined name", async () => {
-    //     try {
-    //       const name = undefined;
-    //       const start = faker.date.future(1);
-    //       const end = faker.date.soon(1, start);
-    //       const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //       const description = faker.lorem.paragraph();
-    //       const visibility = "private";
-    //       const organizer = mongoose.Types.ObjectId();
-    //       const categories = ["Sports"];
-    //       await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //     } catch (err) {
-    //       expect(err.status).toBe(400);
-    //     }
-    //   });
-
-    //   it("invalid name", async () => {
-    //     try {
-    //       const name = faker.lorem.paragraph();
-    //       const start = faker.date.future(1);
-    //       const end = faker.date.soon(1, start);
-    //       const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //       const description = faker.lorem.paragraph();
-    //       const visibility = "private";
-    //       const organizer = mongoose.Types.ObjectId();
-    //       const categories = ["Sports"];
-    //       await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //     } catch (err) {
-    //       expect(err.status).toBe(400);
-    //     }
-    //   });
-
-    //   it("empty start", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = "";
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null start", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = null;
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined start", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = undefined;
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("invalid start", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.lorem.words(3);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("empty end", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = "";
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null end", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = null;
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined end", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = undefined;
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("invalid end", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.lorem.words(3);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("empty location", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = "";
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null location", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = null;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined location", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = undefined;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("invalid location", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.lorem.words(3);
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("empty description", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = "";
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null description", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = null;
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined description", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = undefined;
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("invalid description", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.date.soon(1, start);
-    //         const visibility = "private";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("empty visibility", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "";
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null visibility", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = null;
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined visibility", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = undefined;
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("invalid visibility", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = faker.lorem.words(3);
-    //         const organizer = mongoose.Types.ObjectId();
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("empty organizer", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = "";
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("null organizer", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = null;
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    
-    //     it("undefined organizer", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = undefined;
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-
-    //     it("invalid organizer", async () => {
-    //       try {
-    //         const name = faker.lorem.words(3);
-    //         const start = faker.date.future(1);
-    //         const end = faker.date.soon(1, start);
-    //         const location = faker.address.streetAddress() + faker.address.cityName() + faker.address.countryCode() ;
-    //         const description = faker.lorem.paragraph();
-    //         const visibility = "private";
-    //         const organizer = faker.lorem.words(3);
-    //         const categories = ["Sports"];
-    //         await eventDao.create({ name, start, end, location, description, visibility, organizer, categories });
-    //       } catch (err) {
-    //         expect(err.status).toBe(400);
-    //       }
-    //     });
-    // });
+    describe("test createMessage() throws error", async () => {
+      it("empty chatId", async () => {
+        try {
+          await chatDao.createChat({chatId: "", sender: user1.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("null chatId", async () => {
+        try {
+          await chatDao.createChat({chatId: null, sender: user1.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("undefined chatId", async () => {
+        try {
+          await chatDao.createChat({chatId: undefined, sender: user1.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid chatId", async () => {
+        try {
+          await chatDao.createChat({chatId: '1', sender: user1.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid chat", async () => {
+        try {
+          await chatDao.createChat({chatId: mongoose.Types.ObjectId(), sender: user1.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Chat does not exist!')
+        }
+      });
+      it("empty sender", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: "", receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("null sender", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: null, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("undefined sender", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: undefined, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid sender: invalid id", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: '1', receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid sender: invalid user", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: mongoose.Types.ObjectId(), receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid Sender!')
+        }
+      });
+      it("invalid sender: user not in chat", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user3.id, receiver: user2.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid Sender!')
+        }
+      });
+      it("empty receiver", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: "", message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("null receiver", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: null, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("undefined receiver", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: undefined, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid receiver: invalid id", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: '1', message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
+      it("invalid receiver: invalid user", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: mongoose.Types.ObjectId(), message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid Receiver!')
+        }
+      });
+      it("invalid receiver: user not in chat", async () => {
+        try {
+          await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: user3.id, message: text});
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid Receiver!')
+        }
+      });
+    });
 });
