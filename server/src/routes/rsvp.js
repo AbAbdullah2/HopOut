@@ -56,9 +56,13 @@ router.put(`/rsvp/sendInvite`, async (req, res, next) => {
     const event = await eventDao.read(eventId);
     const invitee = await userDao.read(inviteeId);
     const eventInvitees = event.invitees;
-    eventInvitees.push(inviteeId);
+    if (!eventInvitees.includes(inviteeId)) {
+      eventInvitees.push(inviteeId);
+    }
     const userInvited = invitee.invited;
-    userInvited.push(eventId);
+    if (!userInvited.includes(eventId)) {
+      userInvited.push(eventId);
+    }
     const updatedEvent = await eventDao.update({
       id: eventId,
       invitees: eventInvitees,

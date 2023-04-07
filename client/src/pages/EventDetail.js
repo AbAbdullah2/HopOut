@@ -6,9 +6,10 @@ import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getEvent, getUser } from '../services/api';
+import { getEvent, getUser, getAllUsers } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
+import { Table, Dropdown } from 'flowbite-react';
 
 export default function EventDetail(props) {
  const {eventid} = useParams();
@@ -21,6 +22,10 @@ export default function EventDetail(props) {
  const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
  const [attendeesCount, setAttendeesCount] = useState(0);
+ const [attendees, setAttendees] = useState([]);
+ const [attendeesAndInvitees, setAttendeesAndInvitees] = useState([]);
+ const [invitees, setInvitees] = useState([]);
+ const [checkedArray, setCheckedArray] = useState([true, true, true]);
 
  const navigate = useNavigate();
  useEffect(() => {
@@ -38,14 +43,48 @@ export default function EventDetail(props) {
 })
 }, [curUser, eventid]);
 
+useEffect(() => {
+  const getPeople = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+    const att = users.filter((user) => {return user.attending.includes(eventid)});
+    setAttendees(att);
+    const ppl = users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)});
+    setAttendeesAndInvitees(ppl);
+    const inv = users.filter((user) => {return user.invited.includes(eventid)});
+    setInvitees(inv);
+  }
+  getPeople();
+}, [curUser, eventid]);
+
+useEffect(() => {
+  const getPeople = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+  }
+  getPeople();
+}, [curUser, eventid]);
+
  useEffect(() => {
    if (event !== null) {
      getUser(event.organizer).then((res) => {
        setHost(res.data.data);
      });
-   } 
+   }
  }, [event, eventid]);
 
+ const toShow = (user) => {
+  if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
+    return false;
+  }
+  if (!checkedArray[1] && (!attendees.includes(user) && invitees.includes(user))) {
+    return false;
+  }
+  if (!checkedArray[2] && (attendees.includes(user) && !invitees.includes(user))) {
+    return false;
+  }
+  return true;
+ }
 
  const confirmRsvp = () => {
    // set rsvp state to true, show toast message and rsvp in the backend
@@ -78,7 +117,7 @@ export default function EventDetail(props) {
           { curUser.organizing && curUser.organizing.includes(eventid) ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
             <></> }
-        </div>
+       </div>
        <div className='m-5'>
          <p className='text-4xl font-extrabold text-center'>{event.name}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
@@ -123,6 +162,95 @@ export default function EventDetail(props) {
          <hr className='my-4 bg-stone-800 h-1' />
         
          <p className='my-2'>{event.description}</p>   
+         {event.organizer !== curUser._id ? 
+          <div>
+          <p>Attendees</p>
+         <Table striped={true}>
+          <Table.Head>
+            <Table.HeadCell>
+              Name
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Email
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {attendees.map((attendee) => {
+              return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {attendee.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {attendee.email}
+                </Table.Cell>
+              </Table.Row>);
+            })}
+          </Table.Body>
+        </Table>
+        </div>
+        :
+        <div>
+          <div>
+            <p>Attendees and Invitees</p>
+            <div className="mt-1 flex flex-row">
+              <Dropdown
+                label={"Filter"}
+                className="bg-gray-50"
+                dismissOnClick={false}
+              >
+                <Dropdown.Item>
+                  <input id="checkbox-item-1" type="checkbox" checked={checkedArray[0]} onChange={(e) => setCheckedArray([!checkedArray[0], checkedArray[1], checkedArray[2]])} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                  <span className="pl-2">Attending and Invited</span>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <input id="checkbox-item-1" type="checkbox" checked={checkedArray[1]} onChange={(e) => setCheckedArray([checkedArray[0], !checkedArray[1], checkedArray[2]])} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                  <span className="pl-2">Not Attending and Invited</span>
+                </Dropdown.Item>
+                <Dropdown.Item>
+                  <input id="checkbox-item-1" type="checkbox" checked={checkedArray[2]} onChange={(e) => setCheckedArray([checkedArray[0], checkedArray[1], !checkedArray[2]])} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2" />
+                  <span className="pl-2">Attending and Not Invited</span>
+                </Dropdown.Item>
+              </Dropdown>
+            </div>
+          </div>
+         <Table striped={true}>
+          <Table.Head>
+            <Table.HeadCell>
+              Name
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Email
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Attending?
+            </Table.HeadCell>
+            <Table.HeadCell>
+              Invited?
+            </Table.HeadCell>
+          </Table.Head>
+          <Table.Body className="divide-y">
+            {attendeesAndInvitees
+            .filter((person) => toShow(person))
+            .map((person) => {
+              return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                  {person.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {person.email}
+                </Table.Cell>
+                <Table.Cell>
+                  {person.attending.includes(event._id) ? 'Yes' : 'No'}
+                </Table.Cell>
+                <Table.Cell>
+                  {person.invited.includes(event._id) ? 'Yes' : 'No'}
+                </Table.Cell>
+              </Table.Row>);
+            })}
+          </Table.Body>
+        </Table>
+        </div>
+        }
        </div>
      </div>
    </div>

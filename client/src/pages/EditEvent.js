@@ -9,7 +9,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { updateEvent, getEvent } from '../services/api';
+import { updateEvent, getEvent, sendInvite, unsendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
@@ -127,13 +127,23 @@ function EditEvent(props) {
     toast.success('Updating event...', {duration: 500});
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime); 
+    const currentEvent = await getEvent(event._id);
+    const oldInvitees = currentEvent.data.data.invitees;
     if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
-    updateEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then((res) => {
+    updateEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then(async (res) => {
       if (res.status === 200) {                
         console.log("Successfully updated event. received res: ", res);
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not update event ' + event.name);
+      }
+      const new_invitee_ids = invitees.map((inv) => {return inv._id}).filter((idd) => {return !oldInvitees.includes(idd)});
+      const removed_invitee_ids = oldInvitees.filter((idd) => {return !invitees.map((inv) => {return inv._id}).includes(idd)});
+      for (const idx in new_invitee_ids) {
+        await sendInvite(res.data.data._id, new_invitee_ids[idx]);
+      }
+      for (const idx in removed_invitee_ids) {
+        await unsendInvite(res.data.data._id, removed_invitee_ids[idx]);
       }
     });
   }
@@ -281,6 +291,7 @@ function EditEvent(props) {
                   >
                     <div className="mt-3 flex rounded-md shadow-sm">
                       <input
+                        autoComplete="none"
                         type="text"
                         name="address"
                         id="address"

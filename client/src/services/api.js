@@ -164,6 +164,15 @@ async function sendInvite(evid, invid) {
   return response;
 }
 
+async function unsendInvite(evid, invid) {
+  const body = { eventId: evid, uninviteeId: invid };
+  const response = await axios.put(`${BASE_URL}/rsvp/unsendInvite`, body)
+  .catch(function (error) {
+    console.log(error);
+  });
+  return response;
+}
+
 async function rsvpToEvent(userId, eventId) {
   const body = { senderId: userId, eventId };
   const response = await axios.put(`${BASE_URL}/rsvp/sendRSVP`, body)
@@ -183,4 +192,4 @@ async function rsvpToEvent(userId, eventId) {
   return response;
  }
 
-export { sendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getAllHostedEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }
+export { sendInvite, unsendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }
