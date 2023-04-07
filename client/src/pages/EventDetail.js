@@ -29,7 +29,7 @@ export default function EventDetail(props) {
 
  const navigate = useNavigate();
  useEffect(() => {
-   if (curUser === null) navigate('/login');
+   if (!curUser || curUser === null) navigate('/login');
    getEvent(eventid).then((res) => {
      setEvent(res.data.data);
      setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);
@@ -111,13 +111,13 @@ useEffect(() => {
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-       {/* <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' /> */}
+       <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
        <div className="relative">
           <img src={event.coverId} alt={event.title} className='w-full object-cover h-60' />
           { curUser.organizing && curUser.organizing.includes(eventid) ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
             <></> }
-      </div>
+       </div>
        <div className='m-5'>
          <p className='text-4xl font-extrabold text-center'>{event.name}</p>
          <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getUser, updateUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
+import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriend, removeFriendReq} from '../services/api';
 import Header from '../components/Header';
+import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
 
 
 export default function Profile(props) {
   const { userid } = useParams();
   const { curUser, setCurUser} = props
   const [user, setUser] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   
   const navigate = useNavigate();
 
@@ -21,7 +23,7 @@ export default function Profile(props) {
     switch(friendStatus) {
       case "friends":
         return (<button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
-          onClick={handleUnfriend}> Friend <FontAwesomeIcon icon={solid('circle-check')} /> 
+          onClick={() => setShowConfirm(true)}> Friend <FontAwesomeIcon icon={solid('circle-check')} /> 
         </button>)
       case "sent":
         return (<button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full" onClick={handleUnsendReq}> Friend request sent <FontAwesomeIcon icon={solid('circle-check')} /> 
@@ -29,10 +31,10 @@ export default function Profile(props) {
       case "received":
         return (
           <div className="items-center py-5 px-12 lg:px-4" role="alert">
-          <div className="bg-blue-900 shadow-md px-7 py-3 rounded-md items-center text-blue-100 leading-none lg:rounded-full flex lg:inline-flex " >
-            <span className="font-semibold text-left flex-auto">{user.name} sent you a friend request. </span>
-            <button className="hover:bg-blue-400 font-bold py-2 px-3 rounded-full" onClick={handleAcceptFriend}>Accept <FontAwesomeIcon icon={solid('check')} /></button>
-            <button className="hover:bg-blue-400 font-bold py-2 px-3 rounded-full" onClick={handleDenyFriend}>Deny <FontAwesomeIcon icon={solid('x')} /></button>
+          <div className="bg-blue-500 shadow-md px-7 py-3 rounded-md items-center text-blue-100 leading-none lg:rounded-full flex lg:inline-flex " >
+            <span className="font-semibold text-left flex-auto">{user.name} sent you a friend request.  </span>
+            <button className="hover:bg-blue-400 font-bold ml-2 py-2 px-2 rounded-md" onClick={handleAcceptFriend}>Accept <FontAwesomeIcon icon={solid('check')} /></button>
+            <button className="hover:bg-blue-400 font-bold py-2 px-2 rounded-md" onClick={handleDenyFriend}>Deny <FontAwesomeIcon icon={solid('x')} /></button>
           </div>
         </div>
         )
@@ -43,111 +45,68 @@ export default function Profile(props) {
   }
 
   const handleSendReq = (e) => {
+    setFriendStatus("sent");  
     sendFriendReq(curUser._id, user._id).then((sendRes) => {
-      updateUser({...curUser, sentFriends: [...curUser.sentFriends, user._id]}).then((updateRes) => {
-        if (updateRes.status === 200 || updateRes.status === 201) {
-          setCurUser(updateRes.data.data)
-        }
-        updateUser({...user, receivedFriends: [...user.receivedFriends, curUser._id]});
-      });      
+      setCurUser(sendRes.data.data);
     });
-    setFriendStatus("sent")  
   }
 
   const handleAcceptFriend = (e) => {
-    acceptFriendReq(curUser._id, user._id).then((acceptRes) => {
-      updateUser({...curUser, 
-        friends: [...curUser.friends, user._id],
-        receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
-      }).then((updateRes) => {
-        if (updateRes.status === 200 || updateRes.status === 201) {
-          setCurUser(updateRes.data.data)
-        }
-        updateUser({...user, 
-          friends: [...user.friends, curUser._id], 
-          sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
-          ).then((updateReceiverRes) => {
-        });  
-      });
-    });
     setFriendStatus("friends")        
+    acceptFriendReq(curUser._id, user._id).then((acceptRes) => {
+      setCurUser(acceptRes.data.data);
+    });
   }
 
   const handleDenyFriend = (e) => {
-    declineFriendReq(curUser._id, user._id).then((denyRes) => {
-      updateUser({...curUser, 
-        receivedFriends: [user.receivedFriends.filter((receieveds) => {return receieveds !== user._id})]
-      }).then((updateRes) => {
-        if (updateRes.status === 200 || updateRes.status === 201) {
-          setCurUser(updateRes.data.data)
-        }
-        updateUser({...user, 
-          sentFriends: [user.sentFriends.filter((sents) => {return sents !== curUser._id})]}
-          ).then((updateDeniedRes) => {
-        });  
-      });
-    });
     setFriendStatus("none");
+    declineFriendReq(curUser._id, user._id).then((declineRes) => {
+      setCurUser(declineRes.data.data);
+    });
   }
 
   const handleUnsendReq = (e) => {
-    removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
-      updateUser({...curUser, 
-        receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
-      }).then((updateRes) => {
-        if (updateRes.data.data) {
-          setCurUser(updateRes.data.data)
-        }
-        updateUser({...user, 
-          sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
-          ).then((updateRemovedRes) => {
-        });  
-      });
-    });
     setFriendStatus("none");
+    removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
+      setCurUser(removeReqRes.data.data);
+    });
   }
 
-  const handleUnfriend = (e) => {
-    removeFriendReq(curUser._id, user._id).then((removeReqRes) => {
-      updateUser({...curUser, 
-        receivedFriends: [user.sentFriends.filter((sents) => {return sents !== user._id})]
-      }).then((updateRes) => {
-        if (updateRes.status === 200 || updateRes.status === 201) {
-          setCurUser(updateRes.data.data)
-        }
-        updateUser({...user, 
-          sentFriends: [user.receivedFriends.filter((receiveds) => {return receiveds !== curUser._id})]}
-          ).then((updateRemovedRes) => {
-        });  
-      });
-    });
-    setFriendStatus("none");
+  const closeModal = () => {
+    setFriendStatus(false);
+    setShowConfirm(false);
   }
 
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getUser(userid).then((res) => {
       setUser(res.data.data);
-      curUser.sentFriends.forEach(e => {
-        if (e.user === res.data.data._id) {
+    });
+
+    getUser(curUser._id).then((res) => {
+      setCurUser(res.data.data);
+      res.data.data.sentFriends.forEach(e => {
+        if (e.user === userid) {
           setFriendStatus("sent");
         }
       });
-      curUser.receivedFriends.forEach(e => {
-        if (e.user === res.data.data._id) {
+      res.data.data.receivedFriends.forEach(e => {
+        if (e.user === userid) {
           setFriendStatus("received");
         }
       });
-      curUser.friends.forEach(e => {
-        if (e === res.data.data._id) {
+      res.data.data.friends.forEach(e => {
+        if (e.user === userid) {
           setFriendStatus("friends");
         }
       });
-    });  
-  }, [curUser, userid, navigate]);
+    });
+
+  }, [userid, navigate]);
 
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
+      <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={closeModal} unfriended={user}/> 
       <div className='mx-auto flex flex-col h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className='m-5 flex flex-col items-center'>

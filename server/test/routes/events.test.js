@@ -31,6 +31,14 @@ describe(`Test ${endpoint}`, () => {
 
   beforeEach(async () => {
     await eventDao.deleteAll();
+    await userDao.deleteAll();
+    const user = await userDao.create({
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
+    uid = user.id;
+
     events = [];
 
     for (let index = 0; index < numEvents; index++) {

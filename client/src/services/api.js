@@ -82,6 +82,15 @@ async function getAllPrivateEvents(userId) {
   return response;
 }
 
+// get all hosted events
+async function getAllHostedEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/hostedEvents/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
 async function getEvent(eventId) {
   const response = await axios.get(`${BASE_URL}/events/${eventId}`)
     .catch(function (error) {
@@ -123,7 +132,7 @@ async function declineFriendReq(declinerId, requesterId) {
 }
 
 async function removeFriendReq(removerId, otherId) {
-  const response = await axios.put(`${BASE_URL}/friends/declineRequest`, { removerId, otherId })
+  const response = await axios.put(`${BASE_URL}/friends/removeRequest`, { removerId, otherId })
   .catch(function (error) {
     console.log(error);
   });
