@@ -36,8 +36,17 @@ export function EventList(props) {
 
   const toDisplayEvent = (ev) => {
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0 && !friendEventsActive) {
-      return true;
+    if (selectedFilters.length === 0 && friendFilters.length === 0) {
+      if (!friendEventsActive) {
+        return true;
+      }
+      if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
+        return true;
+      }
+    }
+
+    if (friendEventsActive && !(curUser.friends.map((ev) => ev.user).includes(ev.organizer))) {
+      return false;
     }
 
     for (const f in selectedFilters) {
@@ -68,10 +77,6 @@ export function EventList(props) {
           }
         }
       }
-    }
-
-    if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
-      filtered = false;
     }
 
     return filtered;
