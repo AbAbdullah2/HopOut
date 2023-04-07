@@ -70,7 +70,7 @@ export function EventList(props) {
       }
     }
 
-    if (friendEventsActive && curUser.friends.includes(ev.organizer)) {
+    if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
       filtered = false;
     }
 
