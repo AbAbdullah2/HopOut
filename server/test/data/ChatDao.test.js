@@ -154,7 +154,7 @@ describe("Test ChatDao", () => {
           await chatDao.createChat({chatId: mongoose.Types.ObjectId(), sender: user1.id, receiver: user2.id, message: text});
         } catch (err) {
           expect(err.status).toBe(400);
-          expect(err.message).toBe('Chat does not exist!')
+          expect(err.message).toBe('Invalid ID!')
         }
       });
       it("empty sender", async () => {
@@ -194,7 +194,7 @@ describe("Test ChatDao", () => {
           await chatDao.createChat({chatId: chatId, sender: mongoose.Types.ObjectId(), receiver: user2.id, message: text});
         } catch (err) {
           expect(err.status).toBe(400);
-          expect(err.message).toBe('Invalid Sender!')
+          expect(err.message).toBe('Invalid ID!')
         }
       });
       it("invalid sender: user not in chat", async () => {
@@ -202,7 +202,7 @@ describe("Test ChatDao", () => {
           await chatDao.createChat({chatId: chatId, sender: user3.id, receiver: user2.id, message: text});
         } catch (err) {
           expect(err.status).toBe(400);
-          expect(err.message).toBe('Invalid Sender!')
+          expect(err.message).toBe('Invalid ID!')
         }
       });
       it("empty receiver", async () => {
@@ -242,7 +242,7 @@ describe("Test ChatDao", () => {
           await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: mongoose.Types.ObjectId(), message: text});
         } catch (err) {
           expect(err.status).toBe(400);
-          expect(err.message).toBe('Invalid Receiver!')
+          expect(err.message).toBe('Invalid ID!')
         }
       });
       it("invalid receiver: user not in chat", async () => {
@@ -250,7 +250,7 @@ describe("Test ChatDao", () => {
           await chatDao.createChat({chatId: chatId, sender: user1.id, receiver: user3.id, message: text});
         } catch (err) {
           expect(err.status).toBe(400);
-          expect(err.message).toBe('Invalid Receiver!')
+          expect(err.message).toBe('Invalid ID!')
         }
       });
     });
