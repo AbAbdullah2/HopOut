@@ -112,6 +112,7 @@ function Map({events}) {
           disableDefaultUI: true,
           zoomControl: true,
         }}
+        onClick={() => setActiveMarker(null)}
       >
         <Autocomplete
           onPlaceChanged={
