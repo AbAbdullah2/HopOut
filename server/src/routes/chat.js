@@ -32,8 +32,6 @@ router.post('/message', async (req, res, next) => {
       receiver: receiverId,
       message,
     });
-    console.log(chat);
-
     res.status(201).json({
       status: 201,
       message: `Successfully sent message!`,
@@ -78,6 +76,9 @@ router.get('/getChat/:chatId', async (req, res, next) => {
 router.delete('/deleteChat/:chatId', async (req, res, next) => {
   try {
     const { chatId } = req.params;
+    
+    
+    //verify that user deleting chat is in the chat
 
     const chat = await chatDao.deleteChat(chatId);
 
