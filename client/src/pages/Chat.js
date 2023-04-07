@@ -80,7 +80,9 @@ socket.on("data", (res) => {
           ></ChatsList>
           <div className="col-span-4">
             {currentChat === undefined ? (
-              <div />
+              <div>
+                <p>Select a chat!</p>
+              </div>
             ) : (
               <ChatBody
                 curChat={currentChat}

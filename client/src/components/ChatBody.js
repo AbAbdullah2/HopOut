@@ -70,7 +70,7 @@ function ChatBody(props) {
   // }, [messages]);
 
   return (
-    <div className="h-screen bg-stone-100">
+    <div className="bg-stone-100 ">
       <div className=" flex items-center justify-center">
         <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
           <p>{curChat[0][0]}</p>
@@ -80,24 +80,31 @@ function ChatBody(props) {
         </div>
       </div>
       <hr className="h-px bg-slate-800 border-0"></hr>
-
-      {messages.map((message, index) => {
-        return (
-          <div key={index}>
-            <div>
-              {message['receiver'] === curUser._id ? (
-                <div className="grid place-items-center bg-blue-400">
-                  {message['message']}
+      <div className="overflow-auto p-5">
+        <div className="flex-col">
+          {messages.map((message, index) => {
+            return (
+              <div key={index}>
+                <div>
+                  {message['receiver'] === curUser._id ? (
+                    <div className="py-1 flex justify-start">
+                      <div className="flex align-items-center bg-blue-900 justify-start px-5 py-1 max-w-fit max-w-md break-words	rounded-2xl	text-white	">
+                        {message['message']}
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-1 flex justify-end">
+                      <div className="flex align-items-center bg-slate-400 justify-end px-5 py-1 max-w-fit max-w-md break-words rounded-2xl	">
+                        {message['message']}
+                      </div>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="grid place-items-center bg-blue-900">
-                  {message['message']}
-                </div>
-              )}
-            </div>
-          </div>
-        );
-      })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
       <ChatInput handleSendMsg={handleSendMsg}></ChatInput>
     </div>
   );

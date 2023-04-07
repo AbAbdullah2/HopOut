@@ -17,9 +17,10 @@ function ChatInput(props) {
         <input
           type="text"
           id="msg"
-          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm w-5/6"
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
+          placeholder="Type your message here"
         />
         <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
