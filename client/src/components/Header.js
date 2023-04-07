@@ -22,6 +22,9 @@ export default function Header(props) {
         <a href='/create' className='hover:text-blue-400'>
           <FontAwesomeIcon icon={solid('plus')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Create</span>
         </a>
+        <a href='/chat' className='hover:text-blue-400'>
+          <FontAwesomeIcon icon={solid('comments')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Chats</span>
+        </a>
         <Notifications curUser={curUser}/>
         <Dropdown
           floatingArrow= {false}

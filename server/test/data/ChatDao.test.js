@@ -1,10 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import ChatDao from "../../src/data/ChatDao.js";
-import { faker } from "@faker-js/faker";
-import Chat from "../../src/models/Chat.js";
 import * as db from "../../src/data/db.js";
 import * as dotenv from "dotenv";
-import User from "../../src/models/User.js";
 import UserDao from "../../src/data/UserDao.js";
 import mongoose from "mongoose";
 
