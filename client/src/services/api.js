@@ -192,4 +192,4 @@ async function rsvpToEvent(userId, eventId) {
   return response;
  }
 
-export { sendInvite, unsendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }
+export { sendInvite, unsendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser, getAllHostedEvents }
