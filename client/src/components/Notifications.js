@@ -51,7 +51,7 @@ export default function Notifications(props) {
           {
             allNotifications.length > 0 ? 
           allNotifications.map((notif) => { 
-              return (<Dropdown.Item>
+              return (<Dropdown.Item key={notif._id}>
                 <div className="flex items-center space-x-4">
                     {notif.type === "friend" ? 
                     <div className="min-w-100 px-8" onClick={() => navigate("/profile/" + notif._id)}>

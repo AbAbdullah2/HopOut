@@ -36,7 +36,7 @@ export function EventList(props) {
 
   const toDisplayEvent = (ev) => {
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0) {
+    if (selectedFilters.length === 0 && friendFilters.length === 0 && !friendEventsActive) {
       return true;
     }
 
@@ -68,6 +68,10 @@ export function EventList(props) {
           }
         }
       }
+    }
+
+    if (friendEventsActive && curUser.friends.includes(ev.organizer)) {
+      filtered = false;
     }
 
     return filtered;
