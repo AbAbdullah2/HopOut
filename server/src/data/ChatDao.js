@@ -66,7 +66,6 @@ class ChatDao {
   // return the created message
   async createMessage({ chatId, sender, receiver, message }) {
     //check message is valid
-    console.log("people", sender, receiver)
     let result = validString.safeParse(message);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Message!');
@@ -80,7 +79,6 @@ class ChatDao {
 
     //check sender is valid
     const send = await User.findById(sender);
-    console.log("sender", send)
     if (!send) {
       throw new ApiError(400, 'Invalid Sender!');
     }
@@ -98,9 +96,10 @@ class ChatDao {
     }
 
     //check chatId is valid
-    result = validObjectId.safeParse(chatId);
+    result = validObjectId.safeParse(chatId.toString());
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      console.log(result.error)
+      throw new ApiError(400, 'Invalid ChatId!');
     }
 
     const chat = await Chat.findById(chatId);
@@ -108,7 +107,7 @@ class ChatDao {
       throw new ApiError(400, 'Chat does not exist!')
     }
     
-    if (!((chat.users[0].toString() === (sender) || chat.users[1].toString() === (sender)) && (chat.users[1].toString() === (receiver) || chat.users[1].toString() === (receiver)))) {
+    if (!((chat.users[0].toString() === (sender) || chat.users[1].toString() === (sender)) && (chat.users[0].toString() === (receiver) || chat.users[1].toString() === (receiver)))) {
       throw new ApiError(400, 'Invalid Chat Users!');
     }
 

@@ -43,6 +43,7 @@ describe("Test ChatDao", () => {
     it("test createMessage()", async () => {
       const text = "hi how are you";
       const chat = await chatDao.createChat({ person1: user1.id, person2: user2.id });
+      console.log("chat", chat.users)
       const formMessage = await chatDao.createMessage({chatId: chat._id, sender: user1.id, receiver: user2.id, message: text})
       expect(formMessage.messages[0].id).toBeDefined();
       expect(formMessage.messages[0].sender.toString()).toBe(user1.id);
