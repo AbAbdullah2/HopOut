@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUser } from '../services/api';
 import { Combobox } from '@headlessui/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import { getAllUsers } from "../services/api.js";
 
 function ChatsList(props) {
   const { chats, curUser, changeChat } = props;
@@ -12,14 +13,21 @@ function ChatsList(props) {
 
   const [invitees, setInvitees] = useState([]);
   const [inviteQuery, setInviteQuery] = useState('');
-  const [users, setUsers] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getAllUsers().then((res) => {
+      setAllUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
+    });  
+  }, [curUser]);
 
   const setUsersChats = async () => {
     const getChatters = [];
     for (let j = 0; j < chats.length; j++) {
       const users = chats[j.toString()].users;
+      console.log('THIS IS THE UYSER IDS', users);
       for (let k = 0; k < users.length; k++) {
         if (users[k] !== curUser._id) {
           const response = await getUser(users[k]);
@@ -28,6 +36,7 @@ function ChatsList(props) {
         }
       }
     }
+    console.log('getChatters', getChatters);
     setChatters(getChatters);
   };
 
@@ -45,8 +54,8 @@ function ChatsList(props) {
 
   const filteredPeople =
     inviteQuery === ''
-      ? users
-      : users.filter((person) => {
+      ? allUsers
+      : allUsers.filter((person) => {
           return (
             person.name.toLowerCase().includes(inviteQuery.toLowerCase()) ||
             person.email.toLowerCase().includes(inviteQuery.toLowerCase())
@@ -116,18 +125,25 @@ function ChatsList(props) {
       </div>
       <div>
         <div>
-                  {invitees.map((inv) => {
-                    return <div key={inv._id} className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10">
-                      <div className='space-y-1'>
-                        <p className='font-semibold'>{inv.name}</p>
-                        <p className='italic'>{inv.email}</p>
-                      </div>
-                      <button className='ml-4' onClick={() => removeInvitee(inv._id)}><FontAwesomeIcon icon={solid('xmark')} /></button>
-                    </div>
-                  })}
+          {invitees.map((inv) => {
+            return (
+              <div
+                key={inv._id}
+                className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10"
+              >
+                <div className="space-y-1">
+                  <p className="font-semibold">{inv.name}</p>
+                  <p className="italic">{inv.email}</p>
                 </div>
+                <button className="ml-4" onClick={() => removeInvitee(inv._id)}>
+                  <FontAwesomeIcon icon={solid('xmark')} />
+                </button>
               </div>
-      
+            );
+          })}
+        </div>
+      </div>
+
       {chatters.map((name, index) => {
         return (
           <div key={index}>

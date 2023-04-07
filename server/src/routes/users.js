@@ -32,7 +32,9 @@ router.get('/users', async (req, res, next) => {
 router.get('/users/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
+    console.log(id)
     const user = await userDao.read(id);
+    console.log(user)
 
     return res.json({
       status: 200,

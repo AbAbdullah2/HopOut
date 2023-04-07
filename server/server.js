@@ -21,16 +21,16 @@ const io = new Server(server, {
 global.onlineUsers = new Map();
 
 io.on('connection', (socket) => {
-  console.log(`User Connected: ${socket.id}`);
+  // console.log(`User Connected: ${socket.id}`);
 
   socket.on('add-user', (userId) => {
-    console.log('USER ADDED', userId);
+    // console.log('USER ADDED', userId);
     onlineUsers.set(userId, socket.id);
   });
   socket.on('send-msg', (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
-    console.log('RECEIEVED MESG', data);
-    console.log(sendUserSocket);
+    // console.log('RECEIEVED MESG', data);
+    // console.log(sendUserSocket);
 
     if (sendUserSocket) {
       
