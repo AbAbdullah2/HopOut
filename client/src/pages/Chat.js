@@ -4,7 +4,7 @@ import Header from '../components/Header';
 import ChatsList from '../components/ChatsList';
 import ChatBody from '../components/ChatBody';
 import { getAllChats, host } from '../services/api';
-import { io } from 'socket.io-client';
+import io from 'socket.io-client' 
 
 function Chat(props) {
   const { curUser, setCurUser } = props;
@@ -12,34 +12,61 @@ function Chat(props) {
   const [currentChat, setCurrentChat] = useState(undefined);
 
   const navigate = useNavigate();
-  const socket = useRef();
+  //const socket = useRef();
+
+  const ENDPOINT = 'http://localhost:6002/';
+  const socket = io(ENDPOINT, {
+    transports: ['websocket'], upgrade: false
+    
+  });
+  socket.on("connect", () => {
+    console.log("connected");
+});
+
+socket.on("data", (res) => {
+    console.log(res);
+});
+
+  // useEffect(() => {
+  //   // ... other codes
+  //   console.log('c');
+
+  //   // Emitting an event that will trigger in the backend
+  //   socket.emit('send-msg', {
+
+  //      msg: " message: msg"
+  //     });
+  //   console.log('d');
+
+  //   // ... other codes
+  // }, []);
 
   useEffect(() => {
+
     if (curUser === null) navigate('/login');
     getAllChats(curUser._id).then((res) => {
       let chatters = [];
       for (let i = 0; i < res.data.data.length; i++) {
         chatters.push(res.data.data[i.toString()]);
       }
-
       setChats(res.data.data);
     });
   }, [curUser]);
+
+  useEffect(() => {
+    console.log(chats)
+  }, [chats]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
   };
 
   useEffect(() => {
-    console.log(currentChat);
-  }, [currentChat]);
-
-  useEffect(() => {
     if (curUser) {
-      socket.current = io(host);
-      socket.current.emit('add-user', curUser._id);
+      socket.emit('add-user', curUser._id);
     }
-  }, [curUser]);
+    console.log("emit")
+  }, [socket]);
 
   return (
     <div className="bg-stone-100 min-h-screen">

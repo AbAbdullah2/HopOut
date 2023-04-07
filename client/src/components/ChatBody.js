@@ -21,7 +21,6 @@ function ChatBody(props) {
     if (curChat) {
       const getMessages = [];
       await getChat(curChat[1].toString()).then((res) => {
-        console.log('chat', res.data.data.users);
         if (res.data.data.users[0] === curUser._id) {
           setReceiver(res.data.data.users[1]);
         } else if (res.data.data.users[1] === curUser._id) {
@@ -44,25 +43,31 @@ function ChatBody(props) {
         currentChat().catch(console.error);
       }
     );
-    socket.current.emit('send-msg', {
+    socket.emit('send-msg', {
       to: receiver,
       from: curUser._id,
       message: msg,
     });
+    const msgs = [...messages];
+    msgs.push({ message: msg, receiver });
+    setMessages(msgs);
   };
 
   useEffect(() => {
-    if (socket.current) {
-      socket.current.on('msg-recieved', (msg) => {
-        alert(msg)
-        setArrivalMessage({ message: msg, receiver: curUser._id });
-      });
-    }
+    //if (socket.current) {
+    socket.on('msg-recieved', (msg) => {
+      setArrivalMessage({ message: msg, receiver: curUser._id });
+    });
+    //}
   }, [socket]);
 
   useEffect(() => {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
+
+  // useEffect(() => {
+  //   console.log(messages);
+  // }, [messages]);
 
   return (
     <div className="h-screen bg-stone-100">
