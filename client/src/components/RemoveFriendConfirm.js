@@ -1,4 +1,3 @@
-
 import { Modal } from 'flowbite-react'
 import { removeFriend } from '../services/api';
 

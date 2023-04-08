@@ -6,10 +6,11 @@ import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getEvent, getUser, getAllUsers } from '../services/api';
+import { getEvent, getUser, getAllUsers, unsendInvite } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
 import { Table, Dropdown } from 'flowbite-react';
+import RemoveInviteeConfirm from '../components/RemoveInviteeConfirm';
 
 export default function EventDetail(props) {
  const {eventid} = useParams();
@@ -18,6 +19,7 @@ export default function EventDetail(props) {
  const [event, setEvent] = useState(null);
  const [host, setHost] = useState(null);
  const [showConfirm, setShowConfirm] = useState(false);
+ const [showUninviteConfirm, setShowUninviteConfirm] = useState(false);
 
  const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
@@ -26,44 +28,32 @@ export default function EventDetail(props) {
  const [attendeesAndInvitees, setAttendeesAndInvitees] = useState([]);
  const [invitees, setInvitees] = useState([]);
  const [checkedArray, setCheckedArray] = useState([true, true, true]);
+ const [uninvited, setUninvited] = useState(null);
 
  const navigate = useNavigate();
+
  useEffect(() => {
-   if (!curUser || curUser === null) navigate('/login');
-   getEvent(eventid).then((res) => {
-     setEvent(res.data.data);
-     setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);
-     setAttendeesCount(res.data.data.attendees.length);
-   }); 
- }, [curUser, navigate, eventid]);
- 
- useEffect(() => {
-  getUser(curUser._id).then(userData => {
-    setRsvp(userData.data.data.attending.includes(eventid));
-})
-}, [curUser, eventid]);
+  if (!curUser || curUser === null) navigate('/login');
+  getUser(curUser._id).then((res) => {
+    setCurUser(res.data.data);
+    setRsvp(res.data.data.attending.includes(eventid));
+  });
+}, []);
 
 useEffect(() => {
-  const getPeople = async () => {
-    const response = await getAllUsers();
-    const users = response.data.data;
-    const att = users.filter((user) => {return user.attending.includes(eventid)});
-    setAttendees(att);
-    const ppl = users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)});
-    setAttendeesAndInvitees(ppl);
-    const inv = users.filter((user) => {return user.invited.includes(eventid)});
-    setInvitees(inv);
-  }
-  getPeople();
-}, [curUser, eventid]);
+  getEvent(eventid).then((res) => {
+    setEvent(res.data.data);
+    setAtCapacity(res.data.data.capacity === res.data.data.attendees.length);
+    setAttendeesCount(res.data.data.attendees.length);
+  }); 
 
- useEffect(() => {
-   if (event !== null) {
-     getUser(event.organizer).then((res) => {
-       setHost(res.data.data);
-     });
-   }
- }, [event, eventid]);
+  getPeople();
+  if (event !== null) {
+    getUser(event.organizer).then((res) => {
+      setHost(res.data.data);
+    });
+  }
+}, [curUser]);
 
  const toShow = (user) => {
   if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
@@ -81,25 +71,36 @@ useEffect(() => {
  const confirmRsvp = () => {
    // set rsvp state to true, show toast message and rsvp in the backend
    setRsvp(true);
-   rsvpToEvent(curUser._id, eventid);
-   toast.success('Successfully RSVP\'d to this event!');
-   curUser.attending.push(eventid);
+   rsvpToEvent(curUser._id, eventid).then((res) => {
+    setCurUser(res.data.data);
+  });
+   toast.success('Successfully RSVP\'d to this event!');   
    setAttendeesCount(attendeesCount + 1);
  }
+
+ const getPeople = async () => {
+  const response = await getAllUsers();
+  const users = response.data.data;
+  setAttendees(users.filter((user) => {return user.attending.includes(eventid)}));
+  setAttendeesAndInvitees(users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)}));
+  setInvitees(users.filter((user) => {return user.invited.includes(eventid)}));
+}
 
  const cancelRsvpHelper = () => {
    // set rsvp state to false, show toast message and cancel rsvp in the backend
    setRsvp(false);
-   cancelRsvp(curUser._id, eventid);
+   cancelRsvp(curUser._id, eventid).then((res) => {
+    setCurUser(res.data.data);
+   });
    toast.error('Your RSVP has been cancelled!');
    curUser.attending.pop(eventid);
    setAttendeesCount(attendeesCount - 1);
  }
 
-
  return event === null ? '' : (
    <div className='bg-stone-100 min-h-screen'>
      <Toaster />
+     <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/> 
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
@@ -121,6 +122,11 @@ useEffect(() => {
          event.organizer === curUser._id ?
          <div></div> :
          <div>
+          {event.invitees.includes(curUser._id) && !event.attendees.includes(curUser._id) ? <div className="items-center py-5 px-12 lg:px-4" role="alert">
+            <div className="bg-green-500 shadow-md px-7 py-3 rounded-md items-center text-white leading-none lg:rounded-full flex lg:inline-flex" >
+              <span className="font-semibold text-left flex-auto">You're invited to this event!</span>
+            </div>
+          </div> : <></>}
           {
           rsvp ?
             <div className='flex flex-col items-center'>
@@ -151,11 +157,13 @@ useEffect(() => {
            })}
          </div>
          <hr className='my-4 bg-stone-800 h-1' />
-        
-         <p className='my-2'>{event.description}</p>   
+         <p className='m-2 font-bold text-slate-700'>Event description</p>  
+         <div className='p-4 my-2 bg-white rounded-md shadow-md'>
+          <p className='my-2'>{event.description}</p>  
+         </div> 
          {event.organizer !== curUser._id ? 
           <div>
-          <p>Attendees</p>
+          <p className='font-bold text-slate-700 m-2'>Attendees</p>
          <Table striped={true}>
           <Table.Head>
             <Table.HeadCell>
@@ -168,10 +176,10 @@ useEffect(() => {
           <Table.Body className="divide-y">
             {attendees.map((attendee) => {
               return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+attendee._id)}>
                   {attendee.name}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell onClick={() => navigate("/profile/"+attendee._id)}>
                   {attendee.email}
                 </Table.Cell>
               </Table.Row>);
@@ -182,11 +190,11 @@ useEffect(() => {
         :
         <div>
           <div>
-            <p>Attendees and Invitees</p>
-            <div className="mt-1 flex flex-row">
+            <p className='font-bold text-slate-700 m-2'>Attendees and Invitees</p>
+            <div className="my-2 flex flex-row">
               <Dropdown
                 label={"Filter"}
-                className="bg-gray-50"
+                className="bg-grey-50"
                 dismissOnClick={false}
               >
                 <Dropdown.Item>
@@ -218,23 +226,35 @@ useEffect(() => {
             <Table.HeadCell>
               Invited?
             </Table.HeadCell>
+            <Table.HeadCell>
+               
+            </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
             {attendeesAndInvitees
             .filter((person) => toShow(person))
             .map((person) => {
               return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+person._id)}>
                   {person.name}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
                   {person.email}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
                   {person.attending.includes(event._id) ? 'Yes' : 'No'}
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
                   {person.invited.includes(event._id) ? 'Yes' : 'No'}
+                </Table.Cell>
+                <Table.Cell>
+                  <button className="inline-flex font-bold py-2 px-4 rounded-full" 
+                  onClick={() => {
+                    setUninvited(person);
+                    setShowUninviteConfirm(true);
+                  }}>
+                    <FontAwesomeIcon icon={solid('xmark')} />
+                  </button>
                 </Table.Cell>
               </Table.Row>);
             })}

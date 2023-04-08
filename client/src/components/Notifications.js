@@ -36,7 +36,7 @@ export default function Notifications(props) {
 
     getAllPublicEvents().then(eventData => {
         setEventInvites(eventData.data.data.filter(function (event) {
-            return (curUser.invited.includes(event._id));
+            return (curUser.invited.includes(event._id) && !curUser.attending.includes(event._id));
         }));
     });
 
@@ -86,7 +86,7 @@ export default function Notifications(props) {
                             {notif.name}
                         </p>
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                            {notif.start}
+                            {(new Date(notif.start)).toDateString()}
                         </p>
                         </div>
                       </div> 

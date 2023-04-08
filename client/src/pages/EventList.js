@@ -91,12 +91,12 @@ export function EventList(props) {
               onChange={setListActive}
               className={`${
                 listActive ? 'bg-blue-600' : 'bg-gray-400'
-              } relative inline-flex h-6 w-11 items-center rounded-full`}
+              } relative inline-flex h-6 w-11 items-center rounded-full align-middle`}
             >
               <span
                 className={`${
                   listActive ? 'translate-x-6' : 'translate-x-1'
-                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+                } inline-block h-4 w-4 transform rounded-full bg-white transition align-middle`}
               />
             </Switch>
             <span className='pl-2'>List View</span>
