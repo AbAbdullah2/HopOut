@@ -8,7 +8,7 @@ function AddFriends(props) {
     const [results, setResults] = useState([]);
     const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [itemsPerPage, setItemsPerPage] = useState(9);
+    const itemsPerPage  = 9;
 
     useEffect(() => {
         getAllUsers().then((res) => {
@@ -20,31 +20,29 @@ function AddFriends(props) {
         e.preventDefault();
         const searchInput = document.querySelector('input[type="search"]');
         const filteredPeople = users.filter((user) => {
-            return user.name.toLowerCase().includes(searchInput.value.toLowerCase()) || user.email.toLowerCase().includes(searchInput.value.toLowerCase())});
-        setResults((prevResults) =>
-    filteredPeople.map((user) => {
-      const prevUser = prevResults.find((u) => u._id === user._id) || {};
-      //NOTE: the current user's sentFriends isn't updated but the friend's receivedFriends is
-      //const isFriend = curUser.friends.some((friend) => friend._id === user._id);
-      //const hasSentRequest = curUser.sentFriends.some((friend) => friend._id === user._id);
-      //const hasReceivedRequest = curUser.receivedFriends.some((friend) => friend._id === user._id);
-        const isFriend = user.friends.some((friend) => friend.user === curUser._id);
-        const hasSentRequest = user.sentFriends.some((friend) => friend.user === curUser._id);
-        const hasReceivedRequest = user.receivedFriends.some((friend) => friend.user === curUser._id);
-      const isDisabled = isFriend || hasSentRequest || hasReceivedRequest || prevUser.isDisabled;
-      return {
-        ...user,
-        isDisabled,
-      };
-    })
-  );
-        const searchResults = users.filter((user) => {
             return user.name.toLowerCase().includes(searchInput.value.toLowerCase()) || user.email.toLowerCase().includes(searchInput.value.toLowerCase())
         });
+        setResults((prevResults) =>
+            filteredPeople.map((user) => {
+            const prevUser = prevResults.find((u) => u._id === user._id) || {};
+            //NOTE: the current user's sentFriends isn't updated but the friend's receivedFriends is
+            //const isFriend = curUser.friends.some((friend) => friend._id === user._id);
+            //const hasSentRequest = curUser.sentFriends.some((friend) => friend._id === user._id);
+            //const hasReceivedRequest = curUser.receivedFriends.some((friend) => friend._id === user._id);
+                const isFriend = user.friends.some((friend) => friend.user === curUser._id);
+                const hasSentRequest = user.sentFriends.some((friend) => friend.user === curUser._id);
+                const hasReceivedRequest = user.receivedFriends.some((friend) => friend.user === curUser._id);
+            const isDisabled = isFriend || hasSentRequest || hasReceivedRequest || prevUser.isDisabled;
+            return {
+                ...user,
+                isDisabled,
+            };
+            })
+        );
     }
 
     async function handleFriendReq(receiverId) {
-        const response = await sendFriendReq(curUser._id, receiverId);
+        await sendFriendReq(curUser._id, receiverId);
         setResults(results.map(user => {
             if (user._id === receiverId) {
               return {

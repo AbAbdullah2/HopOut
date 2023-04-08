@@ -57,14 +57,6 @@ useEffect(() => {
   getPeople();
 }, [curUser, eventid]);
 
-useEffect(() => {
-  const getPeople = async () => {
-    const response = await getAllUsers();
-    const users = response.data.data;
-  }
-  getPeople();
-}, [curUser, eventid]);
-
  useEffect(() => {
    if (event !== null) {
      getUser(event.organizer).then((res) => {

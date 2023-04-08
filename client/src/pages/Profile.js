@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -77,6 +77,10 @@ export default function Profile(props) {
     setShowConfirm(false);
   }
 
+  const updateCurUser = useCallback((newUser) => {
+    setCurUser(newUser);
+  }, [setCurUser]);  
+
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getUser(userid).then((res) => {
@@ -84,7 +88,7 @@ export default function Profile(props) {
     });
 
     getUser(curUser._id).then((res) => {
-      setCurUser(res.data.data);
+      updateCurUser(res.data.data);
       res.data.data.sentFriends.forEach(e => {
         if (e.user === userid) {
           setFriendStatus("sent");
@@ -102,7 +106,7 @@ export default function Profile(props) {
       });
     });
 
-  }, [userid, navigate]);
+  }, [userid, navigate, curUser, updateCurUser]);
 
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
