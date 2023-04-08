@@ -262,6 +262,7 @@ async function createChat(person1, person2) {
 
 export {
   sendInvite,
+  unsendInvite,
   rsvpToEvent,
   cancelRsvp,
   getAllUsers,

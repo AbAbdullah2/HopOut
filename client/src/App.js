@@ -10,11 +10,8 @@ import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
 import Profile from './pages/Profile';
-<<<<<<< HEAD
 import AddFriends from './pages/AddFriends';
-=======
 import Chat from './pages/Chat';
->>>>>>> 8601ad868aefdd4d42fd902af04cd14c223b3f6f
 
 const App = () => {
   const [curUser, setCurUser] = useState(JSON.parse(window.localStorage.getItem("curUser")) ? JSON.parse(window.localStorage.getItem("curUser")) : null);

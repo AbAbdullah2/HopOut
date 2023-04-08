@@ -80,7 +80,6 @@ function ChatsList(props) {
           value={newChat.name}
           onChange={(e) => {
             setNewChat(e);
-            console.log(e);
           }}
         >
           <div className='flex flex-row h-12 text-center justify-center items-center'>
