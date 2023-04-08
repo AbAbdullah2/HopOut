@@ -4,30 +4,33 @@ import { getUser } from '../services/api';
 import { Combobox } from '@headlessui/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
-import { getAllUsers } from "../services/api.js";
+import { getAllUsers, createChat } from '../services/api.js';
 
 function ChatsList(props) {
-  const { chats, curUser, changeChat } = props;
+  const { chats, curUser, changeChat, getUsersChats } = props;
   const [chatters, setChatters] = useState([]);
   const [selected, setSelected] = useState(undefined);
 
-  const [invitees, setInvitees] = useState([]);
-  const [inviteQuery, setInviteQuery] = useState('');
+  const [newChat, setNewChat] = useState('');
+  const [query, setQuery] = useState('');
   const [allUsers, setAllUsers] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     getAllUsers().then((res) => {
-      setAllUsers(res.data.data.filter((u) => {return u._id !== curUser._id}));
-    });  
+      setAllUsers(
+        res.data.data.filter((u) => {
+          return u._id !== curUser._id;
+        })
+      );
+    });
   }, [curUser]);
 
   const setUsersChats = async () => {
     const getChatters = [];
     for (let j = 0; j < chats.length; j++) {
       const users = chats[j.toString()].users;
-      console.log('THIS IS THE UYSER IDS', users);
       for (let k = 0; k < users.length; k++) {
         if (users[k] !== curUser._id) {
           const response = await getUser(users[k]);
@@ -36,7 +39,6 @@ function ChatsList(props) {
         }
       }
     }
-    console.log('getChatters', getChatters);
     setChatters(getChatters);
   };
 
@@ -53,56 +55,36 @@ function ChatsList(props) {
   };
 
   const filteredPeople =
-    inviteQuery === ''
+    query === ''
       ? allUsers
       : allUsers.filter((person) => {
           return (
-            person.name.toLowerCase().includes(inviteQuery.toLowerCase()) ||
-            person.email.toLowerCase().includes(inviteQuery.toLowerCase())
+            person.name.toLowerCase().includes(query.toLowerCase()) ||
+            person.email.toLowerCase().includes(query.toLowerCase())
           );
         });
 
-  const [searchBox, setSearchBox] = React.useState(null);
-
-  const loadSearchBox = (searchBox) => {
-    setSearchBox(searchBox);
-  };
-
-  const updateInvitees = (e) => {
-    if (e.length > 0) {
-      const target = e[e.length - 1]._id;
-      const ids = e.slice(0, -1).map((inv) => {
-        return inv._id;
-      });
-      if (!ids.includes(target)) {
-        setInvitees(e);
+  const createNewChat = async (msg) => {
+    createChat(curUser._id, newChat._id).then(
+      (res) => {
+        getUsersChats()
       }
-    } else {
-      setInvitees(e);
-    }
-  };
-
-  const removeInvitee = (id) => {
-    setInvitees(
-      invitees.filter((inv) => {
-        return inv._id !== id;
-      })
     );
   };
 
   return (
     <div className="border-solid border-r border-slate-800">
+      <p>Choose a new chat!</p>
       <div className="mb-4">
         <Combobox
-          value={invitees}
+          value={newChat}
           onChange={(e) => {
-            updateInvitees(e);
+            setNewChat(e);
           }}
-          multiple
         >
           <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
             <Combobox.Input
-              onChange={(event) => setInviteQuery(event.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
               className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0"
             />
             <Combobox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
@@ -123,45 +105,35 @@ function ChatsList(props) {
           </div>
         </Combobox>
       </div>
-      <div>
-        <div>
-          {invitees.map((inv) => {
-            return (
-              <div
-                key={inv._id}
-                className="bg-gray-100 p-2 mr-4 shadow-md items-center leading-none w-fit rounded-md flex lg:inline-flex border-solid border-gray-500 border border-opacity-10"
-              >
-                <div className="space-y-1">
-                  <p className="font-semibold">{inv.name}</p>
-                  <p className="italic">{inv.email}</p>
-                </div>
-                <button className="ml-4" onClick={() => removeInvitee(inv._id)}>
-                  <FontAwesomeIcon icon={solid('xmark')} />
-                </button>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {newChat ? (
+        <button className="bg-blue-500 hover:bg-blue-700 text-white px-4 rounded" onClick={createNewChat}>
+          Chat with {newChat.name}
+        </button>
+      ) : (
+        <></>
+      )}
+      <div className="py-1">
+        <hr className="h-px bg-slate-800 border-0"></hr>
 
-      {chatters.map((name, index) => {
-        return (
-          <div key={index}>
-            <div
-              className={`flex ${
-                selected === index ? 'bg-blue-500' : 'bg-stone-100'
-              }`}
-              onClick={() => changeCurrentChat(index, name)}
-            >
-              <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
-                <p className="uppercase">{name[0][0]}</p>
+        {chatters.map((name, index) => {
+          return (
+            <div key={index}>
+              <div
+                className={`flex ${
+                  selected === index ? 'bg-blue-500' : 'bg-stone-100'
+                }`}
+                onClick={() => changeCurrentChat(index, name)}
+              >
+                <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
+                  <p className="uppercase">{name[0][0]}</p>
+                </div>
+                <div className="grid place-items-center">{name[0]}</div>
               </div>
-              <div className="grid place-items-center">{name[0]}</div>
+              <hr className="h-px bg-slate-800 border-0"></hr>
             </div>
-            <hr className="h-px bg-slate-800 border-0"></hr>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

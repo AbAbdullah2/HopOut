@@ -224,6 +224,16 @@ async function sendMessage(chatId, senderId, receiverId, message) {
   return response;
 }
 
+// create new chat between two users
+async function createChat(person1, person2) {
+  const body = { person1, person2 };
+  const response = await axios
+    .post(`${BASE_URL}/chat/`, body)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
 
 export {
   sendInvite,
@@ -248,7 +258,8 @@ export {
   updateUser,
   getAllChats,
   getChat,
-  sendMessage
+  sendMessage,
+  createChat
 };
 
 export const host = `http://localhost:6002/`; // NEED TO CHANGE

@@ -65,10 +65,6 @@ function ChatBody(props) {
     arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
   }, [arrivalMessage]);
 
-  // useEffect(() => {
-  //   console.log(messages);
-  // }, [messages]);
-
   return (
     <div className="bg-stone-100 ">
       <div className=" flex items-center justify-center">

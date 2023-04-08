@@ -19,13 +19,13 @@ function Chat(props) {
     transports: ['websocket'], upgrade: false
     
   });
-  socket.on("connect", () => {
-    console.log("connected");
-});
+//   socket.on("connect", () => {
+//     console.log("connected");
+// });
 
-socket.on("data", (res) => {
-    console.log(res);
-});
+// socket.on("data", (res) => {
+//     console.log(res);
+// });
 
   // useEffect(() => {
   //   // ... other codes
@@ -44,6 +44,10 @@ socket.on("data", (res) => {
   useEffect(() => {
 
     if (curUser === null) navigate('/login');
+    getUsersChats()
+  }, [curUser]);
+
+  const getUsersChats = async () => {
     getAllChats(curUser._id).then((res) => {
       let chatters = [];
       for (let i = 0; i < res.data.data.length; i++) {
@@ -51,11 +55,8 @@ socket.on("data", (res) => {
       }
       setChats(res.data.data);
     });
-  }, [curUser]);
+  }
 
-  useEffect(() => {
-    console.log(chats)
-  }, [chats]);
 
   const handleChatChange = (chat) => {
     setCurrentChat(chat);
@@ -65,7 +66,6 @@ socket.on("data", (res) => {
     if (curUser) {
       socket.emit('add-user', curUser._id);
     }
-    console.log("emit")
   }, [socket]);
 
   return (
@@ -77,6 +77,7 @@ socket.on("data", (res) => {
             chats={chats}
             curUser={curUser}
             changeChat={handleChatChange}
+            getUsersChats={getUsersChats}
           ></ChatsList>
           <div className="col-span-4">
             {currentChat === undefined ? (
