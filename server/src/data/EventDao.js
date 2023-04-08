@@ -15,7 +15,7 @@ const validNumber = z.number().positive('Invalid capacity!');
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories, coverId, thumbnailId }) {
+  async create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, organizer, capacity, categories, attendees, invitees, coverId, thumbnailId }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -37,7 +37,7 @@ class EventDao {
     }
 
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
-    
+
     result = validString.safeParse(address);
     if (!result.success) {
       throw new ApiError(400, "Invalid Street Address!");
@@ -94,9 +94,8 @@ class EventDao {
     }) : categories = [];
 
     //create event
-    const event = await Event.create({ name, start, end, location, description, visibility, organizer, capacity, categories, 
-        attendees: [], invitees: [], coverId, thumbnailId});
-    
+    const event = await Event.create({ name, start, end, locationName, location, addressLine2, description, visibility, organizer, capacity, categories, 
+        attendees: attendees, invitees: invitees, coverId, thumbnailId});
     return event;
   }
 
@@ -139,9 +138,12 @@ class EventDao {
     name,
     start,
     end,
+    locationName,
     location,
+    addressLine2,
     description,
     visibility,
+    organizer,
     categories,
     capacity,
     attendees,
@@ -177,6 +179,19 @@ class EventDao {
       result = validDate.safeParse(end);
       if (!result.success) {
         throw new ApiError(400, "Invalid End Date!");
+      }
+    }
+
+    if (locationName !== undefined) {
+      result = validString.safeParse(locationName);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid Location Name!");
+      }
+    }
+    if (addressLine2 !== undefined) {
+      result = validString.safeParse(addressLine2);
+      if (!result.success) {
+        throw new ApiError(400, "Invalid Address Line 2!");
       }
     }
 
@@ -275,9 +290,12 @@ class EventDao {
         name,
         start,
         end,
+        locationName,
         location,
+        addressLine2,
         description,
         visibility,
+        organizer,
         categories,
         capacity,
         attendees,

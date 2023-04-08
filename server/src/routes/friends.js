@@ -19,6 +19,12 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
     let receiver1 = false;
     let receiver2 = false;
 
+    sender.friends.forEach((e) => {
+      if (e.user.toString() === receiverId) {
+        sender1 = true;
+      }
+    });
+
     sender.sentFriends.forEach((e) => {
       if (e.user.toString() === receiverId) {
         sender1 = true;

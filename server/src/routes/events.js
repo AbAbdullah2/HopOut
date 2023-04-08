@@ -28,7 +28,7 @@ router.get('/events/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.read(id);
-
+    
     res.json({
       status: 200,
       message: `Successfully retrieved the following event!`,
@@ -45,15 +45,19 @@ router.post('/events', async (req, res, next) => {
       name,
       start,
       end,
+      locationName,
       address,
       city,
       state,
       zip,
+      addressLine2,
       description,
       visibility,
       organizer,
-      capacity,
       categories,
+      capacity,
+      attendees,
+      invitees,
       coverId,
       thumbnailId,
     } = req.body;
@@ -61,19 +65,23 @@ router.post('/events', async (req, res, next) => {
       name,
       start,
       end,
+      locationName,
       address,
       city,
       state,
       zip,
+      addressLine2,
       description,
       visibility,
       organizer,
-      capacity,
       categories,
+      capacity,
+      attendees,
+      invitees,
       coverId,
       thumbnailId,
     });
-    
+
     const user = await userDao.read(organizer.toString());
     let newOrganizing = user.organizing;
     newOrganizing.push(event.id);
@@ -99,12 +107,15 @@ router.put(`/events/:id`, async (req, res, next) => {
       name,
       start,
       end,
+      locationName,
       address,
       city,
       state,
       zip,
+      addressLine2,
       description,
       visibility,
+      organizer,
       categories,
       capacity,
       attendees,
@@ -121,12 +132,15 @@ router.put(`/events/:id`, async (req, res, next) => {
       name,
       start,
       end,
+      locationName,
       address,
       city,
       state,
       zip,
+      addressLine2,
       description,
       visibility,
+      organizer, 
       categories,
       capacity: updatedCapacity,
       attendees,
@@ -149,6 +163,38 @@ router.delete('/events/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
     const event = await eventDao.delete(id);
+
+    // Delete from invited users 
+    for (const userId of event.invitees) {
+      const user = await userDao.read(userId.toString);
+      let invited = user.invited
+      const index = invited.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        invited.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await userDao.update({...user._doc, id: user._doc._id.toString(), invited: invited});
+    }
+
+    // Delete from attending users 
+    for (const userId of event.attendees) {
+      const user = await userDao.read(userId.toString());
+      let attending = user.attending
+      const index = attending.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        attending.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await userDao.update({...user._doc, id: user._doc._id.toString(), attending: attending});
+    }
+
+    // Delete from host 
+    const host = await userDao.read(event.organizer.toString());
+    let organizing = host.organizing
+    const index = organizing.indexOf(id);
+    if (index > -1) { // only splice array when item is found
+        organizing.splice(index, 1); // 2nd parameter means remove one item only
+    }
+
+    await userDao.update({...host._doc, id: host._doc._id.toString(), organizing: organizing});
 
     res.json({
       status: 200,

@@ -15,17 +15,6 @@ jobs:
       with:
         node-version: '12.x'
         cache: 'npm'
-        cache-dependency-path: client/yarn.lock
-    - name: Install dependencies
-      run: yarn install 
-      working-directory: client
-    - name: Run tests
-      run: yarn run test
-      working-directory: client
-    - uses: actions/checkout@v1
-      with:
-        node-version: '12.x'
-        cache: 'npm'
         cache-dependency-path: server/yarn.lock
     - name: Install dependencies
       run: yarn install 
@@ -33,3 +22,15 @@ jobs:
     - name: Run tests
       run: yarn run test
       working-directory: server
+    - uses: actions/checkout@v1
+      with:
+        node-version: '12.x'
+        cache: 'npm'
+        cache-dependency-path: client/yarn.lock
+    - name: Install dependencies
+      run: yarn install 
+      working-directory: client
+    - name: Run tests
+      run: yarn run test
+      working-directory: client
+    

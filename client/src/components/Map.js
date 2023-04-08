@@ -1,8 +1,10 @@
 import React from 'react'
-import { GoogleMap, useJsApiLoader, Autocomplete} from '@react-google-maps/api';
+import { GoogleMap, useJsApiLoader, Autocomplete } from '@react-google-maps/api';
+import Geocode from "react-geocode";
 import EventMarker from './Marker';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
+Geocode.setApiKey(API_KEY);
 
 function Map({events}) {
 
@@ -15,7 +17,7 @@ function Map({events}) {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(setCurrentLocationParser);
     }
-  }, [events]);
+  }, []);
 
   function setCurrentLocationParser(position) {
     setCurrentLocation({
@@ -45,10 +47,64 @@ function Map({events}) {
     } catch (error) { }
   }
 
+  const [locations, setLocations] = React.useState([]);
+
+  function locationExists(arr, lat, lng) {
+    return arr.some((location) => location.lat === lat && location.lng === lng);
+  }  
+
+  React.useEffect(() => {
+    const geocodePromises = events.map((event) =>
+      Geocode.fromAddress(
+        event.location.address +
+          " " +
+          event.location.city +
+          ", " +
+          event.location.state +
+          " " +
+          event.location.zip
+      )
+    );
+  
+    Promise.all(geocodePromises).then((responses) => {
+      const tempLocations = [];
+  
+      responses.forEach((response, index) => {
+        const { lat, lng } = response.results[0].geometry.location;
+        const event = events[index];
+  
+        if (!locationExists(tempLocations, lat, lng)) {
+          tempLocations.push({ lat, lng, events: [event] });
+        } else {
+          const location = tempLocations.find(
+            (location) => location.lat === lat && location.lng === lng
+          );
+          location.events.push(event);
+        }
+      });
+  
+      setLocations(tempLocations);
+    });
+  }, [events]);
+
+  const [mapInstance, setMapInstance] = React.useState(null);
+  const [activeMarker, setActiveMarker] = React.useState(null);
+
+  React.useEffect(() => {
+    if (mapInstance && activeMarker) {
+      mapInstance.panTo({
+        lat: activeMarker.lat,
+        lng: activeMarker.lng
+      });
+      mapInstance.setZoom(15);
+    }
+  }, [activeMarker, mapInstance]);
+    
   return isLoaded ? (
     <div>
       <GoogleMap
         mapContainerClassName='rounded-lg shadow-lg w-full h-screen'
+        onLoad={(map) => setMapInstance(map)}
         center={currentLocation}
         zoom={15}
         clickableIcons={false}
@@ -56,26 +112,30 @@ function Map({events}) {
           disableDefaultUI: true,
           zoomControl: true,
         }}
+        onClick={() => setActiveMarker(null)}
       >
-      <Autocomplete
-        onPlaceChanged={
-          onPlaceChanged
-        }
-        onLoad={loadSearchBox}
-        className='text-center'
-      >
-        <input
-          type="text"
-          placeholder="Enter a location"
-          className=' box-border border border-solid border-transparent rounded drop-shadow w-1/5 h-10 px-3 text-md overflow-ellipsis mt-2'
-        />
-      </Autocomplete>
-
-        {events.map((event) => {
+        <Autocomplete
+          onPlaceChanged={
+            onPlaceChanged
+          }
+          onLoad={loadSearchBox}
+          className='text-center'
+        >
+          <input
+            type="text"
+            placeholder="Enter a location"
+            className='box-border border border-solid rounded drop-shadow w-11/12 h-10 px-3 text-md overflow-ellipsis mt-4 font-semibold'
+          />
+        </Autocomplete>
+        {locations.map((location) => {
           return (
             <EventMarker
-              key={event._id}
-              event={event}
+              key={String(location.lat) + String(location.lng)}
+              events={location.events}
+              lat={location.lat}
+              lng={location.lng}
+              activeMarker={activeMarker}
+              setActiveMarker={setActiveMarker}
             />
           );
         })}
