@@ -272,10 +272,12 @@ exports[`matches snapshot 1`] = `
     <div
       className="mt-5 w-11/12 flex flex-row flex-nowrap justify-between"
     >
-      <div>
+      <div
+        className="justify-start align-middle"
+      >
         <button
           aria-checked={false}
-          className="bg-gray-400 relative inline-flex h-6 w-11 items-center rounded-full"
+          className="bg-gray-400 relative inline-flex h-6 w-11 items-center rounded-full align-middle"
           data-headlessui-state=""
           id="headlessui-switch-:r4:"
           onClick={[Function]}
@@ -286,19 +288,17 @@ exports[`matches snapshot 1`] = `
           type="button"
         >
           <span
-            className="translate-x-1 inline-block h-4 w-4 transform rounded-full bg-white transition"
+            className="translate-x-1 inline-block h-4 w-4 transform rounded-full bg-white transition align-middle"
           />
         </button>
         <span
-          className="pl-2"
+          className="pl-2 mr-4 font-semibold text-slate-700 text-sm align-middle"
         >
           Event List View
         </span>
-      </div>
-      <div>
         <button
           aria-checked={false}
-          className="bg-gray-400 relative inline-flex h-6 w-11 items-center rounded-full"
+          className="bg-gray-400 relative inline-flex h-6 w-11 items-center rounded-full align-middle"
           data-headlessui-state=""
           id="headlessui-switch-:r5:"
           onClick={[Function]}
@@ -309,11 +309,11 @@ exports[`matches snapshot 1`] = `
           type="button"
         >
           <span
-            className="translate-x-1 inline-block h-4 w-4 transform rounded-full bg-white transition"
+            className="translate-x-1 inline-block h-4 w-4 transform rounded-full bg-white transition align-middle"
           />
         </button>
         <span
-          className="pl-2"
+          className="pl-2 font-semibold text-slate-700 text-sm align-middle"
         >
           Events Hosted By Your Friends Only
         </span>
