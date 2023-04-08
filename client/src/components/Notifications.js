@@ -26,7 +26,7 @@ export default function Notifications(props) {
 
     getAllPublicEvents().then(eventData => {
         setEventInvites(eventData.data.data.filter(function (event) {
-            return (curUser.invited.includes(event._id));
+            return (curUser.invited.includes(event._id) && !curUser.attending.includes(event._id));
         }));
     });
 
