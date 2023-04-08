@@ -1,17 +1,27 @@
 import { Dropdown } from 'flowbite-react'
-import { useState, useEffect } from 'react';
-import { getAllUsers, getAllPublicEvents } from '../services/api'
+import { useState, useEffect, useCallback } from 'react';
+import { getUser, getAllUsers, getAllPublicEvents } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { useNavigate } from 'react-router-dom'
 
 export default function Notifications(props) {
-  const {curUser} = props;
+  const {curUser, setCurUser} = props;
   const navigate = useNavigate();
   const [allNotifications, setAllNotifications] = useState([]);
 
   const [friendReqs, setFriendReqs] = useState([]);
   const [eventInvites, setEventInvites] = useState([]);
+
+  const updateCurUser = useCallback((newUser) => {
+    setCurUser(newUser);
+  }, [setCurUser]);  
+
+  useEffect(() => {
+    getUser(curUser._id).then((res) => {
+      updateCurUser(res.data.data);
+    });
+  }, [curUser._id, updateCurUser]);
 
   useEffect(() => {
     getAllUsers().then(userData => {

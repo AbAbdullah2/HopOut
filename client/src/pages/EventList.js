@@ -14,7 +14,6 @@ export function EventList(props) {
   const [privateEventList, setPrivateEventList] = useState([]);
 
   const [listActive, setListActive] = useState(false);
-  const [friendEventsActive, setFriendEventsActive] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [friendFilters, setFriendFilters] = useState([]);
