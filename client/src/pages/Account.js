@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Header from '../components/Header';
@@ -17,12 +17,16 @@ export default function Account(props) {
     setShowConfirm(true);
     setUnfriended(toUnfriend);
   }
+
+  const updateCurUser = useCallback((newUser) => {
+    setCurUser(newUser);
+  }, [setCurUser]);  
   
   useEffect(() => {
     getUser(curUser._id).then((res) => {
-      setCurUser(res.data.data);
+      updateCurUser(res.data.data);
     });
-  }, []);
+  }, [curUser._id, updateCurUser]);
 
   if (!curUser || curUser === null) {
     return <NotFound />

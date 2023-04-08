@@ -17,7 +17,7 @@ export default function FriendsList(props) {
         // Update friends list 
         getAllUsers().then((res) => {
             const users = res.data.data.filter((u) => {return u._id !== curUser._id})
-            setFriends(users.filter((u) => {return friendsIds.indexOf(u._id) != -1}));
+            setFriends(users.filter((u) => {return friendsIds.indexOf(u._id) !== -1}));
         });
     }, [curUser]); 
     
@@ -30,7 +30,7 @@ export default function FriendsList(props) {
         { 
         friends.length > 0 ? 
         friends.map((friend) => 
-            <li className="p-3 sm:pb-4 hover:bg-stone-100 hover:shadow-md">
+            <li key={friend._id} className="p-3 sm:pb-4 hover:bg-stone-100 hover:shadow-md">
                 <div className="flex items-center space-x-4">
                     <div className="flex-1 min-w-0" onClick={() => navigate('/profile/'+friend._id)}>
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">

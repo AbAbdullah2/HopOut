@@ -14,7 +14,6 @@ export function EventList(props) {
   const [privateEventList, setPrivateEventList] = useState([]);
 
   const [listActive, setListActive] = useState(false);
-  const [friendEventsActive, setFriendEventsActive] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [friendFilters, setFriendFilters] = useState([]);
@@ -37,16 +36,7 @@ export function EventList(props) {
   const toDisplayEvent = (ev) => {
     let filtered = false;
     if (selectedFilters.length === 0 && friendFilters.length === 0) {
-      if (!friendEventsActive) {
-        return true;
-      }
-      if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
-        return true;
-      }
-    }
-
-    if (friendEventsActive && !(curUser.friends.map((ev) => ev.user).includes(ev.organizer))) {
-      return false;
+      return true;
     }
 
     for (const f in selectedFilters) {
@@ -76,6 +66,14 @@ export function EventList(props) {
             filtered = false;
           }
         }
+        if (friendFilters[f] === "friend's event") {
+          arr = curUser.friends.map((ev) => ev.user);
+          if (arr.includes(ev.organizer)) {
+            filtered = true;
+          } else {
+            filtered = false;
+          }
+        }
       }
     }
 
@@ -87,7 +85,7 @@ export function EventList(props) {
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className={'mt-5 w-11/12 flex flex-row flex-nowrap justify-between'}>
-          <div className={"justify-start align-middle"}>
+          <div className='flex flex-row'>
             <Switch
               checked={listActive}
               onChange={setListActive}
@@ -101,21 +99,7 @@ export function EventList(props) {
                 } inline-block h-4 w-4 transform rounded-full bg-white transition align-middle`}
               />
             </Switch>
-            <span className='pl-2 mr-4 font-semibold text-slate-700 text-sm align-middle'>Event List View</span>
-            <Switch
-              checked={friendEventsActive}
-              onChange={setFriendEventsActive}
-              className={`${
-                friendEventsActive ? 'bg-blue-600' : 'bg-gray-400'
-              } relative inline-flex h-6 w-11 items-center rounded-full align-middle`}
-            >
-              <span
-                className={`${
-                  friendEventsActive ? 'translate-x-6' : 'translate-x-1'
-                } inline-block h-4 w-4 transform rounded-full bg-white transition align-middle`}
-              />
-            </Switch>
-            <span className='pl-2 font-semibold text-slate-700 text-sm align-middle'>Events Hosted By Your Friends Only</span>
+            <span className='pl-2'>List View</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
             <div className='flex flew-row flex-nowrap'>

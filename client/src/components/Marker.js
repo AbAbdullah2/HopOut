@@ -1,4 +1,4 @@
-import { InfoWindow, Marker, InfoWindowF } from "@react-google-maps/api";
+import { Marker, InfoWindowF } from "@react-google-maps/api";
 import React from "react";
 import EventInfoBox from "./EventInfoBox.js";
 

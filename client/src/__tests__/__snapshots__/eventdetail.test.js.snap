@@ -304,7 +304,7 @@ exports[`matches snapshot 1`] = `
       className="mt-5 w-11/12 flex flex-row flex-nowrap justify-between"
     >
       <div
-        className="justify-start align-middle"
+        className="flex flex-row"
       >
         <button
           aria-checked={false}
@@ -323,30 +323,9 @@ exports[`matches snapshot 1`] = `
           />
         </button>
         <span
-          className="pl-2 mr-4 font-semibold text-slate-700 text-sm align-middle"
+          className="pl-2"
         >
-          Event List View
-        </span>
-        <button
-          aria-checked={false}
-          className="bg-gray-400 relative inline-flex h-6 w-11 items-center rounded-full align-middle"
-          data-headlessui-state=""
-          id="headlessui-switch-:r5:"
-          onClick={[Function]}
-          onKeyPress={[Function]}
-          onKeyUp={[Function]}
-          role="switch"
-          tabIndex={0}
-          type="button"
-        >
-          <span
-            className="translate-x-1 inline-block h-4 w-4 transform rounded-full bg-white transition align-middle"
-          />
-        </button>
-        <span
-          className="pl-2 font-semibold text-slate-700 text-sm align-middle"
-        >
-          Events Hosted By Your Friends Only
+          List View
         </span>
       </div>
       <div
@@ -407,7 +386,7 @@ exports[`matches snapshot 1`] = `
             <div
               className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
               data-testid="flowbite-tooltip"
-              id=":r6:"
+              id=":r5:"
               role="tooltip"
               style={
                 Object {
@@ -565,7 +544,7 @@ exports[`matches snapshot 1`] = `
             <div
               className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
               data-testid="flowbite-tooltip"
-              id=":r8:"
+              id=":r7:"
               role="tooltip"
               style={
                 Object {
@@ -614,6 +593,23 @@ exports[`matches snapshot 1`] = `
                       className="pl-2"
                     >
                       invited
+                    </span>
+                  </li>
+                  <li
+                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                    onClick={[Function]}
+                  >
+                    <input
+                      checked={false}
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                      id="checkbox-item-1"
+                      onChange={[Function]}
+                      type="checkbox"
+                    />
+                    <span
+                      className="pl-2"
+                    >
+                      friend's event
                     </span>
                   </li>
                 </ul>

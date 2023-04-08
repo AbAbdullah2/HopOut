@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 .h-screen-minus-header {
-  height: calc(100vh - 5rem); /* h-screen minus h-24 (6rem = 24 units * 0.25rem) */
+  height: calc(100vh - 5rem);
 }

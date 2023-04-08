@@ -75,7 +75,7 @@ function EditEvent(props) {
 
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
-  }, [curUser, eventid, navigate]);
+  }, []);
 
   useEffect(() => {
     getAllUsers().then((res) => {
@@ -83,7 +83,7 @@ function EditEvent(props) {
       setUsers(tusers);      
       setInvitees(tusers.filter((u) => {return event.invitees.includes(u._id)}));
     });
-  }, [event, curUser]);
+  }, [event]);
 
   const filteredPeople =
   inviteQuery === ''
@@ -138,7 +138,6 @@ function EditEvent(props) {
     if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
     updateEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then(async (res) => {
       if (res.status === 200) {                
-        console.log("Successfully updated event. received res: ", res);
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not update event ' + event.name);
@@ -215,10 +214,8 @@ function EditEvent(props) {
                       placeholder="My Event"
                       value={event.name}
                       onChange={(e) => {
-                        setEvent(event => ({ ...event, name: e.target.value
-                      }));  
+                        setEvent({ ...event, name: e.target.value});  
                       }}                  
-
                       required
                     />
                   </div>
