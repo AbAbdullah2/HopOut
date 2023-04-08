@@ -69,20 +69,20 @@ function Chat(props) {
   }, [socket]);
 
   return (
-    <div className="bg-stone-100 min-h-screen">
-      <div className="mx-auto flex flex-col h-full">
+    <div className="bg-stone-100">
+      <div className="mx-auto flex flex-col">
         <Header icons={true} curUser={curUser} setCurUser={setCurUser} />
-        <div className="grid grid-cols-5">
+        <div className="grid grid-cols-5 h-screen-minus-header">
           <ChatsList
             chats={chats}
             curUser={curUser}
             changeChat={handleChatChange}
             getUsersChats={getUsersChats}
           ></ChatsList>
-          <div className="col-span-4">
+          <div className="col-span-4 overflow-auto">
             {currentChat === undefined ? (
-              <div>
-                <p>Select a chat!</p>
+              <div className='flex h-full text-center items-center justify-center'>
+                <p className='text-4xl'>No chat selected</p>
               </div>
             ) : (
               <ChatBody

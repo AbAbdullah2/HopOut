@@ -73,8 +73,7 @@ function ChatsList(props) {
   };
 
   return (
-    <div className="border-solid border-r border-slate-800">
-      <p>Choose a new chat!</p>
+    <div className="border-solid border-r border-gray-400">
       <div className="mb-4">
         <Combobox
           value={newChat}
@@ -113,23 +112,21 @@ function ChatsList(props) {
         <></>
       )}
       <div className="py-1">
-        <hr className="h-px bg-slate-800 border-0"></hr>
+        <hr className="h-px bg-gray-400 border-0"></hr>
 
         {chatters.map((name, index) => {
           return (
-            <div key={index}>
-              <div
-                className={`flex ${
-                  selected === index ? 'bg-blue-500' : 'bg-stone-100'
-                }`}
-                onClick={() => changeCurrentChat(index, name)}
-              >
-                <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-400">
-                  <p className="uppercase">{name[0][0]}</p>
-                </div>
-                <div className="grid place-items-center">{name[0]}</div>
+            <div
+              key={index}
+              className={`flex border-b-2 ${
+                selected === index ? 'bg-blue-300' : 'bg-stone-100'
+              }`}
+              onClick={() => changeCurrentChat(index, name)}
+            >
+              <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
+                <p className="uppercase text-white">{name[0][0]}</p>
               </div>
-              <hr className="h-px bg-slate-800 border-0"></hr>
+              <div className="grid place-items-center">{name[0]}</div>
             </div>
           );
         })}
