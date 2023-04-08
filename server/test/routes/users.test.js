@@ -243,10 +243,12 @@ describe(`Test ${endpoint}`, () => {
       const name = faker.lorem.words(3);
       const start = '2023-06-22T15:28:37.174Z';
       const end = '2023-06-22T15:28:37.174Z';
+      const locationName = faker.lorem.words(2);
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
       const state = faker.address.countryCode();
       const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
       const description = faker.lorem.paragraph();
       const visibility = 'private';
       const organizer = user.id;
@@ -256,10 +258,12 @@ describe(`Test ${endpoint}`, () => {
         name,
         start,
         end,
+        locationName,
         address,
         city,
         state,
         zip,
+        addressLine2,
         description,
         visibility,
         capacity,
