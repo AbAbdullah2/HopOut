@@ -84,7 +84,7 @@ function ChatBody(props) {
           </div>
           <p className='font-semibold'>{curChat[0]}</p>
         </div>
-        <div className="overflow-auto p-5 flex-grow">
+        <div className="overflow-y-auto p-5 flex-grow">
           <div className="flex-col">
             {messages.map((message, index) => {
               return (

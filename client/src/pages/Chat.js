@@ -79,7 +79,7 @@ function Chat(props) {
             changeChat={handleChatChange}
             getUsersChats={getUsersChats}
           ></ChatsList>
-          <div className="col-span-4 overflow-auto">
+          <div className="col-span-4 overflow-y-auto">
             {currentChat === undefined ? (
               <div className='flex h-full text-center items-center justify-center'>
                 <p className='text-4xl'>No chat selected</p>

@@ -70,55 +70,49 @@ function ChatsList(props) {
         getUsersChats()
       }
     );
+    setNewChat('');
   };
 
   return (
-    <div className="border-solid border-r border-gray-400">
-      <div className="mb-4">
+    <div className="border-solid border-r border-gray-400 flex flex-col">
+      <div className="p-2 box shadow-md relative">
         <Combobox
-          value={newChat}
+          value={newChat.name}
           onChange={(e) => {
             setNewChat(e);
+            console.log(e);
           }}
         >
-          <div className="relative w-full cursor-default rounded-lg bg-white text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm">
+          <div className='flex flex-row h-12 text-center justify-center items-center'>
             <Combobox.Input
               onChange={(event) => setQuery(event.target.value)}
-              className="w-full py-2 pl-3 pr-10 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0"
+              className="w-full py-2 rounded border-gray-300 text-sm leading-5 text-gray-900 focus:ring-0"
             />
-            <Combobox.Options className="mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-              {filteredPeople.map((person) => (
-                <Combobox.Option
-                  key={person._id}
-                  value={person}
-                  className={({ active }) =>
-                    `relative cursor-default select-none py-2 pl-4 pr-4 ${
-                      active ? 'bg-blue-600 text-white' : 'text-gray-900'
-                    }`
-                  }
-                >
-                  {person.name} <br /> {person.email}
-                </Combobox.Option>
-              ))}
-            </Combobox.Options>
+            <FontAwesomeIcon icon={solid('plus')} className={"ml-2 text-2xl bg-blue-400 p-2 rounded-md"} onClick={newChat ? createNewChat : null} />
           </div>
+          <Combobox.Options className="absolute mt-1 max-h-60 w-4/5 overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+            {filteredPeople.map((person) => (
+              <Combobox.Option
+                key={person._id}
+                value={person}
+                className={({ active }) =>
+                  `relative cursor-default select-none py-2 pl-4 pr-4 ${
+                    active ? 'bg-blue-600 text-white' : 'text-gray-900'
+                  }`
+                }
+              >
+                {person.name} <br /> {person.email}
+              </Combobox.Option>
+            ))}
+          </Combobox.Options>
         </Combobox>
       </div>
-      {newChat ? (
-        <button className="bg-blue-500 hover:bg-blue-700 text-white px-4 rounded" onClick={createNewChat}>
-          Chat with {newChat.name}
-        </button>
-      ) : (
-        <></>
-      )}
       <div className="py-1">
-        <hr className="h-px bg-gray-400 border-0"></hr>
-
         {chatters.map((name, index) => {
           return (
             <div
               key={index}
-              className={`flex border-b-2 ${
+              className={`flex flex-row border-b-2 ${
                 selected === index ? 'bg-blue-300' : 'bg-stone-100'
               }`}
               onClick={() => changeCurrentChat(index, name)}
@@ -126,7 +120,7 @@ function ChatsList(props) {
               <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
                 <p className="uppercase text-white">{name[0][0]}</p>
               </div>
-              <div className="grid place-items-center">{name[0]}</div>
+              <div className="invisible md:visible grid place-items-center">{name[0]}</div>
             </div>
           );
         })}
