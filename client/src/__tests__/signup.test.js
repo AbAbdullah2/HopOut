@@ -29,7 +29,7 @@ test('renders login fields', () => {
   const nameInput = screen.getByLabelText('Name');
   const passwordInput = screen.getByLabelText('Password');
   const confirmPasswordInput = screen.getByLabelText('Confirm password');
-  const signupButton = screen.getByRole('button', { name: 'Create account' });
+  const signupButton = screen.getByRole('button', { name: 'Create Account' });
 
   expect(emailInput).toBeInTheDocument();
   expect(nameInput).toBeInTheDocument();
@@ -43,7 +43,7 @@ test('password alerts', () => {
 
   const passwordInput = screen.getByLabelText('Password');
   const confirmPasswordInput = screen.getByLabelText('Confirm password');
-  const signupButton = screen.getByRole('button', { name: 'Create account' });
+  const signupButton = screen.getByRole('button', { name: 'Create Account' });
 
   fireEvent.change(passwordInput, { target: { value: '123' } });
   expect(screen.getByText('Password must be at least 6 characters.')).toBeInTheDocument();
