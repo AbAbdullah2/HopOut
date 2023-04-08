@@ -1,16 +1,13 @@
-
 import { Modal } from 'flowbite-react'
-import { getUser, removeFriend } from '../services/api';
+import { removeFriend } from '../services/api';
 
 
 export default function RemoveFriendConfirm(props) {
     const {curUser, setCurUser, showConfirm, closeModal, unfriended} = props;
 
     const handleUnfriend = () => {
-        console.log("unfriended called: ", unfriended);
         if (unfriended) {
           removeFriend(curUser._id, unfriended._id).then((res) => {
-              console.log("response: ", res);
               if (res.status === 201 || res.status === 200) {
                   setCurUser(res.data.data);
               } else {

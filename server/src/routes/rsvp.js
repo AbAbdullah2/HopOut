@@ -89,16 +89,20 @@ router.put(`/rsvp/unsendInvite`, async (req, res, next) => {
     const uninvitee = await userDao.read(uninviteeId);
     const event = await eventDao.read(eventId);
 
-    let filteredUninvitee = uninvitee.invited.filter((e) => e.toString() !== eventId);
-    let filteredEvent = event.invitees.filter((e) => e.toString() !== uninviteeId);
+    let filteredInvited = uninvitee.invited.filter((e) => e.toString() !== eventId);
+    let filteredAttending = uninvitee.attending.filter((e) => e.toString() !== eventId);
+    let filteredInvitees = event.invitees.filter((e) => e.toString() !== uninviteeId);
+    let filteredAttendees = event.attendees.filter((e) => e.toString() !== uninviteeId);
 
     const updatedUninvitee = await userDao.update({
       id: uninviteeId,
-      invited: filteredUninvitee,
+      invited: filteredInvited,
+      attending: filteredAttending,
     });
     const updatedEvent = await eventDao.update({
       id: eventId,
-      invitees: filteredEvent,
+      invitees: filteredInvitees,
+      attendees: filteredAttendees,
     });
 
     res.json({
