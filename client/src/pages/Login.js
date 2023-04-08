@@ -11,7 +11,7 @@ function Login(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (curUser) navigate('/events');
+    if (curUser !== null) navigate('/events');
   });
 
   const [email, setEmail] = useState("");

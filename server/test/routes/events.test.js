@@ -31,16 +31,26 @@ describe(`Test ${endpoint}`, () => {
 
   beforeEach(async () => {
     await eventDao.deleteAll();
+    await userDao.deleteAll();
+    const user = await userDao.create({
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
+    uid = user.id;
+
     events = [];
 
     for (let index = 0; index < numEvents; index++) {
       const name = faker.lorem.words(3);
       const start = '2023-06-22T15:28:37.174Z';
       const end = '2023-06-22T15:28:37.174Z';
+      const locationName = faker.lorem.words(2);
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
       const state = faker.address.countryCode();
       const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
       const description = faker.lorem.paragraph();
       const visibility = 'public';
       const organizer = uid;
@@ -50,10 +60,12 @@ describe(`Test ${endpoint}`, () => {
         name,
         start,
         end,
+        locationName,
         address,
         city,
         state,
         zip,
+        addressLine2,
         description,
         visibility,
         capacity,
@@ -85,10 +97,12 @@ describe(`Test ${endpoint}`, () => {
       const name = faker.lorem.words(3);
       const start = '2023-06-22T15:28:37.174Z';
       const end = '2023-06-22T15:28:37.174Z';
+      const locationName = faker.lorem.words(2);
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
       const state = faker.address.countryCode();
       const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
       const description = faker.lorem.paragraph();
       const visibility = 'private';
       const organizer = uid;
@@ -98,10 +112,12 @@ describe(`Test ${endpoint}`, () => {
         name,
         start,
         end,
+        locationName,
         address,
         city,
         state,
         zip,
+        addressLine2,
         description,
         visibility,
         organizer,
@@ -113,12 +129,14 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.name).toBe(name);
       expect(response.body.data.start).toBe(start);
       expect(response.body.data.end).toBe(end);
+      expect(response.body.data.locationName).toBe(locationName);
       expect(response.body.data.location).toStrictEqual({
         address,
         city,
         state,
         zip,
       });
+      expect(response.body.data.addressLine2).toBe(addressLine2);
       expect(response.body.data.description).toBe(description);
       expect(response.body.data.organizer).toBe(organizer);
       expect(response.body.data.capacity).toBe(capacity);
@@ -130,10 +148,12 @@ describe(`Test ${endpoint}`, () => {
         const name = null;
         const start = '2023-06-22T15:28:37.174Z';
         const end = '2023-06-22T15:28:37.174Z';
+        const locationName = faker.lorem.words(2);
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
         const zip = faker.address.zipCode();
+        const addressLine2 = faker.address.secondaryAddress();
         const description = faker.lorem.paragraph();
         const visibility = 'private';
         const organizer = uid;
@@ -143,10 +163,12 @@ describe(`Test ${endpoint}`, () => {
           name,
           start,
           end,
+          locationName,
           address,
           city,
           state,
           zip,
+          addressLine2,
           description,
           visibility,
           organizer,
@@ -157,26 +179,30 @@ describe(`Test ${endpoint}`, () => {
       });
 
       it('Undefined name', async () => {
-        const name = undefined;
+        const undefName = undefined;
         const start = '2023-06-22T15:28:37.174Z';
         const end = '2023-06-22T15:28:37.174Z';
+        const locationName = faker.lorem.words(2);
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
         const zip = faker.address.zipCode();
+        const addressLine2 = faker.address.secondaryAddress();
         const description = faker.lorem.paragraph();
         const visibility = 'private';
         const organizer = uid;
         const capacity = 20;
         const categories = ['Sports'];
         const response = await request.post('/events').send({
-          name,
+          undefName,
           start,
           end,
+          locationName,
           address,
           city,
           state,
           zip,
+          addressLine2,
           description,
           visibility,
           organizer,
@@ -190,10 +216,12 @@ describe(`Test ${endpoint}`, () => {
         const name = '';
         const start = '2023-06-22T15:28:37.174Z';
         const end = '2023-06-22T15:28:37.174Z';
+        const locationName = faker.lorem.words(2);
         const address = faker.address.streetAddress();
         const city = faker.address.cityName();
         const state = faker.address.countryCode();
         const zip = faker.address.zipCode();
+        const addressLine2 = faker.address.secondaryAddress();
         const description = faker.lorem.paragraph();
         const visibility = 'private';
         const organizer = uid;
@@ -203,10 +231,12 @@ describe(`Test ${endpoint}`, () => {
           name,
           start,
           end,
+          locationName,
           address,
           city,
           state,
           zip,
+          addressLine2,
           description,
           visibility,
           organizer,
