@@ -75,7 +75,7 @@ function EditEvent(props) {
 
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
-  }, [curUser, eventid, navigate]);
+  }, []);
 
   useEffect(() => {
     getAllUsers().then((res) => {
@@ -83,7 +83,7 @@ function EditEvent(props) {
       setUsers(tusers);      
       setInvitees(tusers.filter((u) => {return event.invitees.includes(u._id)}));
     });
-  }, [event, curUser]);
+  }, [event]);
 
   const filteredPeople =
   inviteQuery === ''
@@ -214,10 +214,8 @@ function EditEvent(props) {
                       placeholder="My Event"
                       value={event.name}
                       onChange={(e) => {
-                        setEvent(event => ({ ...event, name: e.target.value
-                      }));  
+                        setEvent({ ...event, name: e.target.value});  
                       }}                  
-
                       required
                     />
                   </div>

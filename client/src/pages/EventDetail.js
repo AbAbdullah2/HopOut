@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'
 import Header from '../components/Header';
 import EventHostView from '../components/EventHostView';
+import EventAttendeeView from '../components/EventAttendeeView';
 import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getEvent, getUser, getAllUsers, unsendInvite } from '../services/api';
+import { getEvent, getUser, getAllUsers } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
 import { Table, Dropdown } from 'flowbite-react';
@@ -108,62 +109,38 @@ useEffect(() => {
           <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
           { curUser.organizing && curUser.organizing.includes(eventid) ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
-            <></> }
+          (event.organizer !== curUser._id ? 
+            <EventAttendeeView event={event} curUser={curUser} rsvp={rsvp} atCapacity={atCapacity} cancelRsvpHelper={cancelRsvpHelper} confirmRsvp={confirmRsvp}  />
+          : <></>) }
        </div>
        <div className='m-5'>
-         <p className='text-4xl font-extrabold text-center'>{event.name}</p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.locationName ? event.locationName + ':' : ''} {event.location.address}, {event.addressLine2 ? event.addressLine2 + ',' : ''} {event.location.city}, {event.location.state} {event.location.zip}</p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('users')} /> {attendeesCount} attending</p>
-         <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('circle-exclamation')} /> {event.capacity - attendeesCount} spots remaining</p>
-         {
-         event.organizer === curUser._id ?
-         <div></div> :
-         <div>
-          {event.invitees.includes(curUser._id) && !event.attendees.includes(curUser._id) ? <div className="items-center py-5 px-12 lg:px-4" role="alert">
-            <div className="bg-green-500 shadow-md px-7 py-3 rounded-md items-center text-white leading-none lg:rounded-full flex lg:inline-flex" >
-              <span className="font-semibold text-left flex-auto">You're invited to this event!</span>
-            </div>
-          </div> : <></>}
-          {
-          rsvp ?
-            <div className='flex flex-col items-center'>
-            <button className="text-2xl bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" onClick={cancelRsvpHelper}>
-              Cancel RSVP
-            </button>
-            </div>     
-          :
-          <div>
-            { !atCapacity ?
-              <div className='flex flex-col items-center'>
-                <button className="text-2xl bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={confirmRsvp}>
-                  RSVP
-                </button>
-              </div>
-              :
-              <div className='flex flex-col items-center'>
-                <p>This Event Has Reached Its Capacity!</p>
-              </div>
-            }
-            </div>
-          }
-         </div>
-         }
-         <div className="flex items-center justify-center mt-4">
+       <p className='text-4xl font-extrabold text-center'>{event.name}</p>
+        <p className='text-lg mt-4 text-center'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
+        <p className='text-lg mt-2 text-center'><FontAwesomeIcon icon={solid('location-dot')} /> {event.locationName ? event.locationName + ':' : ''} {event.location.address}, {event.addressLine2 ? event.addressLine2 + ',' : ''} {event.location.city}, {event.location.state} {event.location.zip}</p>
+        <div className='flex flex-row items-center text-center justify-center mt-2'>
+          <p className='text-lg text-center'><FontAwesomeIcon icon={solid('user')} /> Organized by <a href={host ? "/profile/"+host._id : "/profile/"}>{host ? host.name : ''}</a></p>
+          <p>&nbsp;|&nbsp;</p>
+          <p className='text-lg text-center'><FontAwesomeIcon icon={event.visibility === 'public' ? solid('eye') : solid('eye-slash')} /> {event.visibility === 'public' ? "Public Event" : "Private Event"}</p>
+        </div>
+        <div className='flex flex-row items-center text-center justify-center mt-2'>
+          <p className='text-lg text-center'><FontAwesomeIcon icon={solid('users')} /> {attendeesCount} attending</p>
+          <p>&nbsp;|&nbsp;</p>
+          <p className='text-lg text-center'><FontAwesomeIcon icon={solid('circle-exclamation')} /> {event.capacity - attendeesCount} spots remaining</p>
+        </div>
+        <div className="flex items-center justify-center mt-4">
            {event.categories.map((c, i) => {
-             return <div key={i} className="bg-gray-400 p-4 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
+             return <div key={i} className="bg-blue-400 px-4 py-2 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
            })}
          </div>
+         
          <hr className='my-4 bg-stone-800 h-1' />
          <p className='m-2 font-bold text-slate-700'>Event description</p>  
-         <div className='p-4 my-2 bg-white rounded-md shadow-md'>
+         <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
           <p className='my-2'>{event.description}</p>  
          </div> 
          {event.organizer !== curUser._id ? 
-          <div>
-          <p className='font-bold text-slate-700 m-2'>Attendees</p>
+          <div className='mt-4 mx-2'>
+          <p className='font-bold text-slate-700 my-2'>Attendees</p>
          <Table striped={true}>
           <Table.Head>
             <Table.HeadCell>
@@ -188,10 +165,10 @@ useEffect(() => {
         </Table>
         </div>
         :
-        <div>
-          <div>
-            <p className='font-bold text-slate-700 m-2'>Attendees and Invitees</p>
-            <div className="my-2 flex flex-row">
+        <div className='mt-4 mx-2'>
+          <div className='flex flex-row items-center justify-between mb-2'>
+            <p className='font-bold text-slate-700'>Attendees and Invitees</p>
+            <div className="my-2 flex flex-row right-0">
               <Dropdown
                 label={"Filter"}
                 className="bg-grey-50"
@@ -227,7 +204,7 @@ useEffect(() => {
               Invited?
             </Table.HeadCell>
             <Table.HeadCell>
-               
+               Delete
             </Table.HeadCell>
           </Table.Head>
           <Table.Body className="divide-y">
@@ -242,10 +219,10 @@ useEffect(() => {
                   {person.email}
                 </Table.Cell>
                 <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
-                  {person.attending.includes(event._id) ? 'Yes' : 'No'}
+                  {person.attending.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
                 </Table.Cell>
                 <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
-                  {person.invited.includes(event._id) ? 'Yes' : 'No'}
+                  {person.invited.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
                 </Table.Cell>
                 <Table.Cell>
                   <button className="inline-flex font-bold py-2 px-4 rounded-full" 
@@ -253,7 +230,7 @@ useEffect(() => {
                     setUninvited(person);
                     setShowUninviteConfirm(true);
                   }}>
-                    <FontAwesomeIcon icon={solid('xmark')} />
+                    <FontAwesomeIcon className='text-xl' icon={solid('trash')} />
                   </button>
                 </Table.Cell>
               </Table.Row>);
