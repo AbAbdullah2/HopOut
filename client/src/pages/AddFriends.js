@@ -72,10 +72,10 @@ function AddFriends(props) {
 
     return(
         <div className='bg-stone-100 min-h-screen'>
-            <div className='mx-auto flex flex-col h-full space-y-4'>
+            <div className='mx-auto flex flex-col h-full space-y-4 items-center'>
                 <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
                     <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                    <div className="relative">
+                    <div className="relative w-11/12">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg aria-hidden="true" 
                                 className="w-5 h-5 text-gray-500 dark:text-gray-400" 

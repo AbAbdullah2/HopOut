@@ -9,11 +9,8 @@ export default function MyEventsList(props) {
     useEffect(() => {
         // Update hosted events list  
         getAllHostedEvents(curUser._id).then((res) => {
-            console.log("res of allHostedEvents", res);
-            console.log("setting events res.data.data", res.data.data);
             setEvents(res.data.data);
         });
-        console.log("events;", events);
     }, [curUser]); 
 
 

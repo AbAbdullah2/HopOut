@@ -14,14 +14,8 @@ export default function Account(props) {
   const [unfriended, setUnfriended] = useState(null);
 
   const triggerShow = (toUnfriend) => {
-    console.log('trigger show clicked. unfriended: ', toUnfriend);
     setShowConfirm(true);
-    console.log('showConfirm: ', showConfirm);
-    console.log('curUser: ', curUser);
-
     setUnfriended(toUnfriend);
-    console.log('unfriended: ', unfriended);
-
   }
   
   useEffect(() => {
@@ -30,10 +24,7 @@ export default function Account(props) {
     });
   }, []);
 
-  console.log("!curUser || curUser == null", !curUser || curUser === null);
-
   if (!curUser || curUser === null) {
-    console.log("curUser is null: ", curUser);
     return <NotFound />
   }
   return (
