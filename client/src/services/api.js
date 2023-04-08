@@ -290,4 +290,4 @@ export {
   createChat,
 };
 
-export const host = `http://localhost:6002/`; // NEED TO CHANGE
+export const host = BASE_URL;

@@ -5,7 +5,7 @@ import { createServer } from 'http';
 
 //db.connect(process.env.TEST_DB)
 db.connect(process.env.DB);
-const PORT = process.env.PORT || 6000;
+const PORT = process.env.PORT || 6002;
 
 // const httpServer = createServer();
 const server = app.listen(PORT, () => {

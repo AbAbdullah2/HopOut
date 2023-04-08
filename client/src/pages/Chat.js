@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import ChatsList from '../components/ChatsList';
 import ChatBody from '../components/ChatBody';
-import { getAllChats, host } from '../services/api';
+import { getAllChats } from '../services/api';
 import io from 'socket.io-client' 
 
 function Chat(props) {
@@ -14,40 +14,16 @@ function Chat(props) {
   const navigate = useNavigate();
   //const socket = useRef();
 
-  const ENDPOINT = 'http://localhost:6002/';
+  const ENDPOINT =
+  !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
+    ? 'http://localhost:6002'
+    : 'https://hopout.herokuapp.com';
+
   const socket = io(ENDPOINT, {
     transports: ['websocket'], upgrade: false
-    
   });
-//   socket.on("connect", () => {
-//     console.log("connected");
-// });
 
-// socket.on("data", (res) => {
-//     console.log(res);
-// });
-
-  // useEffect(() => {
-  //   // ... other codes
-  //   console.log('c');
-
-  //   // Emitting an event that will trigger in the backend
-  //   socket.emit('send-msg', {
-
-  //      msg: " message: msg"
-  //     });
-  //   console.log('d');
-
-  //   // ... other codes
-  // }, []);
-
-  useEffect(() => {
-
-    if (curUser === null) navigate('/login');
-    getUsersChats()
-  }, [curUser]);
-
-  const getUsersChats = async () => {
+  const getUsersChats = useCallback(async () => {
     getAllChats(curUser._id).then((res) => {
       let chatters = [];
       for (let i = 0; i < res.data.data.length; i++) {
@@ -55,7 +31,12 @@ function Chat(props) {
       }
       setChats(res.data.data);
     });
-  }
+  }, [curUser._id]);
+
+  useEffect(() => {
+    if (curUser === null) navigate('/login');
+      getUsersChats()
+  }, [curUser, getUsersChats, navigate]);
 
 
   const handleChatChange = (chat) => {
@@ -66,7 +47,7 @@ function Chat(props) {
     if (curUser) {
       socket.emit('add-user', curUser._id);
     }
-  }, [socket]);
+  }, [curUser, socket]);
 
   return (
     <div className="bg-stone-100">
