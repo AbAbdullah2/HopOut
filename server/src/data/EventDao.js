@@ -38,15 +38,6 @@ class EventDao {
 
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
 
-    result = validString.safeParse(locationName);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Location Name!");
-    }
-    result = validString.safeParse(addressLine2);
-    if (!result.success) {
-      throw new ApiError(400, "Invalid Address Line 2!");
-    }
-
     result = validString.safeParse(address);
     if (!result.success) {
       throw new ApiError(400, "Invalid Street Address!");

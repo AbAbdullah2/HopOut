@@ -87,7 +87,7 @@ export function EventList(props) {
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className={'mt-5 w-11/12 flex flex-row flex-nowrap justify-between'}>
-          <div>
+          <div className='flex flex-row'>
             <Switch
               checked={listActive}
               onChange={setListActive}
@@ -101,9 +101,9 @@ export function EventList(props) {
                 } inline-block h-4 w-4 transform rounded-full bg-white transition`}
               />
             </Switch>
-            <span className='pl-2'>Event List View</span>
+            <span className='pl-2'>List View</span>
           </div>
-          <div>
+          <div className='flex flex-row'>
             <Switch
               checked={friendEventsActive}
               onChange={setFriendEventsActive}
