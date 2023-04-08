@@ -2,6 +2,7 @@ import express from 'express';
 import { verifyPassword } from "../util/password.js";
 import UserDao from '../data/UserDao.js';
 import EventDao from '../data/EventDao.js';
+import nodemailer from "nodemailer";
 
 
 const router = express.Router();
@@ -13,6 +14,15 @@ export const hidePassword = (user) => {
   const { password, __v, ...rest } = user._doc;
   return rest;
 };
+
+let transporter = nodemailer.createTransport({
+  pool: true,
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD
+  }
+});
 
 router.get('/users', async (req, res, next) => {
   try {
@@ -89,6 +99,38 @@ router.post('/register', async (req, res, next) => {
       status: 201,
       message: `Successfully registered the following user!`,
       data: hidePassword(savedUser),
+    });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/verification', async (req, res) => {
+  try {
+    let { email, name } = req.body;
+
+    const code = Math.floor(1000000 * Math.random()).toString().padStart(6, '0');
+
+    let mailOptions = {
+      from: process.env.SMTP_USER,
+      to: email,
+      subject: 'Verify your JHU email for HopOut',
+      html: `Hi ${name}, <br/><br/> Thank you for registering for HopOut! <br/>
+            Here is your 6-digit verification code: <strong>${code}</strong><br/>
+            Enter this code back on the sign up page to begin using the app.<br/><br/>
+            Welcome to HopOut!<br/>
+            The HopOut Team`
+    };
+    
+    const info = await transporter.sendMail(mailOptions);
+    return res.status(201).json({
+      status: 201,
+      message: `Successfully sent verification code to ${email}!`,
+      data: {
+        email: email,
+        code: code,
+      },
     });
 
   } catch (err) {

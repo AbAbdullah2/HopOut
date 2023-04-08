@@ -30,6 +30,14 @@ async function register(user) {
   return response;
 }
 
+async function emailVerification(user) {
+  const response = await axios.post(`${BASE_URL}/verification`, user)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
+}
+
 async function updateUser(user) {
   const response = await axios.put(`${BASE_URL}/users/${user._id}`, user)
     .catch(function (error) {
@@ -174,4 +182,4 @@ async function rsvpToEvent(userId, eventId) {
   return response;
  }
 
-export { sendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser }
+export { sendInvite, rsvpToEvent, cancelRsvp, getAllUsers, getUser, register, postLogin, deleteUser, getAllPublicEvents, getAllPrivateEvents, getEvent, createNewEvent, updateEvent, deleteEvent, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq, removeFriend, updateUser, emailVerification }
