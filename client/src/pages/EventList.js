@@ -37,16 +37,7 @@ export function EventList(props) {
   const toDisplayEvent = (ev) => {
     let filtered = false;
     if (selectedFilters.length === 0 && friendFilters.length === 0) {
-      if (!friendEventsActive) {
-        return true;
-      }
-      if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
-        return true;
-      }
-    }
-
-    if (friendEventsActive && !(curUser.friends.map((ev) => ev.user).includes(ev.organizer))) {
-      return false;
+      return true;
     }
 
     for (const f in selectedFilters) {
@@ -71,6 +62,14 @@ export function EventList(props) {
         if (friendFilters[f] === "invited") { 
           arr = curUser.invited;
           if (arr.includes(ev._id)) {
+            filtered = true;
+          } else {
+            filtered = false;
+          }
+        }
+        if (friendFilters[f] === "friend's event") {
+          arr = curUser.friends.map((ev) => ev.user);
+          if (arr.includes(ev.organizer)) {
             filtered = true;
           } else {
             filtered = false;
@@ -102,22 +101,6 @@ export function EventList(props) {
               />
             </Switch>
             <span className='pl-2'>List View</span>
-          </div>
-          <div className='flex flex-row'>
-            <Switch
-              checked={friendEventsActive}
-              onChange={setFriendEventsActive}
-              className={`${
-                friendEventsActive ? 'bg-blue-600' : 'bg-gray-400'
-              } relative inline-flex h-6 w-11 items-center rounded-full`}
-            >
-              <span
-                className={`${
-                  friendEventsActive ? 'translate-x-6' : 'translate-x-1'
-                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
-              />
-            </Switch>
-            <span className='pl-2'>Events Hosted By Your Friends Only</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
             <div className='flex flew-row flex-nowrap'>
