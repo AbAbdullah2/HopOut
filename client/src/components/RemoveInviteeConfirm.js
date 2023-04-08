@@ -7,9 +7,7 @@ export default function RemoveInviteeConfirm(props) {
 
     const handleRemove = () => {
         if (uninvited) {
-            console.log("unsending invite: ", uninvited);
             unsendInvite(event._id, uninvited._id).then((res) => {
-              console.log("res", res);
               setEvent(res.data.data);
             });
         }
@@ -25,7 +23,7 @@ export default function RemoveInviteeConfirm(props) {
         <Modal.Body>
         <div className="space-y-6">
             <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                Are you sure you'd like to remove this user? 
+                Are you sure you'd like to remove this user? You will have to invite them again if you change your mind.
             </p>
         </div>
         </Modal.Body>

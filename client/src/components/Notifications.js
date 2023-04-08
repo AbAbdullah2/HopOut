@@ -75,7 +75,7 @@ export default function Notifications(props) {
                             {notif.name}
                         </p>
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                            {notif.start}
+                            {(new Date(notif.start)).toDateString()}
                         </p>
                         </div>
                     </div> 
