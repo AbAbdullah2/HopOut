@@ -9,7 +9,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { createNewEvent, sendInvite, updateUser } from '../services/api';
+import { createNewEvent, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
@@ -29,10 +29,12 @@ function CreateEvent(props) {
     description: "",
     thumbnailId: THUMB_PLACEHOLDER,
     coverId: COVER_PLACEHOLDER,
+    locationName: "",
     address: "",
     city: "",
     state: "",
     zip: "",
+    addressLine2: "",
     visibility: "public",
     categories: [],
     capacity: 5,
@@ -253,6 +255,19 @@ function CreateEvent(props) {
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Location
                   </label>
+                  <div className="mt-3 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="LocationName"
+                      id="locationName"
+                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                      placeholder="Location Name"
+                      value={event.locationName}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, locationName: e.target.value}));
+                      }}
+                    />
+                  </div>
                   <Autocomplete
                     onPlaceChanged={
                       onPlaceChanged
@@ -280,6 +295,19 @@ function CreateEvent(props) {
                       />
                     </div>
                   </Autocomplete>
+                  <div className="mt-3 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="AddressLine2"
+                      id="addressLine2"
+                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                      placeholder="Apt, suite, etc. (optional)"
+                      value={event.addressLine2}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, addressLine2: e.target.value}));
+                      }}
+                    />
+                  </div>
                   <div className='flex flex-row space-x-5 w-full'>
                     <div className="mt-3 flex rounded-md shadow-sm w-1/2">
                       <input

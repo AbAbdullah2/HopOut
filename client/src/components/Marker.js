@@ -1,22 +1,26 @@
-import { InfoWindow, Marker } from "@react-google-maps/api";
+import { InfoWindow, Marker, InfoWindowF } from "@react-google-maps/api";
 import React from "react";
 import EventInfoBox from "./EventInfoBox.js";
 
-export default function EventMarker({ events, lat, lng }) {
+export default function EventMarker({ events, lat, lng, activeMarker, setActiveMarker }) {
+  const markerPosition = { lat, lng };
 
-  const [open, setOpen] = React.useState(false);
+  const isOpen = activeMarker && activeMarker.lat === markerPosition.lat && activeMarker.lng === markerPosition.lng;
 
-  return ( 
-    <Marker 
-      position={{lat, lng}}
+  return (
+    <Marker
+      position={markerPosition}
       onClick={() => {
-        setOpen(!open);
+        setActiveMarker(isOpen ? null : markerPosition);
       }}
     >
-      {open && (
-        <InfoWindow>
-          <EventInfoBox events={events}/>
-        </InfoWindow>
+      {isOpen && (
+        <InfoWindowF
+          position={markerPosition}
+          onCloseClick={() => setActiveMarker(null)}
+        >
+          <EventInfoBox events={events} />
+        </InfoWindowF>
       )}
     </Marker>
   );

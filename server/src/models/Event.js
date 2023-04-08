@@ -14,6 +14,10 @@ const EventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    locationName: {
+      type: String,
+      required: false,
+    },
     location: {
       address: {
         type: String,
@@ -31,6 +35,10 @@ const EventSchema = new mongoose.Schema(
         type: String,
         required: true
       }
+    },
+    addressLine2: {
+      type: String,
+      required: false,
     },
     description: {
       type: String,

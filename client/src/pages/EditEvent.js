@@ -30,10 +30,12 @@ function EditEvent(props) {
     description: "",
     thumbnailId: THUMB_PLACEHOLDER,
     coverId: COVER_PLACEHOLDER,
+    locationName: "",
     address: "",
     city: "",
     state: "",
     zip: "",
+    addressLine2: "",
     visibility: "public",
     categories: [],
     capacity: 5,
@@ -42,7 +44,7 @@ function EditEvent(props) {
     organizer: curUser._id,
   });
 
-  const [validated, setValidated] = useState(false);
+  const [validated, setValidated] = useState(true);
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -73,7 +75,7 @@ function EditEvent(props) {
 
       if (res.data.data.organizer && res.data.data.organizer !== curUser._id) navigate('/');
     });  
-  }, []);
+  }, [curUser, eventid, navigate]);
 
   useEffect(() => {
     getAllUsers().then((res) => {
@@ -81,7 +83,7 @@ function EditEvent(props) {
       setUsers(tusers);      
       setInvitees(tusers.filter((u) => {return event.invitees.includes(u._id)}));
     });
-  }, [event]);
+  }, [event, curUser]);
 
   const filteredPeople =
   inviteQuery === ''
@@ -124,6 +126,10 @@ function EditEvent(props) {
 
   const handleUpdateEvent = async (e) => {
     e.preventDefault();
+    if (validated === false) {
+      toast.error('Invalid address');
+      return;
+    }
     toast.success('Updating event...', {duration: 500});
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime); 
@@ -279,6 +285,19 @@ function EditEvent(props) {
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
                     Location
                   </label>
+                  <div className="mt-3 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="LocationName"
+                      id="locationName"
+                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                      placeholder="Location Name"
+                      value={event.locationName}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, locationName: e.target.value}));
+                      }}
+                    />
+                  </div>
                   <Autocomplete
                     onPlaceChanged={
                       onPlaceChanged
@@ -306,6 +325,19 @@ function EditEvent(props) {
                       />
                     </div>
                   </Autocomplete>
+                  <div className="mt-3 flex rounded-md shadow-sm">
+                    <input
+                      type="text"
+                      name="AddressLine2"
+                      id="addressLine2"
+                      className="block w-full flex-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
+                      placeholder="Apt, suite, etc. (optional)"
+                      value={event.addressLine2}
+                      onChange={(e) => {
+                        setEvent(event => ({ ...event, addressLine2: e.target.value}));
+                      }}
+                    />
+                  </div>
                   <div className='flex flex-row space-x-5 w-full'>
                     <div className="mt-3 flex rounded-md shadow-sm w-1/2">
                       <input
