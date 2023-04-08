@@ -21,7 +21,7 @@ export default function Notifications(props) {
     getUser(curUser._id).then((res) => {
       updateCurUser(res.data.data);
     });
-  }, [curUser._id, updateCurUser]);
+  }, [curUser, updateCurUser]);
 
   useEffect(() => {
     getAllUsers().then(userData => {
