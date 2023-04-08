@@ -25,7 +25,7 @@ Object.defineProperty(window, 'matchMedia', {
     expect(2*2).toBe(4)
   }) 
 
-// test('matches snapshot', async () => {
-//   const tree = await renderer.create(<EventDetail/>).toJSON();
-//   expect(tree).toMatchSnapshot();
-// });
+ test('matches snapshot', async () => {
+   const tree = await renderer.create(<EventDetail/>).toJSON();
+   expect(tree).toMatchSnapshot();
+ });

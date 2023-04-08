@@ -54,7 +54,7 @@ test('password alerts', () => {
 });
 
 
-// test('matches snapshot', () => {
-//   const tree = renderer.create(<CreateAccount/>).toJSON();
-//   expect(tree).toMatchSnapshot();
-// })
+test('matches snapshot', () => {
+  const tree = renderer.create(<CreateAccount/>).toJSON();
+  expect(tree).toMatchSnapshot();
+});

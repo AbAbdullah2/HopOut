@@ -23,11 +23,11 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 
-// test('matches snapshot', async () => {
-//   const data = {email: "jhop@jhu.edu", password: "password!"};
-//   const tree = await renderer.create(<Login data={data}/>).toJSON();
-//   expect(tree).toMatchSnapshot();
-// });
+test('matches snapshot', async () => {
+  const data = {email: "jhop@jhu.edu", password: "password!"};
+  const tree = await renderer.create(<Login data={data}/>).toJSON();
+  expect(tree).toMatchSnapshot();
+});
 
 test('renders login fields', () => {
   render(<Login />);
