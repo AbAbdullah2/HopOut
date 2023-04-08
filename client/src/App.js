@@ -10,7 +10,11 @@ import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
 import Profile from './pages/Profile';
+<<<<<<< HEAD
 import AddFriends from './pages/AddFriends';
+=======
+import Chat from './pages/Chat';
+>>>>>>> 8601ad868aefdd4d42fd902af04cd14c223b3f6f
 
 const App = () => {
   const [curUser, setCurUser] = useState(JSON.parse(window.localStorage.getItem("curUser")) ? JSON.parse(window.localStorage.getItem("curUser")) : null);
@@ -38,6 +42,7 @@ const App = () => {
           <Route path="create" element={<CreateEvent curUser={curUser} setCurUser={setCurUser}/>}/>
           <Route path="edit/:eventid" element={<EditEvent curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="addFriends" element={<AddFriends curUser={curUser} setCurUser={setCurUser}/>} />
+          <Route path="chat" element={<Chat curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
