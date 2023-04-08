@@ -30,7 +30,7 @@ export default function Header(props) {
         <a href='/chat' className='hover:text-blue-400'>
           <FontAwesomeIcon icon={solid('comments')} className="px-1" /><span className='pl-1 invisible hidden md:visible md:inline'>Chats</span>
         </a>
-        <Notifications curUser={curUser}/>
+        <Notifications curUser={curUser} setCurUser={setCurUser}/>
         <Dropdown
           floatingArrow= {false}
           arrowIcon={false}
