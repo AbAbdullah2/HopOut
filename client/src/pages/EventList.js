@@ -14,6 +14,7 @@ export function EventList(props) {
   const [privateEventList, setPrivateEventList] = useState([]);
 
   const [listActive, setListActive] = useState(false);
+  const [friendEventsActive, setFriendEventsActive] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [friendFilters, setFriendFilters] = useState([]);
@@ -36,7 +37,16 @@ export function EventList(props) {
   const toDisplayEvent = (ev) => {
     let filtered = false;
     if (selectedFilters.length === 0 && friendFilters.length === 0) {
-      return true;
+      if (!friendEventsActive) {
+        return true;
+      }
+      if (friendEventsActive && curUser.friends.map((ev) => ev.user).includes(ev.organizer)) {
+        return true;
+      }
+    }
+
+    if (friendEventsActive && !(curUser.friends.map((ev) => ev.user).includes(ev.organizer))) {
+      return false;
     }
 
     for (const f in selectedFilters) {
@@ -91,7 +101,23 @@ export function EventList(props) {
                 } inline-block h-4 w-4 transform rounded-full bg-white transition`}
               />
             </Switch>
-            <span className='pl-2'>Toggle List View</span>
+            <span className='pl-2'>Event List View</span>
+          </div>
+          <div>
+            <Switch
+              checked={friendEventsActive}
+              onChange={setFriendEventsActive}
+              className={`${
+                friendEventsActive ? 'bg-blue-600' : 'bg-gray-400'
+              } relative inline-flex h-6 w-11 items-center rounded-full`}
+            >
+              <span
+                className={`${
+                  friendEventsActive ? 'translate-x-6' : 'translate-x-1'
+                } inline-block h-4 w-4 transform rounded-full bg-white transition`}
+              />
+            </Switch>
+            <span className='pl-2'>Events Hosted By Your Friends Only</span>
           </div>
           <div className='justify-end content-end items-end right-0'>
             <div className='flex flew-row flex-nowrap'>
