@@ -60,11 +60,12 @@ export default function Notifications(props) {
         >
           {
             allNotifications.length > 0 ? 
-          allNotifications.map((notif) => { 
-              return (<Dropdown.Item key={notif._id}>
-                <div className="flex items-center space-x-4">
-                    {notif.type === "friend" ? 
-                    <div className="min-w-100 px-8" onClick={() => navigate("/profile/" + notif._id)}>
+              allNotifications.map((notif) => { 
+                return (
+                  <Dropdown.Item key={notif._id}>
+                    <div className="flex items-center space-x-4">
+                      {notif.type === "friend" ? 
+                      <div className="min-w-100 px-8" onClick={() => navigate("/profile/" + notif._id)}>
                         <p className="font-bold text-slate-800 truncate dark:text-white">
                             Friend request
                         </p>
@@ -74,8 +75,8 @@ export default function Notifications(props) {
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                             {notif.email}
                         </p>
-                    </div> : 
-                    <div className="flex" onClick={() => navigate("/events/" + notif._id)}>
+                      </div> : 
+                      <div className="flex" onClick={() => navigate("/events/" + notif._id)}>
                         <img className="w-9 h-9 mr-2 rounded-full" src={notif.thumbnailId} alt="" />
                         <div className="min-w-100">
                         <p className="font-bold text-slate-800 truncate dark:text-white">
@@ -88,13 +89,14 @@ export default function Notifications(props) {
                             {notif.start}
                         </p>
                         </div>
-                    </div> 
-                    }
-                </div>
-              </Dropdown.Item>)
-            }
-          ): <Dropdown.Item>No notifications!</Dropdown.Item>}
-              
+                      </div> 
+                      }
+                    </div>
+                  </Dropdown.Item>
+                )
+              }
+            ): <Dropdown.Item>No notifications!</Dropdown.Item>
+          }  
         </Dropdown>
     </div>
     );

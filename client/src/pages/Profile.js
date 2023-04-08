@@ -30,13 +30,15 @@ export default function Profile(props) {
         </button> )
       case "received":
         return (
-          <div className="items-center py-5 px-12 lg:px-4" role="alert">
-          <div className="bg-blue-500 shadow-md px-7 py-3 rounded-md items-center text-blue-100 leading-none lg:rounded-full flex lg:inline-flex " >
-            <span className="font-semibold text-left flex-auto">{user.name} sent you a friend request.  </span>
-            <button className="hover:bg-blue-400 font-bold ml-2 py-2 px-2 rounded-md" onClick={handleAcceptFriend}>Accept <FontAwesomeIcon icon={solid('check')} /></button>
-            <button className="hover:bg-blue-400 font-bold py-2 px-2 rounded-md" onClick={handleDenyFriend}>Deny <FontAwesomeIcon icon={solid('x')} /></button>
+          <div className="bg-slate-200 shadow-md my-3 px-7 py-3 rounded-md items-center justify-center text-center flex flex-col" >
+            <div>
+              <span className="font-semibold text-left flex-auto">{user.name}</span>&nbsp;<span>sent you a friend request!</span>
+            </div>
+            <div className='w-full mt-1'>
+              <button className="hover:bg-green-200 text-green-600 font-bold py-2 px-2 rounded-md w-1/2" onClick={handleAcceptFriend}>Accept <FontAwesomeIcon icon={solid('check')} /></button>
+              <button className="hover:bg-red-200 text-red-600 font-bold py-2 px-2 rounded-md w-1/2" onClick={handleDenyFriend}>Deny <FontAwesomeIcon icon={solid('x')} /></button>
+            </div>
           </div>
-        </div>
         )
         
       default:

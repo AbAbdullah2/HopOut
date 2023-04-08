@@ -70,10 +70,10 @@ function AddFriends(props) {
 
     return(
         <div className='bg-stone-100 min-h-screen'>
-            <div className='mx-auto flex flex-col h-full space-y-4'>
+            <div className='mx-auto flex flex-col h-full space-y-4 text-center items-center justify-center'>
                 <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
                     <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-                    <div className="relative">
+                    <div className="relative w-11/12">
                         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                             <svg aria-hidden="true" 
                                 className="w-5 h-5 text-gray-500 dark:text-gray-400" 
@@ -92,12 +92,12 @@ function AddFriends(props) {
                                 className="text-white absolute right-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" 
                                 onClick={handleSearch}>Search</button>
                     </div>
-                    <div className="my-5 w-11/12 mx-auto md:grid md:grid-cols-3 gap-4">
+                    <div className="my-5 w-11/12 mx-auto md:grid md:grid-cols-3 gap-4 text-center items-center justify-center">
                     {resultsToDisplay.map(user => {
                         return (
-                            <div key={user._id} className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <div className="flex flex-col items-center pb-10">
-                                    <div className="w-24 h-24 mb-3 mt-4 rounded-full bg-gray-300 flex items-center justify-center">
+                            <div key={user._id} className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                <div className="flex flex-col items-center text-center justify-center py-6">
+                                    <div className="w-24 h-24 mb-3 rounded-full bg-gray-300 flex items-center justify-center">
                                         <svg className="w-12 h-12 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                                             <path d="M12 14c3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6 2.69 6 6 6zm0 2c-3.87 0-11 1.94-11 5.82v2.18h22v-2.18c0-3.88-7.13-5.82-11-5.82z" />
                                         </svg>
