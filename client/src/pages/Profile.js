@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriend, removeFriendReq} from '../services/api';
+import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
 import Header from '../components/Header';
 import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
 

@@ -17,9 +17,8 @@ export default function FriendsList(props) {
         // Update friends list 
         getAllUsers().then((res) => {
             const users = res.data.data.filter((u) => {return u._id !== curUser._id})
-            setFriends(users.filter((u) => {return friendsIds.indexOf(u._id) != -1}));
+            setFriends(users.filter((u) => {return friendsIds.indexOf(u._id) !== -1}));
         });
-        console.log("friends;", friends);
     }, [curUser]); 
     
     return (

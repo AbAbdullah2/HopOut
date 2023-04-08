@@ -115,7 +115,6 @@ function CreateEvent(props) {
         const updUser = curUser.organizing ? {...curUser, organizing: [...curUser.organizing, res.data.data._id]}
         : {...curUser, organizing: [res.data.data._id]};
         setCurUser(updUser);
-        console.log( 'updated User:', updUser)
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not create event ' + event.title);
