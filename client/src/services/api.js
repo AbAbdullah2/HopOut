@@ -3,7 +3,7 @@ import axios from 'axios';
 const BASE_URL =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:6002'
-    : 'https://hopout.herokuapp.com';
+    : 'https://hopoutapi.herokuapp.com';
 
 // Get all users
 async function getAllUsers() {

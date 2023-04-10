@@ -17,7 +17,7 @@ function Chat(props) {
   const ENDPOINT =
   !process.env.NODE_ENV || process.env.NODE_ENV === 'development'
     ? 'http://localhost:6002'
-    : 'https://hopout.herokuapp.com';
+    : 'https://hopoutapi.herokuapp.com';
 
   const socket = io(ENDPOINT, {
     transports: ['websocket'], upgrade: false
