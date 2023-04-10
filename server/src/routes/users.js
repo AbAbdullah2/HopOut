@@ -126,7 +126,7 @@ router.post('/register', async (req, res, next) => {
   }
 });
 
-router.post('/verification', async (req, res) => {
+router.post('/verification', async (req, res, next) => {
   try {
     let { email, name } = req.body;
 
