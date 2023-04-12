@@ -12,6 +12,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
 import { Table, Dropdown } from 'flowbite-react';
 import RemoveInviteeConfirm from '../components/RemoveInviteeConfirm';
+import Comments from '../components/Comments';
 
 export default function EventDetail(props) {
  const {eventid} = useParams();
@@ -239,6 +240,13 @@ useEffect(() => {
         </Table>
         </div>
         }
+
+        <div className='px-4 py-2 m-2 bg-white rounded-md shadow-md'>
+        <div className="flex items-center justify-center mt-4">
+          <Comments event={event} /> 
+          </div>
+        </div>
+
        </div>
      </div>
    </div>
