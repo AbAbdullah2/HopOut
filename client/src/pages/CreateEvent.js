@@ -43,7 +43,6 @@ function CreateEvent(props) {
     organizer: curUser._id,
   });
 
-
   const [validated, setValidated] = useState(false);
 
   const [startDate, setStartDate] = useState("");

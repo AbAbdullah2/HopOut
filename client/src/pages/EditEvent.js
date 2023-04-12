@@ -54,7 +54,6 @@ function EditEvent(props) {
   const [inviteQuery, setInviteQuery] = useState('');
   const [users, setUsers] = useState([]);
 
-
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
