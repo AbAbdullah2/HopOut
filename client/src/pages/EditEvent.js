@@ -130,6 +130,10 @@ function EditEvent(props) {
       toast.error('Invalid address');
       return;
     }
+    if (event.capacity < event.attendees.length) {
+      toast.error('Capacity cannot be less than current number of attendees');
+      return;
+    }
     toast.success('Updating event...', {duration: 500});
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime); 
