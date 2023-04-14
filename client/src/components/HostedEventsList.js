@@ -32,7 +32,7 @@ export default function MyEventsList(props) {
                 const endDate = new Date(ev.end);
                 const now = Date.now();
                 return endDate < now;
-            }))
+            }));
         });
         console.log(events);
     }, [curUser]); 
