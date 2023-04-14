@@ -7,26 +7,42 @@ import { useNavigate } from 'react-router-dom'
 
 export default function MyEventsList(props) {
     const {curUser} = props;    
-    const [events, setEvents] = useState([]);
     const navigate = useNavigate();
 
+    const [pastEvents, setPastEvents] = useState([])
+    const [currentEvents, setCurrentEvents] = useState([])
+
     useEffect(() => {
-        // Update attended events list  
+        // Update hosted events list  
         getAllAttendedEvents(curUser._id).then((res) => {
-            setEvents(res.data.data);
+            const displayedEvents = res.data.data;
+
+            const past = displayedEvents.filter((ev) => {
+                const endDate = new Date(ev.end);
+                const now = Date.now();
+                return endDate < now;
+            });
+            setPastEvents(past);
+
+            const current = displayedEvents.filter((ev) => {
+                const endDate = new Date(ev.end);
+                const now = Date.now();
+                return endDate >= now;
+            });
+            setCurrentEvents(current);
         });
     }, [curUser]); 
 
 
     return (
     <div className="rounded overflow-hidden shadow bg-white">
-    <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Planning to Attend</div>
+    <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Planning To Attend</div>
 
     <div className='my-2 flex flex-col'>
         { 
-        events.length > 0 ? 
-        events.map((event) => 
-            <div className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
+        currentEvents.length > 0 ? 
+        currentEvents.map((event) => 
+            <div key={event._id} className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
                 <div>
                     <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-32 h-32' />
                 </div>
@@ -46,13 +62,13 @@ export default function MyEventsList(props) {
         
     </div>
 
-    <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Attended Events</div>
+    <div className="text-xl w-full px-4 py-2 border-b-2 font-semibold text-slate-900">Previously Attended Events</div>
 
     <div className='my-2 flex flex-col'>
         { 
-        events.length > 0 ? 
-        events.map((event) => 
-            <div className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
+        pastEvents.length > 0 ? 
+        pastEvents.map((event) => 
+            <div key={event._id} className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
                 <div>
                     <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-32 h-32' />
                 </div>
