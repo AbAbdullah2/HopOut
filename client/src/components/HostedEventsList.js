@@ -28,8 +28,11 @@ export default function MyEventsList(props) {
         getAllHostedEvents(curUser._id).then((res) => {
             const displayedEvents = self ? res.data.data : res.data.data.filter((ev) => { return ev.visibility === "public"});
             setEvents(displayedEvents);
-
-
+            setPastEvents(displayedEvents.filter((ev) => {
+                const endDate = new Date(ev.end);
+                const now = Date.now();
+                return endDate < now;
+            }))
         });
         console.log(events);
     }, [curUser]); 
