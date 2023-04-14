@@ -153,7 +153,7 @@ useEffect(() => {
           <Table.Body className="divide-y">
             {attendees.map((attendee) => {
               return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+attendee._id)}>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer" onClick={() => navigate("/profile/"+attendee._id)}>
                   {attendee.name}
                 </Table.Cell>
                 <Table.Cell onClick={() => navigate("/profile/"+attendee._id)}>
@@ -212,7 +212,7 @@ useEffect(() => {
             .filter((person) => toShow(person))
             .map((person) => {
               return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+person._id)}>
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer" onClick={() => navigate("/profile/"+person._id)}>
                   {person.name}
                 </Table.Cell>
                 <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
