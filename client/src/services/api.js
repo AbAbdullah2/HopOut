@@ -108,6 +108,14 @@ async function getAllHostedEvents(userId) {
   return response;
 }
 
+async function getAllAttendedEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/attendedEvents/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
 async function getEvent(eventId) {
   const response = await axios
     .get(`${BASE_URL}/events/${eventId}`)
@@ -283,6 +291,7 @@ export {
   removeFriend,
   updateUser,
   getAllHostedEvents, 
+  getAllAttendedEvents,
   emailVerification,
   getAllChats,
   getChat,

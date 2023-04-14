@@ -104,6 +104,26 @@ router.get('/users/hostedEvents/:id', async (req, res, next) => {
   }
 });
 
+router.get('/users/attendedEvents/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await userDao.read(id);
+    let events = [];
+    for (const eventId of user.attending) {
+      const event = await eventDao.read(eventId.toString());
+      events.push(event);
+    }
+
+    return res.json({
+      status: 200,
+      message: `Successfully retrieved the user's attended events!`,
+      data: events,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/register', async (req, res, next) => {
   try {
     let { email, name, password } = req.body;

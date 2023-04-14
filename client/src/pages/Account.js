@@ -4,6 +4,7 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Header from '../components/Header';
 import FriendsList from '../components/FriendsList';
 import HostedEventsList from '../components/HostedEventsList';
+import AttendedEventsList from '../components/AttendedEventsList';
 import NotFound from './NotFound';
 import { getUser } from '../services/api';
 import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
@@ -42,10 +43,13 @@ export default function Account(props) {
         </div>
         <div className=" align-top w-11/12 md:grid md:grid-cols-4 overflow-hidden break-all"> 
           <div className="m-auto col-span-3 p-2 align-top w-full h-full">
-            <HostedEventsList curUser={curUser} />
+            <HostedEventsList curUser={curUser} self={true}/>
           </div>
           <div className="m-auto col-span-1 p-2 align-top w-full h-full">
             <FriendsList curUser={curUser} triggerShow={triggerShow}/>
+          </div>
+          <div className="m-auto col-span-3 p-2 align-top w-full h-full">
+            <AttendedEventsList curUser={curUser} />
           </div>
         </div>
       </div>
