@@ -188,12 +188,6 @@ class EventDao {
         throw new ApiError(400, "Invalid Location Name!");
       }
     }
-    if (addressLine2 !== undefined) {
-      result = validString.safeParse(addressLine2);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid Address Line 2!");
-      }
-    }
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
