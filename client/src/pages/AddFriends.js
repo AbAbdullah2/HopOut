@@ -1,6 +1,7 @@
 import Header from '../components/Header';
 import React, { useState, useEffect } from 'react';
 import { getAllUsers, sendFriendReq } from "../services/api.js";
+import toast, { Toaster } from 'react-hot-toast';
 
 function AddFriends(props) {
     
@@ -42,6 +43,7 @@ function AddFriends(props) {
     }
 
     async function handleFriendReq(receiverId) {
+        toast.success('Sending friend request...', {duration: 10000});
         await sendFriendReq(curUser._id, receiverId);
         setResults(results.map(user => {
             if (user._id === receiverId) {
@@ -52,7 +54,6 @@ function AddFriends(props) {
             }
             return user;
         }));
-
     }
 
     const handleNextPage = () => {
@@ -70,6 +71,7 @@ function AddFriends(props) {
 
     return(
         <div className='bg-stone-100 min-h-screen'>
+            <Toaster/>
             <div className='mx-auto flex flex-col h-full space-y-4 text-center items-center justify-center'>
                 <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
                     <label htmlFor="default-search" className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
