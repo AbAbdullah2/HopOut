@@ -63,7 +63,7 @@ router.get('/users/privateEvents/:id', async (req, res, next) => {
     for (const eventId of user.invited) {
       const event = await eventDao.read(eventId.toString());
       if (event.visibility === 'private') {
-        events.push({ event });
+        events.push(event);
       }
     }
 
