@@ -64,6 +64,11 @@ const EventSchema = new mongoose.Schema(
       ref: 'User',
       required: true,
     }],
+    reviews: [{
+      rating: Number,
+      comment: String,
+      reviewer: mongoose.Schema.Types.ObjectId
+    }],
     categories: [{
       type: String,
     }], //consider making categories an enum type with certain catgeory options (including an 'other' option)
