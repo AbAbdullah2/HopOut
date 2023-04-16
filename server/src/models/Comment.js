@@ -17,7 +17,7 @@ const CommentSchema = new mongoose.Schema(
   }
 );
 
-const SectionSchema = new mongoose.Schema(
+const CommentSectionSchema = new mongoose.Schema(
   {
     event: 
       {

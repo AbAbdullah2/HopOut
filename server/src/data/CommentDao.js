@@ -34,6 +34,7 @@ class CommentSectionDao {
   // return the created comment
   async createComment({ eventId, commentSectionId, sender, message }) {
     //check message is valid
+    let senderValid = false;
     let result = validString.safeParse(comment);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Message!');
@@ -63,6 +64,17 @@ class CommentSectionDao {
       throw new ApiError(400, 'Event does not exist!')
     }
 
+    //check that commenter is on attendees list
+    event.attendees.forEach((a) => {
+      if (a.user.toString() === sender) {
+        senderValid = true;
+      }
+    });
+
+    if (senderValid === false) {
+      throw new ApiError(400, 'Commenter not attending event!')
+    }
+
     result = validObjectId.safeParse(commentSectionId.toString());
     if (!result.success) {
       console.log(result.error)
@@ -73,18 +85,12 @@ class CommentSectionDao {
     if (!event) {
       throw new ApiError(400, 'Comment section does not exist!')
     }
-    
-    // if (!(([0].toString() === (sender) || chat.users[1].toString() === (sender)) && (chat.users[0].toString() === (receiver) || chat.users[1].toString() === (receiver)))) {
-    //   throw new ApiError(400, 'Invalid Chat Users!');
-    // }
 
     const sendComment = {
       sender: sender,
       message: message,
     };
-    // const updatedChat = await Chat.findByIdAndUpdate(chatId, {
-    //   messages: chat.messages[0].push({ sender, receiver, message }),
-    // });
+   
     commentSection.comments.push(sendComment);
     commentSection.save(function (err) {
       if (err) {
@@ -94,45 +100,99 @@ class CommentSectionDao {
     return commentSection;
   }
 
-  // return a specific chat between two users
-  // throws ApiError if id is invalid or resource does not exist in our database
-  async readChat(eventId) {
-    //validate person1
-    const result = validObjectId.safeParse(id);
+
+  async readCommentSection(eventId) {
+    const result = validObjectId.safeParse(eventId);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid Event ID!');
+    }
+    const event = await Event.findById(id);
+    if (!event) {
+      throw new ApiError(404, 'Event not found!');
     }
 
-    //find chat
-    const commentSection = await CommentSection.findById(id);
-    if (!chat) {
+    const filter = {};
+    filter.event = eventId;
+    
+    const commentSection = await CommentSection.find(filter);
+    if (!commentSection) {
       throw new ApiError(404, 'Resource not found!');
     }
-
-    return chat;
+    return commentSection;
   }
 
-  async deleteChat(id) {
+
+  // NEED TO CALL BEFORE WE CALL DELETE EVENT
+  async deleteCommentSection({commentSectionId, eventId}) {
     //validate id
-    const result = validObjectId.safeParse(id);
+    const result = validObjectId.safeParse(commentSectionId);
     if (!result.success) {
-      throw new ApiError(400, 'Invalid ID!');
+      throw new ApiError(400, 'Invalid Comment Section ID!');
+    }
+    result = validObjectId.safeParse(eventId);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid Event ID!');
     }
 
-    let chat = await Chat.findByIdAndDelete(id)
-    // = await Chat.findByIdAndDelete(id);
-    if (!chat) {
+    let event = Event.findById(eventId);
+    if (!event) {
+      throw new ApiError(404, 'Event not found!')
+    }
+
+    let commentSection = await CommentSection.findByIdAndDelete(commentSectionId)
+    if (!commentSection) {
+      throw new ApiError(404, 'Comment section not found!');
+    }
+    
+    return commentSection;
+  }
+
+
+  async deleteComment({commentSectionId, commentId, senderId}) {
+    //validate id
+    const result = validObjectId.safeParse(commentSectionId);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid Comment Section ID!');
+    }
+    result = validObjectId.safeParse(commentId);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid Comment ID!');
+    }
+    result = validObjectId.safeParse(senderId);
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid Sender ID!');
+    }
+    let sender = await User.findById(senderId)
+    if (!sender) {
+      throw new ApiError(404, 'User not found!');
+    }
+
+    let commentSection = await CommentSection.findById(commentSectionId)
+    if (!commentSection) {
+      throw new ApiError(404, 'Comment section not found!');
+    }
+
+    if (!commentSection) {
       throw new ApiError(404, 'Resource not found!');
     }
 
-    return chat;
-  }
+    let commentIndex = commentSection.comments.findIndex((comment) => comment._id === commentId);
 
-  // delete all messages
-  async deleteAll() {
-    const chats = await Chat.deleteMany();
-    return chats;
+    if (!commentIndex) {
+      throw new ApiError(404, 'Comment not found!');
+    }
+
+    const comment = commentSection.comments.splice(commentIndex, commentIndex + 1);
+    commentSection.save(function (err) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log('Success!');
+      }
+    });
+    
+    return comment;
   }
 }
 
-export default ChatDao;
+export default CommentSectionDao;
