@@ -35,7 +35,7 @@ class CommentSectionDao {
   async createComment({ eventId, commentSectionId, sender, message }) {
     //check message is valid
     let senderValid = false;
-    let result = validString.safeParse(comment);
+    let result = validString.safeParse(message);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Message!');
     }
