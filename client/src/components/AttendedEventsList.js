@@ -31,8 +31,7 @@ export default function MyEventsList(props) {
             });
             setCurrentEvents(current);
         });
-    }, [curUser]); 
-
+    }, [curUser]);
 
     return (
     <div className="rounded overflow-hidden shadow bg-white">
