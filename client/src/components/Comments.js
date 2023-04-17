@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsers } from '../services/api';
+import { getAllUsers, getAllComments } from '../services/api';
 
 
 function Comments(props) {
     const { curUser, event } = props;
+    const commentSectionId = null;
     const [allUsers, setAllUsers] = useState([])
     const fakeComments = [
         {
@@ -32,7 +33,11 @@ function Comments(props) {
     useEffect(() => {
         getAllUsers().then((res) => {
             setAllUsers(res.data.data);
-        })  
+        }); 
+        getAllComments(event._id).then((res) => {
+            console.log("res from getAllComments: ", res);
+            setComments(res.data.data);
+        });
     }, []);
 
     useEffect(() => {

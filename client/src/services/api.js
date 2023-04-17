@@ -260,6 +260,29 @@ async function createChat(person1, person2) {
   return response;
 }
 
+// get all of events's comments by eventid
+async function getAllComments(eventId) {
+  const response = await axios
+    .get(`${BASE_URL}/getAllComments/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// delete comment from comment section 
+async function deleteComment(commentSectionId, commentId, senderId) {
+  const body = { senderId, commentId };
+
+  const response = await axios
+    .delete(`${BASE_URL}/deleteComment/${commentSectionId}`, body)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+
 export {
   sendInvite,
   unsendInvite,
@@ -288,6 +311,8 @@ export {
   getChat,
   sendMessage,
   createChat,
+  getAllComments,
+  deleteComment,
 };
 
 export const host = BASE_URL;
