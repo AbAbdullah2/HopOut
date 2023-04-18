@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import EventHostView from '../components/EventHostView';
 import EventAttendeeView from '../components/EventAttendeeView';
 import DeleteEventConfirm from '../components/DeleteEventConfirm';
+import CreateReview from '../components/CreateReview';
 import { formatEventDates } from '../helpers/FormatDate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
@@ -22,6 +23,7 @@ export default function EventDetail(props) {
  const [host, setHost] = useState(null);
  const [showConfirm, setShowConfirm] = useState(false);
  const [showUninviteConfirm, setShowUninviteConfirm] = useState(false);
+ const [showAddReviewConfirm, setShowAddReviewConfirm] = useState(false);
 
  const [atCapacity, setAtCapacity] = useState();
  const [rsvp, setRsvp] = useState(curUser.attending.includes(eventid));
@@ -57,36 +59,44 @@ useEffect(() => {
   }
 }, [curUser]);
 
- const toShow = (user) => {
-  if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
-    return false;
+  const toShow = (user) => {
+    if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
+      return false;
+    }
+    if (!checkedArray[1] && (!attendees.includes(user) && invitees.includes(user))) {
+      return false;
+    }
+    if (!checkedArray[2] && (attendees.includes(user) && !invitees.includes(user))) {
+      return false;
+    }
+    return true;
   }
-  if (!checkedArray[1] && (!attendees.includes(user) && invitees.includes(user))) {
-    return false;
-  }
-  if (!checkedArray[2] && (attendees.includes(user) && !invitees.includes(user))) {
-    return false;
-  }
-  return true;
- }
 
- const confirmRsvp = () => {
-   // set rsvp state to true, show toast message and rsvp in the backend
-   setRsvp(true);
-   rsvpToEvent(curUser._id, eventid).then((res) => {
-    setCurUser(res.data.data);
-  });
-   toast.success('Successfully RSVP\'d to this event!');   
-   setAttendeesCount(attendeesCount + 1);
- }
+  const canCreateReview = () => {
+    const endDate = new Date(event.end);
+    const alreadyHappened = endDate < Date.now();
+    const didAttend = event.attendees.includes(curUser._id);
+    const notReviewedYet = !event.reviews.map((rev) => {return rev.reviewer}).includes(curUser._id);
+    return alreadyHappened && didAttend && notReviewedYet;
+  }
 
- const getPeople = async () => {
-  const response = await getAllUsers();
-  const users = response.data.data;
-  setAttendees(users.filter((user) => {return user.attending.includes(eventid)}));
-  setAttendeesAndInvitees(users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)}));
-  setInvitees(users.filter((user) => {return user.invited.includes(eventid)}));
-}
+  const confirmRsvp = () => {
+    // set rsvp state to true, show toast message and rsvp in the backend
+    setRsvp(true);
+    rsvpToEvent(curUser._id, eventid).then((res) => {
+      setCurUser(res.data.data);
+    });
+    toast.success('Successfully RSVP\'d to this event!');   
+    setAttendeesCount(attendeesCount + 1);
+  }
+
+  const getPeople = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+    setAttendees(users.filter((user) => {return user.attending.includes(eventid)}));
+    setAttendeesAndInvitees(users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)}));
+    setInvitees(users.filter((user) => {return user.invited.includes(eventid)}));
+  }
 
  const cancelRsvpHelper = () => {
    // set rsvp state to false, show toast message and cancel rsvp in the backend
@@ -102,7 +112,8 @@ useEffect(() => {
  return event === null ? '' : (
    <div className='bg-stone-100 min-h-screen'>
      <Toaster />
-     <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/> 
+     <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/>
+     <CreateReview curUser={curUser} showConfirm={showAddReviewConfirm} closeModal={() => setShowAddReviewConfirm(false)} />
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
@@ -241,6 +252,7 @@ useEffect(() => {
         }
        </div>
        <div>
+        <div>{ canCreateReview() ? <button><FontAwesomeIcon icon={solid('plus')} className={"ml-10 text-2xl bg-blue-400 p-2 rounded-md"} onClick={() => {setShowAddReviewConfirm(true)}}/></button> : <span></span> }</div>
         <ReviewList event={event} />
        </div>
      </div>

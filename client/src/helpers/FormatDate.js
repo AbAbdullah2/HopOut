@@ -10,7 +10,7 @@ export function AMPM(date) {
 
 export function formatDate(date) {
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-  return (months[date.getMonth() + 1]) + ' ' + date.getDate();
+  return (months[date.getMonth()]) + ' ' + date.getDate();
 }
 
 export function formatEventDates(start, end) {
