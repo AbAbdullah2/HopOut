@@ -8,10 +8,16 @@ export default function CreateReview(props) {
   const [starsColored, setStarsColored] = useState(0);
   const [text, setText] = useState("");
 
+  const closeThisModal = () => {
+    setStarsColored(0);
+    setText("");
+    closeModal();
+  }
+
   return (
     <Modal
       show={showConfirm}
-      onClose={() => closeModal()}
+      onClose={() => closeThisModal()}
     >
       <Modal.Header>Add your review</Modal.Header>
       <Modal.Body>
@@ -25,10 +31,10 @@ export default function CreateReview(props) {
       </div>
       </Modal.Body>
       <Modal.Footer>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+        <span>{ starsColored > 0 ? <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
             Add review
-        </button>
-        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={() => closeModal()}>
+        </button> : <span></span> }</span>
+        <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={() => closeThisModal()}>
             Cancel
         </button>
         </Modal.Footer>
