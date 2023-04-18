@@ -113,7 +113,7 @@ useEffect(() => {
    <div className='bg-stone-100 min-h-screen'>
      <Toaster />
      <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/>
-     <CreateReview curUser={curUser} showConfirm={showAddReviewConfirm} closeModal={() => setShowAddReviewConfirm(false)} />
+     <CreateReview curUser={curUser} event={event} setEvent={setEvent} showConfirm={showAddReviewConfirm} closeModal={() => setShowAddReviewConfirm(false)} />
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
