@@ -2,28 +2,27 @@ import React, { useState } from 'react';
 import { Modal } from 'flowbite-react';
 import { updateEvent } from "../services/api.js";
 
-export default function CreateReview(props) {
+export default function EditReview(props) {
 
-  const {curUser, event, setEvent, showConfirm, closeModal} = props;
+  const {curUser, event, setEvent, review, showConfirm, closeModal} = props;
 
-  const [starsColored, setStarsColored] = useState(0);
-  const [text, setText] = useState("");
+  const [starsColored, setStarsColored] = useState(review.rating);
+  const [text, setText] = useState(review.comment);
 
-  const addYourReview = async () => {
+  const editYourReview = async () => {
     const thisReview = { rating: starsColored, comment: text, reviewer: curUser._id };
-    if (!event.reviews.map((rev) => rev.reviewer).includes(curUser._id)) {
-      let reviews = [...event.reviews, thisReview];
-      let ev = event;
-      ev.reviews = reviews;
-      const resp = await updateEvent(ev);
-      setEvent(resp.data.data);
-    }
+    let reviews = event.reviews.filter((rev) => {return rev.reviewer !== curUser._id});
+    reviews = [...reviews, thisReview];
+    let ev = event;
+    ev.reviews = reviews;
+    const resp = await updateEvent(ev);
+    setEvent(resp.data.data);
     closeModal();
   }
 
   const closeThisModal = () => {
-    setStarsColored(0);
-    setText("");
+    setStarsColored(review.rating);
+    setText(review.comment);
     closeModal();
   }
 
@@ -32,7 +31,7 @@ export default function CreateReview(props) {
       show={showConfirm}
       onClose={() => closeThisModal()}
     >
-      <Modal.Header>Add your review</Modal.Header>
+      <Modal.Header>Edit your review</Modal.Header>
       <Modal.Body>
       <div className="flex flex-col mb-3">
           <div className="flex flex-row items-center mb-3">
@@ -49,8 +48,8 @@ export default function CreateReview(props) {
       </div>
       </Modal.Body>
       <Modal.Footer>
-        <span>{ starsColored > 0 ? <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={addYourReview}>
-            Add review
+        <span>{ starsColored > 0 ? <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={editYourReview}>
+            Edit review
         </button> : <span></span> }</span>
         <button className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded" onClick={() => closeThisModal()}>
             Cancel

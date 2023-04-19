@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { getUser } from "../services/api.js";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
+import EditReview from "../components/EditReview.js";
+import DeleteReview from "../components/DeleteReview.js";
 
 export default function DisplayReview(props) {
 
-  const { review } = props;
+  const { review, curUser, event, setEvent } = props;
 
   const [user, setUser] = useState("");
+  const [showEditReviewConfirm, setShowEditReviewConfirm] = useState(false);
+  const [showDeleteReviewConfirm, setShowDeleteReviewConfirm] = useState(false);
 
   useEffect(() => {
     const getTheUser = async () => {
@@ -16,10 +22,20 @@ export default function DisplayReview(props) {
   }, [review]);
 
   return (
-    <div className="ml-10 mr-10 p-6 mb-6 text-base bg-white border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+    <div className="ml-10 mr-10 p-2 mb-2 text-base bg-white border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+      <EditReview curUser={curUser} event={event} setEvent={setEvent} review={review} showConfirm={showEditReviewConfirm} closeModal={() => setShowEditReviewConfirm(false)} />
+      <DeleteReview curUser={curUser} event={event} setEvent={setEvent} review={review} showConfirm={showDeleteReviewConfirm} closeModal={() => setShowDeleteReviewConfirm(false)} />
       <article>
         <div className="flex items-center mb-4 space-x-4">
           <div className="space-y-1 font-medium dark:text-white">
+              <span>
+                { curUser._id === review.reviewer ?
+                <div>
+                  <button className="ml-2" onClick={() => {setShowEditReviewConfirm(true)}}><FontAwesomeIcon icon={solid('pen')} /></button>
+                  <button className="ml-2" onClick={() => {setShowDeleteReviewConfirm(true)}}><FontAwesomeIcon icon={solid('trash')} /></button>
+                </div>
+                : <span></span> }
+              </span>
               <p>{user}</p>
           </div>
         </div>

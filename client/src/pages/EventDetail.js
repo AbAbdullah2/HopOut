@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import EventHostView from '../components/EventHostView';
 import EventAttendeeView from '../components/EventAttendeeView';
 import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import CreateReview from '../components/CreateReview';
 import { formatEventDates } from '../helpers/FormatDate';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { getEvent, getUser, getAllUsers } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
@@ -253,7 +253,7 @@ useEffect(() => {
        </div>
        <div>
         <div>{ canCreateReview() ? <button><FontAwesomeIcon icon={solid('plus')} className={"ml-10 text-2xl bg-blue-400 p-2 rounded-md"} onClick={() => {setShowAddReviewConfirm(true)}}/></button> : <span></span> }</div>
-        <ReviewList event={event} />
+        <ReviewList event={event} setEvent={setEvent} curUser={curUser} />
        </div>
      </div>
    </div>
