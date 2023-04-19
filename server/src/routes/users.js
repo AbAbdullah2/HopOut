@@ -203,7 +203,7 @@ router.put(`/users/:id`, async (req, res, next) => {
   try {
     const { id } = req.params;
     const { name, password, organizing, attending, invited } = req.body;
-    const user = await userDao.update({ id, name, password, organizing, attending, invited, reviews });
+    const user = await userDao.update({ id, name, password, organizing, attending, invited });
 
     res.json({
       status: 200,
