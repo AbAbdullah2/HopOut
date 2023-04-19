@@ -10,14 +10,13 @@ export default function DisplayReview(props) {
   useEffect(() => {
     const getTheUser = async () => {
       const resp = await getUser(review.reviewer);
-      console.log(resp.data.data);
       setUser(resp.data.data.name);
     }
     getTheUser();
   }, [review]);
 
   return (
-    <div className="ml-10 mr-10 outline">
+    <div className="ml-10 mr-10 p-6 mb-6 text-base bg-white border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
       <article>
         <div className="flex items-center mb-4 space-x-4">
           <div className="space-y-1 font-medium dark:text-white">

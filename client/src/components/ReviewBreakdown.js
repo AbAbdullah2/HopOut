@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 export default function ReviewBreakdown(props) {
 
@@ -33,38 +33,38 @@ export default function ReviewBreakdown(props) {
           <p className="ml-2 text-sm font-medium text-gray-900 dark:text-white">{rating} out of 5</p>
       </div>
       <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{event.reviews.length} total ratings</p>
-      <div className="flex items-center mt-4">
+      <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">5 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={`h-5 bg-yellow-400 rounded w-[${breakdown[4]}%]`}></div>
+              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[4] + "%]"}></div>
           </div>
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[4]}%`}</span>
       </div>
       <div className="flex items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">4 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={`h-5 bg-yellow-400 rounded w-[${breakdown[3]}%]`}></div>
+              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[3] + "%]"}></div>
           </div>
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[3]}%`}</span>
       </div>
       <div className="flex items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">3 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={`h-5 bg-yellow-400 rounded w-[${breakdown[2]}%]`}></div>
+              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[2] + "%]"}></div>
           </div>
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[2]}%`}</span>
       </div>
       <div className="flex items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">2 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={`h-5 bg-yellow-400 rounded w-[${breakdown[1]}%]`}></div>
+              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[1] + "%]"}></div>
           </div>
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[1]}%`}</span>
       </div>
       <div className="flex items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">1 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={`h-5 bg-yellow-400 rounded w-[${breakdown[0]}%]`}></div>
+              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[0] + "%]"}></div>
           </div>
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[0]}%`}</span>
       </div>
