@@ -26,7 +26,7 @@ export default function MyEventsList(props) {
         { 
         events.length > 0 ? 
         events.map((event) => 
-            <div className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
+            <div key={event._id} className="flex-grow my-2 mx-5 items-center text-center justify-center rounded-md flex flex-row hover:bg-gray-200 hover:cursor-pointer" onClick={()=> navigate('/events/'+ event._id)}>
                 <div>
                     <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-32 h-32' />
                 </div>

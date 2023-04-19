@@ -198,12 +198,87 @@ router.put(`/users/:id`, async (req, res, next) => {
 router.delete('/users/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    const user = await userDao.delete(id);
+    const user = await userDao.read(id);
+
+    // Delete from friended users 
+    for (const friendReq of user.friends) {
+      const friend = await userDao.read(friendReq.user.toString());
+      let friends = friend.friends
+      friends = friends.filter(f => f.user != id);
+      await userDao.update({...friend._doc, id: friend._doc._id.toString(), friends: friends});
+    }
+
+    // Delete from recievedFriends users 
+    for (const senderReq of user.receivedFriends) {
+      const sender = await userDao.read(senderReq.user.toString());
+      let sent = sender.sentFriends
+      sent = sent.filter(s => s.user != id);
+      await userDao.update({...sender._doc, id: sender._doc._id.toString(), sentFriends: sent});
+    }
+
+    // Delete from sentFriends users 
+    for (const receiverReq of user.sentFriends) {
+      const receiver = await userDao.read(receiverReq.user.toString());
+      let received = receiver.receivedFriends
+      received = received.filter(r => r.user != id);
+      await userDao.update({...receiver._doc, id: receiver._doc._id.toString(), receievedFriends: received});
+    }
+
+    // Delete from invited events 
+    for (const eventId of user.invited) {
+      const event = await eventDao.read(eventId.toString);
+      let invitees = event.invitees
+      const index = invitees.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        invited.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await eventDao.update({...event._doc, id: event._doc._id.toString(), invitees: invitees});
+    }
+
+    // Delete from attending events 
+    for (const eventId of user.attending) {
+      const event = await eventDao.read(eventId.toString());
+      let attendees = event.attendees
+      const index = attendees.indexOf(id);
+      if (index > -1) { // only splice array when item is found
+        attendees.splice(index, 1); // 2nd parameter means remove one item only
+      }
+      await eventDao.update({...event._doc, id: event._doc._id.toString(), attendees: attendees});
+    }
+
+    // Delete hosted events 
+    for (const eventId of user.organizing) {
+      const event = await eventDao.delete(eventId.toString());
+
+      // Delete from invited users 
+      for (const userId of event.invitees) {
+        const u = await userDao.read(userId.toString);
+        let invited = u.invited
+        const index = invited.indexOf(id);
+        if (index > -1) { // only splice array when item is found
+          invited.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        await userDao.update({...u._doc, id: u._doc._id.toString(), invited: invited});
+      }
+  
+      // Delete from attending users 
+      for (const userId of event.attendees) {
+        const u = await userDao.read(userId.toString());
+        let attending = u.attending
+        const index = attending.indexOf(id);
+        if (index > -1) { // only splice array when item is found
+          attending.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        await userDao.update({...u._doc, id: u._doc._id.toString(), attending: attending});
+      }
+    }
+
+    const delUser = await userDao.delete(id);
 
     return res.json({
       status: 200,
       message: `Successfully deleted the following user!`,
-      data: hidePassword(user),
+      data: hidePassword(delUser),
     });
   } catch (err) {
     next(err);
