@@ -19,7 +19,7 @@ export default function ReviewBreakdown(props) {
 
   const rating = computeRating();
 
-  const breakdown = [1, 2, 3, 4, 5].map((num) => {return percentReviewsWithRating(num);});
+  const breakdown = [1, 2, 3, 4, 5].map((num) => {return percentReviewsWithRating(num) + '%';});
 
   return (
     <div className="ml-10 mb-5">
@@ -36,37 +36,37 @@ export default function ReviewBreakdown(props) {
       <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">5 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[4] + "%]"}></div>
+              <div className={"h-5 bg-yellow-400 rounded"} style={{width: breakdown[4]}}></div>
           </div>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[4]}%`}</span>
+          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[4]}`}</span>
       </div>
-      <div className="flex items-center mt-4">
+      <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">4 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[3] + "%]"}></div>
+              <div className={"h-5 bg-yellow-400 rounded"} style={{width: breakdown[3]}}></div>
           </div>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[3]}%`}</span>
+          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[3]}`}</span>
       </div>
-      <div className="flex items-center mt-4">
+      <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">3 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[2] + "%]"}></div>
+              <div className={"h-5 bg-yellow-400 rounded"} style={{width: breakdown[2]}}></div>
           </div>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[2]}%`}</span>
+          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[2]}`}</span>
       </div>
-      <div className="flex items-center mt-4">
+      <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">2 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[1] + "%]"}></div>
+              <div className={"h-5 bg-yellow-400 rounded"} style={{width: breakdown[1]}}></div>
           </div>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[1]}%`}</span>
+          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[1]}`}</span>
       </div>
-      <div className="flex items-center mt-4">
+      <div className="flex flex-row items-center mt-4">
           <span className="text-sm font-medium text-blue-600 dark:text-blue-500">1 star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
-              <div className={"h-5 bg-yellow-400 rounded w-[" + breakdown[0] + "%]"}></div>
+              <div className={"h-5 bg-yellow-400 rounded"} style={{width: breakdown[0]}}></div>
           </div>
-          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[0]}%`}</span>
+          <span className="text-sm font-medium text-blue-600 dark:text-blue-500">{`${breakdown[0]}`}</span>
       </div>
     </div>
   );
