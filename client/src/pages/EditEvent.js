@@ -9,7 +9,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { updateEvent, getEvent, sendInvite, unsendInvite } from '../services/api';
+import { updateEvent, getEvent, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
@@ -82,7 +82,7 @@ function EditEvent(props) {
       setUsers(tusers);
       setInvitees([]);
     });
-  }, [event]);
+  }, [event, curUser]);
 
   const filteredPeople =
   inviteQuery === ''
