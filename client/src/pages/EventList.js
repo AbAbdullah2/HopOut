@@ -20,9 +20,6 @@ export function EventList(props) {
 
   const [friendFilters, setFriendFilters] = useState([]);
 
-  const [dateFilter, setDateFilter] = useState([]);
-
-  //const [startDate, setStartDate] = useState((new Date(Date.now())).getFullYear() + "-" + (new Date(Date.now())).getMonth() + "-" + (new Date(Date.now())).getDay());
   const [startDate, setStartDate] = useState(new Date(Date.now()));
 
   const navigate = useNavigate();
