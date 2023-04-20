@@ -9,7 +9,6 @@ import Map from '../components/Map';
 import { Switch } from '@headlessui/react';
 import Datepicker from "react-tailwindcss-datepicker";
 
-
 export function EventList(props) {
   const { curUser, setCurUser} = props;
   const [eventList, setEventList] = useState([]);
