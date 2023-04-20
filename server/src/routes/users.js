@@ -63,7 +63,7 @@ router.get('/users/privateEvents/:id', async (req, res, next) => {
     for (const eventId of user.invited) {
       const event = await eventDao.read(eventId.toString());
       if (event.visibility === 'private') {
-        events.push({ event });
+        events.push(event);
       }
     }
 
@@ -97,6 +97,26 @@ router.get('/users/hostedEvents/:id', async (req, res, next) => {
     return res.json({
       status: 200,
       message: `Successfully retrieved the user's hosted events!`,
+      data: events,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/users/attendedEvents/:id', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const user = await userDao.read(id);
+    let events = [];
+    for (const eventId of user.attending) {
+      const event = await eventDao.read(eventId.toString());
+      events.push(event);
+    }
+
+    return res.json({
+      status: 200,
+      message: `Successfully retrieved the user's attended events!`,
       data: events,
     });
   } catch (err) {
