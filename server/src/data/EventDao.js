@@ -15,7 +15,7 @@ const validNumber = z.number().positive('Invalid capacity!');
 class EventDao {
 
   // return the created event
-  async create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, organizer, capacity, categories, attendees, invitees, coverId, thumbnailId }) {
+  async create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, organizer, capacity, categories, attendees, invitees, reviews, coverId, thumbnailId }) {
     
     //check name is valid
     let result = validString.safeParse(name);
@@ -93,9 +93,11 @@ class EventDao {
       }
     }) : categories = [];
 
+    reviews = [];
+
     //create event
     const event = await Event.create({ name, start, end, locationName, location, addressLine2, description, visibility, organizer, capacity, categories, 
-        attendees: attendees, invitees: invitees, coverId, thumbnailId});
+        attendees: attendees, invitees: invitees, coverId, thumbnailId, reviews});
     return event;
   }
 
@@ -148,6 +150,7 @@ class EventDao {
     capacity,
     attendees,
     invitees,
+    reviews,
     coverId,
     thumbnailId,
   }) {
@@ -277,6 +280,23 @@ class EventDao {
       }
     }
 
+    if (reviews !== undefined) {
+      for (const review of reviews) {
+        result = validNumber.safeParse(review.rating);
+        if (!result.success || !Number.isInteger(review.rating) || review.rating < 1 || review.rating > 5) {
+          throw new ApiError(400, 'Invalid rating in reviews!');
+        }
+        result = validString.safeParse(review.comment);
+        if (!result.success) {
+          throw new ApiError(400, 'Invalid comment in reviews!');
+        }
+        const u = await User.findById(review.reviewer);
+        if (!u) {
+          throw new ApiError(400, 'Invalid reviewer in reviews!');
+        }
+      }
+    }
+
     //update event
     const event = await Event.findByIdAndUpdate(
       id,
@@ -294,6 +314,7 @@ class EventDao {
         capacity,
         attendees,
         invitees,
+        reviews,
         coverId,
         thumbnailId,
       },
