@@ -80,12 +80,30 @@ export function EventList(props) {
     return filtered;
   }
 
+  const checkSize = () => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 768) {
+        setListActive(true);
+      }
+    }
+  }
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      checkSize();
+      window.addEventListener('resize', checkSize);  
+      return(() => {
+          window.removeEventListener('resize', checkSize);
+      })
+    }
+  }, [listActive]);
+
   return (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-        <div className={'mt-5 w-11/12 flex flex-row flex-nowrap justify-between'}>
-          <div className='flex flex-row'>
+        <div className={'mt-5 w-11/12 items-center flex flex-row flex-nowrap justify-between'}>
+          <div className='flex flex-row invisible md:visible'>
             <Switch
               checked={listActive}
               onChange={setListActive}
