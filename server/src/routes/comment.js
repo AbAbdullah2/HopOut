@@ -1,5 +1,5 @@
 import express from 'express';
-import CommentSectionDao from '../data/CommentSectionDao.js';
+import CommentSectionDao from '../data/CommentDao.js';
 import UserDao from '../data/UserDao.js';
 import EventDao from '../data/EventDao.js';
 import ApiError from '../models/ApiError.js';

@@ -33,9 +33,20 @@ class CommentSectionDao {
 
   // return the created comment
   async createComment({ eventId, commentSectionId, sender, message }) {
-    //check message is valid
+    let result = validObjectId.safeParse(commentSectionId.toString());
+    if (!result.success) {
+      throw new ApiError(400, 'Invalid commentSectionId!');
+    }
+
+    const commentSection = await CommentSection.findById(commentSectionId);
+    if (!commentSection) {
+      throw new ApiError(400, 'Comment section does not exist!')
+    }
+    
     let senderValid = false;
-    let result = validString.safeParse(message);
+    
+    //check message is valid
+    result = validString.safeParse(message);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Message!');
     }
@@ -55,35 +66,31 @@ class CommentSectionDao {
     //check eventId is valid
     result = validObjectId.safeParse(eventId.toString());
     if (!result.success) {
-      console.log(result.error)
       throw new ApiError(400, 'Invalid EventId!');
     }
+
 
     const event = await Event.findById(eventId);
     if (!event) {
       throw new ApiError(400, 'Event does not exist!')
     }
 
+
     //check that commenter is on attendees list
     event.attendees.forEach((a) => {
-      if (a.user.toString() === sender) {
+      if (a.toString() === sender) {
         senderValid = true;
       }
     });
 
+    if (event.organizer.toString() === sender) {
+      senderValid = true;
+    }
+
+
+
     if (senderValid === false) {
       throw new ApiError(400, 'Commenter not attending event!')
-    }
-
-    result = validObjectId.safeParse(commentSectionId.toString());
-    if (!result.success) {
-      console.log(result.error)
-      throw new ApiError(400, 'Invalid commentSectionId!');
-    }
-
-    const commentSection = await CommentSection.findById(commentSectionId);
-    if (!event) {
-      throw new ApiError(400, 'Comment section does not exist!')
     }
 
     const sendComment = {
@@ -159,6 +166,7 @@ class CommentSectionDao {
       throw new ApiError(400, 'Invalid Comment ID!');
     }
     result = validObjectId.safeParse(senderId);
+    console.log("SENDER ID", senderId)
     if (!result.success) {
       throw new ApiError(400, 'Invalid Sender ID!');
     }
