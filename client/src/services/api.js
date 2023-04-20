@@ -34,6 +34,17 @@ async function register(user) {
   return response;
 }
 
+// Delete user / account 
+async function deleteAccount(id) {
+  const response = await axios
+    .delete(`${BASE_URL}/users/${id}`, id)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+
 async function emailVerification(user) {
   const response = await axios.post(`${BASE_URL}/verification`, user)
     .catch(function (error) {
@@ -276,6 +287,7 @@ export {
   getAllUsers,
   getUser,
   register,
+  deleteAccount,
   postLogin,
   deleteUser,
   getAllPublicEvents,
