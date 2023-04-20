@@ -279,6 +279,36 @@ async function createChat(person1, person2) {
   return response;
 }
 
+// create comment section for event
+async function createCommentSection(eventId) {
+  console.log("creating comment section: ", eventId);
+  const response = await axios
+    .post(`${BASE_URL}/commentSection/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  console.log("response", response);
+  return response;
+}
+
+// Post comment
+async function createComment(eventId, commentSectionId, sender, message) {
+  console.log("creating comment: ", commentSectionId);
+  const body = {
+    eventId,
+    commentSectionId,
+    sender,
+    message,
+  };
+  const response = await axios
+    .post(`${BASE_URL}/comment/${commentSectionId}`, body)
+    .catch(function (error) {
+      console.log(error);
+  });
+  console.log("response", response);
+  return response;
+}
+
 // get all of events's comments by eventid
 async function getAllComments(eventId) {
   const response = await axios
@@ -332,6 +362,8 @@ export {
   getChat,
   sendMessage,
   createChat,
+  createCommentSection,
+  createComment,
   getAllComments,
   deleteComment,
 };

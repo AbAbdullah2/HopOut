@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllUsers, getAllComments } from '../services/api';
+import { getAllUsers, getAllComments, createComment, deleteComment} from '../services/api';
+import { Menu } from '@headlessui/react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 
 
 function Comments(props) {
     const { curUser, event } = props;
-    const commentSectionId = null;
     const [allUsers, setAllUsers] = useState([])
+    const [commentText, setCommentText] = useState("");
     const fakeComments = [
         {
             _id: "uid",
@@ -28,85 +31,123 @@ function Comments(props) {
         }
 
     ]
-    const [comments, setComments] = event && event.comments ? event.comments : fakeComments;
+
+    const [commentSection, setCommentSection] = useState(null);
 
     useEffect(() => {
+        console.log("useeffectcalled:")
         getAllUsers().then((res) => {
             setAllUsers(res.data.data);
         }); 
         getAllComments(event._id).then((res) => {
-            console.log("res from getAllComments: ", res);
-            setComments(res.data.data);
+            console.log("get all comments res.data.data ", res.data)
+
+            if (res.data.data.length && res.data.data.length > 0) {
+                // setComments(res.data.data[0].comments);
+                console.log("get all comments res.data.data ", res.data.data)
+                setCommentSection(res.data.data[0])
+            }
         });
     }, []);
 
     useEffect(() => {
         
-    }, [comments]);
+    }, [commentSection]);
 
-    const handlePostComment = () => {
-        
+    const handlePostComment = async (e) => {
+        // console.log('posting comment!', e);
+        e.preventDefault();
+        console.log("e: ", e);
+        console.log("commentText: ", commentText);
+        console.log("commentSection: ", commentSection);
+        createComment(event._id, commentSection._id, curUser._id, commentText).then((res) => {
+            console.log("res.data: ", res.data);
+            setCommentSection(res.data.data);
+        });
     };
 
-    return (
-        <div className="relative">
-            <section className="dark:bg-gray-900 py-3" >
-            <div className="max-w-2xl mx-auto px-2">
-                <div className="flex justify-between items-center mb-3">
-                    <h4 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments ({event && event.comments ? event.comments.length : 0})</h4>
-                </div>
-                <form className="mb-6" onSubmit={handlePostComment}>
-                    <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                        <label for="comment" className="sr-only">Your comment</label>
-                        <textarea id="comment" rows="6"
-                            className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                            placeholder="Write a comment..." required></textarea>
+    const handleDelete = (comment) => {
+        deleteComment(commentSection._id, comment._id, curUser._id).then((res) => {
+            console.log("deletecomment res: ", res);
+            if (res.status == 200) {
+                let newComments = commentSection.comments;
+                newComments = newComments.filter(c => c._id != res.data.data._id);
+                console.log("setting new comments to: ", newComments);
+          
+                setCommentSection({...commentSection, comments: newComments});
+            }
+        });
+    };
+            
+        return (
+            <div className="relative w-full" >
+                <section className="dark:bg-gray-900 py-3" >
+                {(!curUser.attending.includes(event._id)) ? 
+                    <div className="max-w-2xl mx-auto px-2">
+                        
+                    <div className="flex justify-between items-center mb-3 w-full">
+                        <h4 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments ({commentSection ? commentSection.comments.length : 0})</h4>
                     </div>
-                    <button type="submit"
-                        className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                        Post comment
-                    </button>
-                </form>
-                { 
-                fakeComments.map((comment) => (
-                    <article className="p-6 mb-3 text-base bg-white rounded-lg dark:bg-gray-900">
-                    <footer className="flex justify-between items-center mb-2">
-                        <div className="flex items-center">
-                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">{allUsers && allUsers.find(user => user._id === comment.author) ? allUsers.find(user => user._id === comment.author).name : ""}</p>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                                {comment.date.toDateString()}
-                            </p>
+                    <form className="mb-6 w-full" onSubmit={handlePostComment}>
+                        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                            <label for="comment" className="sr-only">Your comment</label>
+                            <textarea id="comment" rows="6"
+                                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                placeholder="Write a comment..." required onChange={(e) => {setCommentText(e.target.value); console.log("e", e.target.value);}}>{commentText}</textarea>
                         </div>
-                        <button id="dropdownComment1Button" data-dropdown-toggle="dropdownComment1"
-                            className="inline-flex items-center p-2 text-sm font-medium text-center text-gray-400 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-50 dark:bg-gray-900 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                            type="button">
-                            <svg className="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z">
-                                </path>
-                            </svg>
-                            <span className="sr-only">Comment settings</span>
+                        <button type="submit"
+                            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                            Post comment
                         </button>
-                    </footer>
-                    <p className="text-gray-500 dark:text-gray-400">{comment ? comment.text : ""}</p>
-                    <div className="flex items-center mt-4 space-x-4">
-                        {/* <button type="button"
-                            className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
-                            <svg aria-hidden="true" className="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                            Reply
-                        </button> */}
+                    </form>
+                    { commentSection ? 
+                    commentSection.comments.map((comment) => (
+                        <article key={comment._id} className="p-6 mb-3 text-base bg-white rounded-lg dark:bg-gray-900">
+                        <footer className="flex justify-between items-center mb-2">
+                            <div className="flex items-center">
+                                <a href={`/profile/${allUsers && allUsers.find(user => user._id === comment.sender) ? allUsers.find(user => user._id === comment.sender)._id : ""}`}>
+                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">{allUsers && allUsers.find(user => user._id === comment.sender) ? allUsers.find(user => user._id === comment.sender).name : ""}</p>
+                                </a>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {new Date(comment.createdAt).toLocaleString()}
+                                </p>
+                            </div>
+                            {comment.sender === curUser._id ?  
+                            <Menu>
+                                <Menu.Button>
+                                <div className='opacity-60 hover:opacity-90'><FontAwesomeIcon icon={solid('ellipsis-vertical')} className="px-1" /></div>
+                                </Menu.Button>
+                                <Menu.Items className="absolute right-0 mt-2 w-fill origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                  <Menu.Item className="p-2 w-full hover:bg-blue-200 text-sm">
+                                    {({ active }) => (
+                                        <button onClick={() => handleDelete(comment)} >
+                                        Delete 
+                                        </button>
+                                    //   </a>
+                                    )}
+                                  </Menu.Item>
+                                </Menu.Items>
+                              </Menu>
+                          
+                            
+                             : <></>
+                            }
+                        </footer>
+                        <p className="text-gray-500 dark:text-gray-400">{comment ? comment.message : ""}</p>
+                    </article>
+                    )) : <></>
+                    }
+                    </div> 
+                :
+                <div className="max-w-2xl mx-auto px-2">
+                    <div className="flex justify-between items-center mb-3 w-full">
+                        <h2 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">RSVP to event to view and post comments!</h2>
                     </div>
-                </article>
-                ))
-
+                </div>
                 }
-
+                </section>
             </div>
-            </section>
-        </div>
-    );
-
+        ); 
 }
 
 export default Comments;
