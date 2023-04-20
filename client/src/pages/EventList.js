@@ -138,7 +138,7 @@ export function EventList(props) {
             displayFormat={"MM/DD/YYYY"}
             asSingle={true}
             value={{startDate: startDate, endDate: startDate}}
-            onChange={(e) => {setStartDate(e.startDate); console.log(startDate);}}
+            onChange={(e) => {setStartDate(e.startDate)}}
             />
           </div>
           <div className='justify-end content-end items-end right-0'>
