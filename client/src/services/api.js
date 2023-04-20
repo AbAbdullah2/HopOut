@@ -34,6 +34,17 @@ async function register(user) {
   return response;
 }
 
+// Delete user / account 
+async function deleteAccount(id) {
+  const response = await axios
+    .delete(`${BASE_URL}/users/${id}`, id)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+
 async function emailVerification(user) {
   const response = await axios.post(`${BASE_URL}/verification`, user)
     .catch(function (error) {
@@ -102,6 +113,14 @@ async function getAllPrivateEvents(userId) {
 // get all hosted events
 async function getAllHostedEvents(userId) {
   const response = await axios.get(`${BASE_URL}/users/hostedEvents/${userId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+async function getAllAttendedEvents(userId) {
+  const response = await axios.get(`${BASE_URL}/users/attendedEvents/${userId}`)
     .catch(function (error) {
       console.log(error);
     });
@@ -291,6 +310,7 @@ export {
   getAllUsers,
   getUser,
   register,
+  deleteAccount,
   postLogin,
   deleteUser,
   getAllPublicEvents,
@@ -306,6 +326,7 @@ export {
   removeFriend,
   updateUser,
   getAllHostedEvents, 
+  getAllAttendedEvents,
   emailVerification,
   getAllChats,
   getChat,

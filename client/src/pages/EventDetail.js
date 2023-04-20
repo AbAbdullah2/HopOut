@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import EventHostView from '../components/EventHostView';
 import EventAttendeeView from '../components/EventAttendeeView';
 import DeleteEventConfirm from '../components/DeleteEventConfirm';
 import { formatEventDates } from '../helpers/FormatDate';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { getEvent, getUser, getAllUsers } from '../services/api';
 import toast, { Toaster } from 'react-hot-toast';
 import { rsvpToEvent, cancelRsvp } from '../services/api';
 import { Table, Dropdown } from 'flowbite-react';
 import RemoveInviteeConfirm from '../components/RemoveInviteeConfirm';
 import Comments from '../components/Comments';
+import ReviewList from "../components/ReviewList.js";
 
 export default function EventDetail(props) {
  const {eventid} = useParams();
@@ -57,36 +58,36 @@ useEffect(() => {
   }
 }, [curUser]);
 
- const toShow = (user) => {
-  if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
-    return false;
+  const toShow = (user) => {
+    if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
+      return false;
+    }
+    if (!checkedArray[1] && (!attendees.includes(user) && invitees.includes(user))) {
+      return false;
+    }
+    if (!checkedArray[2] && (attendees.includes(user) && !invitees.includes(user))) {
+      return false;
+    }
+    return true;
   }
-  if (!checkedArray[1] && (!attendees.includes(user) && invitees.includes(user))) {
-    return false;
-  }
-  if (!checkedArray[2] && (attendees.includes(user) && !invitees.includes(user))) {
-    return false;
-  }
-  return true;
- }
 
- const confirmRsvp = () => {
-   // set rsvp state to true, show toast message and rsvp in the backend
-   setRsvp(true);
-   rsvpToEvent(curUser._id, eventid).then((res) => {
-    setCurUser(res.data.data);
-  });
-   toast.success('Successfully RSVP\'d to this event!');   
-   setAttendeesCount(attendeesCount + 1);
- }
+  const confirmRsvp = () => {
+    // set rsvp state to true, show toast message and rsvp in the backend
+    setRsvp(true);
+    rsvpToEvent(curUser._id, eventid).then((res) => {
+      setCurUser(res.data.data);
+    });
+    toast.success('Successfully RSVP\'d to this event!');   
+    setAttendeesCount(attendeesCount + 1);
+  }
 
- const getPeople = async () => {
-  const response = await getAllUsers();
-  const users = response.data.data;
-  setAttendees(users.filter((user) => {return user.attending.includes(eventid)}));
-  setAttendeesAndInvitees(users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)}));
-  setInvitees(users.filter((user) => {return user.invited.includes(eventid)}));
-}
+  const getPeople = async () => {
+    const response = await getAllUsers();
+    const users = response.data.data;
+    setAttendees(users.filter((user) => {return user.attending.includes(eventid)}));
+    setAttendeesAndInvitees(users.filter((user) => {return user.attending.includes(eventid) || user.invited.includes(eventid)}));
+    setInvitees(users.filter((user) => {return user.invited.includes(eventid)}));
+  }
 
  const cancelRsvpHelper = () => {
    // set rsvp state to false, show toast message and cancel rsvp in the backend
@@ -102,7 +103,7 @@ useEffect(() => {
  return event === null ? '' : (
    <div className='bg-stone-100 min-h-screen'>
      <Toaster />
-     <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/> 
+     <RemoveInviteeConfirm uninvited={uninvited} event={event} setEvent={setEvent} showConfirm={showUninviteConfirm} closeModal={() => setShowUninviteConfirm(false)}/>
      <div className='mx-auto flex flex-col h-full'>
        <DeleteEventConfirm curUser={curUser} setCurUser={setCurUser} eventid={eventid} showConfirm={showConfirm} setShowConfirm={setShowConfirm}/>
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
@@ -132,38 +133,37 @@ useEffect(() => {
            {event.categories.map((c, i) => {
              return <div key={i} className="bg-blue-400 px-4 py-2 rounded-full items-center leading-none w-fit lg:rounded-full flex lg:inline-flex mr-2">{c}</div>
            })}
-         </div>
-         
-         <hr className='my-4 bg-stone-800 h-1' />
-         <p className='m-2 font-bold text-slate-700'>Event description</p>  
-         <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
+        </div>
+        <hr className='my-4 bg-stone-800 h-1' />
+        <p className='m-2 font-bold text-slate-700'>Event description</p>  
+        <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
           <p className='my-2'>{event.description}</p>  
-         </div> 
-         {event.organizer !== curUser._id ? 
-          <div className='mt-4 mx-2'>
+        </div> 
+        {event.organizer !== curUser._id ? 
+        <div className='mt-4 mx-2'>
           <p className='font-bold text-slate-700 my-2'>Attendees</p>
-         <Table striped={true}>
-          <Table.Head>
-            <Table.HeadCell>
-              Name
-            </Table.HeadCell>
-            <Table.HeadCell>
-              Email
-            </Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {attendees.map((attendee) => {
-              return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+attendee._id)}>
-                  {attendee.name}
-                </Table.Cell>
-                <Table.Cell onClick={() => navigate("/profile/"+attendee._id)}>
-                  {attendee.email}
-                </Table.Cell>
-              </Table.Row>);
-            })}
-          </Table.Body>
-        </Table>
+          <Table striped={true}>
+            <Table.Head>
+              <Table.HeadCell>
+                Name
+              </Table.HeadCell>
+              <Table.HeadCell>
+                Email
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {attendees.map((attendee) => {
+                return (<Table.Row key={attendee._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer" onClick={() => navigate("/profile/"+attendee._id)}>
+                    {attendee.name}
+                  </Table.Cell>
+                  <Table.Cell onClick={() => navigate("/profile/"+attendee._id)}>
+                    {attendee.email}
+                  </Table.Cell>
+                </Table.Row>);
+              })}
+            </Table.Body>
+          </Table>
         </div>
         :
         <div className='mt-4 mx-2'>
@@ -190,54 +190,54 @@ useEffect(() => {
               </Dropdown>
             </div>
           </div>
-         <Table striped={true}>
-          <Table.Head>
-            <Table.HeadCell>
-              Name
-            </Table.HeadCell>
-            <Table.HeadCell>
-              Email
-            </Table.HeadCell>
-            <Table.HeadCell>
-              Attending?
-            </Table.HeadCell>
-            <Table.HeadCell>
-              Invited?
-            </Table.HeadCell>
-            <Table.HeadCell>
-               Delete
-            </Table.HeadCell>
-          </Table.Head>
-          <Table.Body className="divide-y">
-            {attendeesAndInvitees
-            .filter((person) => toShow(person))
-            .map((person) => {
-              return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white" onClick={() => navigate("/profile/"+person._id)}>
-                  {person.name}
-                </Table.Cell>
-                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
-                  {person.email}
-                </Table.Cell>
-                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
-                  {person.attending.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
-                </Table.Cell>
-                <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
-                  {person.invited.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
-                </Table.Cell>
-                <Table.Cell>
-                  <button className="inline-flex font-bold py-2 px-4 rounded-full" 
-                  onClick={() => {
-                    setUninvited(person);
-                    setShowUninviteConfirm(true);
-                  }}>
-                    <FontAwesomeIcon className='text-xl' icon={solid('trash')} />
-                  </button>
-                </Table.Cell>
-              </Table.Row>);
-            })}
-          </Table.Body>
-        </Table>
+          <Table striped={true}>
+            <Table.Head>
+              <Table.HeadCell>
+                Name
+              </Table.HeadCell>
+              <Table.HeadCell>
+                Email
+              </Table.HeadCell>
+              <Table.HeadCell>
+                Attending?
+              </Table.HeadCell>
+              <Table.HeadCell>
+                Invited?
+              </Table.HeadCell>
+              <Table.HeadCell>
+                Delete
+              </Table.HeadCell>
+            </Table.Head>
+            <Table.Body className="divide-y">
+              {attendeesAndInvitees
+              .filter((person) => toShow(person))
+              .map((person) => {
+                return (<Table.Row key={person._id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white cursor-pointer" onClick={() => navigate("/profile/"+person._id)}>
+                    {person.name}
+                  </Table.Cell>
+                  <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
+                    {person.email}
+                  </Table.Cell>
+                  <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
+                    {person.attending.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
+                  </Table.Cell>
+                  <Table.Cell onClick={() => navigate("/profile/"+person._id)}>
+                    {person.invited.includes(event._id) ? <FontAwesomeIcon className='text-xl text-green-600' icon={solid('circle-check')} /> : <FontAwesomeIcon className='text-xl text-red-600' icon={solid('circle-xmark')} />}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <button className="inline-flex font-bold py-2 px-4 rounded-full" 
+                    onClick={() => {
+                      setUninvited(person);
+                      setShowUninviteConfirm(true);
+                    }}>
+                      <FontAwesomeIcon className='text-xl' icon={solid('trash')} />
+                    </button>
+                  </Table.Cell>
+                </Table.Row>);
+              })}
+            </Table.Body>
+          </Table>
         </div>
         }
 
@@ -247,6 +247,9 @@ useEffect(() => {
           </div>
         </div>
 
+       </div>
+       <div>
+        <ReviewList event={event} setEvent={setEvent} curUser={curUser} />
        </div>
      </div>
    </div>

@@ -120,6 +120,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity,
       attendees,
       invitees,
+      reviews,
       coverId, 
       thumbnailId
     } = req.body;
@@ -145,6 +146,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       capacity: updatedCapacity,
       attendees,
       invitees,
+      reviews,
       coverId, 
       thumbnailId
     });

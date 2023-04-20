@@ -21,7 +21,7 @@ export default function Notifications(props) {
     getUser(curUser._id).then((res) => {
       updateCurUser(res.data.data);
     });
-  }, [curUser, updateCurUser]);
+  }, [updateCurUser]);
 
   useEffect(() => {
     getAllUsers().then(userData => {
@@ -39,7 +39,6 @@ export default function Notifications(props) {
             return (curUser.invited.includes(event._id) && !curUser.attending.includes(event._id));
         }));
     });
-
   }, [curUser]);
 
   useEffect(() => {
