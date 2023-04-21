@@ -54,9 +54,8 @@ function Comments(props) {
         return (
             <div className="relative w-full" >
                 <section className="dark:bg-gray-900 py-3" >
-                {(!curUser.attending.includes(event._id)) ? 
+                {(curUser.attending.includes(event._id) || curUser.organizing.includes(event._id)) ? 
                     <div className="max-w-2xl mx-auto px-2">
-                        
                     <div className="flex justify-between items-center mb-3 w-full">
                         <h4 className="text-lg lg:text-2xl font-bold text-gray-900 dark:text-white">Comments ({commentSection ? commentSection.comments.length : 0})</h4>
                     </div>
