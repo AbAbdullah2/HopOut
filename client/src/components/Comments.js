@@ -73,6 +73,7 @@ function Comments(props) {
                     </form>
                     { commentSection ? 
                     commentSection.comments.map((comment) => (
+                        <div className="relative">
                         <article key={comment._id} className="p-6 mb-3 text-base bg-white rounded-lg dark:bg-gray-900">
                         <footer className="flex justify-between items-center mb-2">
                             <div className="flex items-center">
@@ -84,28 +85,26 @@ function Comments(props) {
                                 </p>
                             </div>
                             {comment.sender === curUser._id ?  
+                            <div className="absolute top-0 right-0">
                             <Menu>
                                 <Menu.Button>
                                 <div className='opacity-60 hover:opacity-90'><FontAwesomeIcon icon={solid('ellipsis-vertical')} className="px-1" /></div>
                                 </Menu.Button>
                                 <Menu.Items className="absolute right-0 mt-2 w-fill origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                  <Menu.Item className="p-2 w-full hover:bg-blue-200 text-sm">
-                                    {({ active }) => (
+                                  <Menu.Item className="p-2 w-fill hover:bg-blue-200 text-sm">
                                         <button onClick={() => handleDelete(comment)} >
-                                        Delete 
+                                        Delete
                                         </button>
-                                    //   </a>
-                                    )}
                                   </Menu.Item>
                                 </Menu.Items>
-                              </Menu>
-                          
-                            
+                              </Menu>   
+                              </div>                         
                              : <></>
                             }
                         </footer>
                         <p className="text-gray-500 dark:text-gray-400">{comment ? comment.message : ""}</p>
                     </article>
+                    </div>
                     )) : <></>
                     }
                     </div> 
