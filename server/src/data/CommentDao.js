@@ -113,7 +113,7 @@ class CommentSectionDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid Event ID!');
     }
-    const event = await Event.findById(id);
+    const event = await Event.findById(eventId);
     if (!event) {
       throw new ApiError(404, 'Event not found!');
     }
