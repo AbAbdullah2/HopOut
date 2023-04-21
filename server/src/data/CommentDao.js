@@ -129,7 +129,6 @@ class CommentSectionDao {
   }
 
 
-  // NEED TO CALL BEFORE WE CALL DELETE EVENT
   async deleteCommentSection({commentSectionId, eventId}) {
     //validate id
     let result = validObjectId.safeParse(commentSectionId.toString());
@@ -166,7 +165,7 @@ class CommentSectionDao {
       throw new ApiError(400, 'Invalid Comment ID!');
     }
     result = validObjectId.safeParse(senderId);
-    console.log("SENDER ID", senderId)
+
     if (!result.success) {
       throw new ApiError(400, 'Invalid Sender ID!');
     }
@@ -180,13 +179,11 @@ class CommentSectionDao {
       throw new ApiError(404, 'Comment section not found!');
     }
 
-    if (!commentSection) {
-      throw new ApiError(404, 'Resource not found!');
-    }
+    let commentIndex = commentSection.comments.findIndex((comment) => {
+      return comment._id.toString() == commentId;
+    });
 
-    let commentIndex = commentSection.comments.findIndex((comment) => comment._id === commentId);
-
-    if (!commentIndex) {
+    if (commentIndex < 0) {
       throw new ApiError(404, 'Comment not found!');
     }
 
