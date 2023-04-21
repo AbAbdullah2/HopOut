@@ -11,7 +11,7 @@ const validObjectId = z
 const validString = z.string().min(1, 'Missing attribute!');
 
 class CommentSectionDao {
-
+  
   // return the created chat
   async createCommentSection({ eventId }) {
     let result;
@@ -33,14 +33,20 @@ class CommentSectionDao {
 
   // return the created comment
   async createComment({ eventId, commentSectionId, sender, message }) {
-    let result = validObjectId.safeParse(commentSectionId.toString());
-    if (!result.success) {
+    let result;
+    if (commentSectionId) {
+      result = validObjectId.safeParse(commentSectionId.toString());
+      if (!result.success) {
+        throw new ApiError(400, 'Invalid commentSectionId!');
+      }
+    } else {
       throw new ApiError(400, 'Invalid commentSectionId!');
     }
 
     const commentSection = await CommentSection.findById(commentSectionId);
+    console.log(commentSectionId, commentSection)
     if (!commentSection) {
-      throw new ApiError(400, 'Comment section does not exist!')
+      throw new ApiError(400, 'Comment section does not exist!');
     }
     
     let senderValid = false;
@@ -52,33 +58,39 @@ class CommentSectionDao {
     }
 
     //check sender ID is valid
-    result = validObjectId.safeParse(sender);
-    if (!result.success) {
+    if (sender) {
+      result = validObjectId.safeParse(sender.toString());
+      if (!result.success) {
+        throw new ApiError(400, 'Invalid ID!');
+      }
+    } else {
       throw new ApiError(400, 'Invalid ID!');
     }
 
     //check sender is valid
-    const send = await User.findById(sender);
+    const send = await User.findById(sender.toString());
     if (!send) {
       throw new ApiError(400, 'Invalid Sender!');
     }
 
     //check eventId is valid
-    result = validObjectId.safeParse(eventId.toString());
-    if (!result.success) {
+    if (eventId) {
+      result = validObjectId.safeParse(eventId.toString());
+      if (!result.success) {
+        throw new ApiError(400, 'Invalid EventId!');
+      }
+    } else {
       throw new ApiError(400, 'Invalid EventId!');
     }
 
-
     const event = await Event.findById(eventId);
     if (!event) {
-      throw new ApiError(400, 'Event does not exist!')
+      throw new ApiError(400, 'Event does not exist!');
     }
-
 
     //check that commenter is on attendees list
     event.attendees.forEach((a) => {
-      if (a.toString() === sender) {
+      if (a.toString() === sender.toString()) {
         senderValid = true;
       }
     });
@@ -87,26 +99,24 @@ class CommentSectionDao {
       senderValid = true;
     }
 
-
-
     if (senderValid === false) {
-      throw new ApiError(400, 'Commenter not attending event!')
+      throw new ApiError(400, 'Commenter not attending event!');
     }
 
     const sendComment = {
       sender: sender,
       message: message,
     };
-   
+
     commentSection.comments.push(sendComment);
     commentSection.save(function (err) {
       if (err) {
         console.log(err);
       }
     });
+
     return commentSection;
   }
-
 
   async readCommentSection(eventId) {
     const result = validObjectId.safeParse(eventId);
@@ -120,14 +130,13 @@ class CommentSectionDao {
 
     const filter = {};
     filter.event = eventId;
-    
+
     const commentSection = await CommentSection.find(filter);
     if (!commentSection) {
       throw new ApiError(404, 'Resource not found!');
     }
     return commentSection;
   }
-
 
   async deleteCommentSection({commentSectionId, eventId}) {
     //validate id
@@ -142,19 +151,20 @@ class CommentSectionDao {
 
     let event = Event.findById(eventId);
     if (!event) {
-      throw new ApiError(404, 'Event not found!')
+      throw new ApiError(404, 'Event not found!');
     }
 
-    let commentSection = await CommentSection.findByIdAndDelete(commentSectionId)
+    let commentSection = await CommentSection.findByIdAndDelete(
+      commentSectionId
+    );
     if (!commentSection) {
       throw new ApiError(404, 'Comment section not found!');
     }
-    
+
     return commentSection;
   }
 
-
-  async deleteComment({commentSectionId, commentId, senderId}) {
+  async deleteComment({ commentSectionId, commentId, senderId }) {
     //validate id
     let result = validObjectId.safeParse(commentSectionId);
     if (!result.success) {
@@ -169,25 +179,27 @@ class CommentSectionDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid Sender ID!');
     }
-    let sender = await User.findById(senderId)
+    let sender = await User.findById(senderId);
     if (!sender) {
       throw new ApiError(404, 'User not found!');
     }
 
-    let commentSection = await CommentSection.findById(commentSectionId)
+    let commentSection = await CommentSection.findById(commentSectionId);
     if (!commentSection) {
       throw new ApiError(404, 'Comment section not found!');
     }
 
-    let commentIndex = commentSection.comments.findIndex((comment) => {
-      return comment._id.toString() == commentId;
-    });
+    let commentIndex = commentSection.comments.findIndex(
+    (comment) => comment._id.toString() == commentId);
 
     if (commentIndex < 0) {
       throw new ApiError(404, 'Comment not found!');
     }
 
-    const comment = commentSection.comments.splice(commentIndex, 1);
+    const comment = commentSection.comments.splice(
+      commentIndex,
+      commentIndex + 1
+    );
     commentSection.save(function (err) {
       if (err) {
         console.log(err);
@@ -195,8 +207,14 @@ class CommentSectionDao {
         console.log('Success!');
       }
     });
-    
+
     return comment;
+  }
+
+  // delete all messages
+  async deleteAll() {
+    const commentSections = await CommentSection.deleteMany();
+    return commentSections;
   }
 }
 
