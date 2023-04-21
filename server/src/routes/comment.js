@@ -102,7 +102,7 @@ router.delete('/deleteComment/:commentSectionId', async (req, res, next) => {
     throw new ApiError(400, "No commentSectionId")
     }
 
-    const deletedComment = commentDao.deleteComment({ commentSectionId, commentId, senderId})
+    const deletedComment = await commentDao.deleteComment({ commentSectionId, commentId, senderId})
 
     res.json({
       status: 200,
