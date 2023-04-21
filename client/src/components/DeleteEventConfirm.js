@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { deleteEvent, getUser } from '../services/api';
+import { deleteEvent, getUser, deleteCommentSection } from '../services/api';
 import { Modal } from 'flowbite-react'
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -9,16 +9,18 @@ export default function DeleteEventConfirm(props) {
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        deleteEvent(eventid).then((deleteRes) => {
-            if (deleteRes.status === 200) {  
-                getUser(curUser._id).then((res) => {
-                    setCurUser(res.data.data);
-                }); 
-                navigate('/events');
-            } else {
-                toast.error('Could not delete event, please try again later.');
-            };
-        });
+        deleteCommentSection(eventid).then((delCommentRes) => {
+            deleteEvent(eventid).then((deleteRes) => {
+                if (deleteRes.status === 200) {  
+                    getUser(curUser._id).then((res) => {
+                        setCurUser(res.data.data);
+                    }); 
+                    navigate('/events');
+                } else {
+                    toast.error('Could not delete event, please try again later.');
+                };
+            });    
+        })
     }
     
     return (<div>

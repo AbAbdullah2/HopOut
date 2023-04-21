@@ -324,7 +324,17 @@ async function deleteComment(commentSectionId, commentId, senderId) {
   const body = { senderId, commentId };
 
   const response = await axios
-    .delete(`${BASE_URL}/deleteComment/${commentSectionId}`, body)
+    .delete(`${BASE_URL}/deleteComment/${commentSectionId}`, {data: body})
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// delete entire comment section 
+async function deleteCommentSection(eventId) {
+  const response = await axios
+    .delete(`${BASE_URL}/deleteCommentSection/${eventId}`)
     .catch(function (error) {
       console.log(error);
     });
@@ -366,6 +376,7 @@ export {
   createComment,
   getAllComments,
   deleteComment,
+  deleteCommentSection,
 };
 
 export const host = BASE_URL;

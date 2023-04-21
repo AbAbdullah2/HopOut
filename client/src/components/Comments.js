@@ -4,47 +4,20 @@ import { getAllUsers, getAllComments, createComment, deleteComment} from '../ser
 import { Menu } from '@headlessui/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
-
+import toast, { Toaster } from 'react-hot-toast';
 
 function Comments(props) {
     const { curUser, event } = props;
     const [allUsers, setAllUsers] = useState([])
     const [commentText, setCommentText] = useState("");
-    const fakeComments = [
-        {
-            _id: "uid",
-            author: curUser._id,
-            text: "Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy.",
-            date: new Date(),
-        },
-        {
-            _id: "uid",
-            author: curUser._id,
-            text: "Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy.",
-            date: new Date(),
-        },
-        {
-            _id: "uid",
-            author: curUser._id,
-            text: "Very straight-to-point article. Really worth time reading. Thank you! But tools are just the instruments for the UX designers. The knowledge of the design tools are as important as the creation of the design strategy.",
-            date: new Date(),
-        }
-
-    ]
-
     const [commentSection, setCommentSection] = useState(null);
 
     useEffect(() => {
-        console.log("useeffectcalled:")
         getAllUsers().then((res) => {
             setAllUsers(res.data.data);
         }); 
         getAllComments(event._id).then((res) => {
-            console.log("get all comments res.data.data ", res.data)
-
             if (res.data.data.length && res.data.data.length > 0) {
-                // setComments(res.data.data[0].comments);
-                console.log("get all comments res.data.data ", res.data.data)
                 setCommentSection(res.data.data[0])
             }
         });
@@ -55,26 +28,25 @@ function Comments(props) {
     }, [commentSection]);
 
     const handlePostComment = async (e) => {
-        // console.log('posting comment!', e);
         e.preventDefault();
-        console.log("e: ", e);
-        console.log("commentText: ", commentText);
-        console.log("commentSection: ", commentSection);
         createComment(event._id, commentSection._id, curUser._id, commentText).then((res) => {
-            console.log("res.data: ", res.data);
-            setCommentSection(res.data.data);
+            if (res.status == 201) {
+                setCommentSection(res.data.data);
+                setCommentText('');
+            } else {
+                toast.error('Error posting comment. Please try again later.');   
+            }
         });
     };
 
     const handleDelete = (comment) => {
         deleteComment(commentSection._id, comment._id, curUser._id).then((res) => {
-            console.log("deletecomment res: ", res);
             if (res.status == 200) {
-                let newComments = commentSection.comments;
-                newComments = newComments.filter(c => c._id != res.data.data._id);
-                console.log("setting new comments to: ", newComments);
-          
-                setCommentSection({...commentSection, comments: newComments});
+                if (res.data.data && res.data.data.length > 0 ) {
+                    let newComments = commentSection.comments;
+                    newComments = newComments.filter(c => c._id != res.data.data[0]._id);
+                    setCommentSection({...commentSection, comments: newComments});
+                }
             }
         });
     };
@@ -93,7 +65,7 @@ function Comments(props) {
                             <label for="comment" className="sr-only">Your comment</label>
                             <textarea id="comment" rows="6"
                                 className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                                placeholder="Write a comment..." required onChange={(e) => {setCommentText(e.target.value); console.log("e", e.target.value);}}>{commentText}</textarea>
+                                placeholder="Write a comment..." required onChange={(e) => setCommentText(e.target.value)}>{commentText}</textarea>
                         </div>
                         <button type="submit"
                             className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
@@ -109,7 +81,7 @@ function Comments(props) {
                                     <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">{allUsers && allUsers.find(user => user._id === comment.sender) ? allUsers.find(user => user._id === comment.sender).name : ""}</p>
                                 </a>
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                    {new Date(comment.createdAt).toLocaleString()}
+                                    {comment.createdAt ? new Date(comment.createdAt).toLocaleString() : "Just now"}
                                 </p>
                             </div>
                             {comment.sender === curUser._id ?  
