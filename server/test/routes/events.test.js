@@ -16,6 +16,7 @@ describe(`Test ${endpoint}`, () => {
   const numEvents = 5;
   let events;
   let uid;
+  let uid2;
 
   beforeAll(async () => {
     db.connect(process.env.TEST_DB);
@@ -26,7 +27,13 @@ describe(`Test ${endpoint}`, () => {
       email: faker.internet.email(),
       password: faker.internet.password(6),
     });
+    const user2 = await userDao.create({
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
     uid = user.id;
+    uid2 = user2.id;
   });
 
   beforeEach(async () => {
@@ -282,6 +289,23 @@ describe(`Test ${endpoint}`, () => {
       expect(response.status).toBe(200);
       expect(response.body.data._id).toBe(event.id);
       expect(response.body.data.name).toBe(name);
+    });
+    it('Respond 200 when updating reviews', async () => {
+      const index = Math.floor(Math.random() * numEvents);
+      const event = events[index];
+      const comment = faker.lorem.sentence();
+      const rating = Math.floor(Math.random()*5) + 1;
+      const reviewer = uid2;
+      const reviews = {comment, rating, reviewer};
+      const response = await request.put(`${endpoint}/${event.id}`).send({
+        reviews
+      });
+      expect(response.status).toBe(200);
+      expect(response.body.data._id).toBe(event.id);
+      expect(response.body.data.reviews[0].comment).toBe(comment);
+      expect(response.body.data.reviews[0].rating).toBe(rating);
+      expect(response.body.data.reviews[0].reviewer).toBe(reviewer);
+
     });
 
     describe('Respond 400', () => {
