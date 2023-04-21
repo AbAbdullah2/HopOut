@@ -9,7 +9,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { createNewEvent, sendInvite } from '../services/api';
+import { createNewEvent, createCommentSection, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
@@ -42,7 +42,6 @@ function CreateEvent(props) {
     invitees: [],
     organizer: curUser._id,
   });
-
 
   const [validated, setValidated] = useState(false);
 
@@ -116,12 +115,13 @@ function CreateEvent(props) {
         : {...curUser, organizing: [res.data.data._id]};
         setCurUser(updUser);
         navigate('/events/' + res.data.data._id);
+        await createCommentSection(res.data.data._id);
+        const ids = invitees.map((inv) => {return inv._id});
+        for (const idx in ids) {
+          await sendInvite(res.data.data._id, ids[idx]);
+        }  
       } else {
         toast.error('Could not create event ' + event.title);
-      }
-      const ids = invitees.map((inv) => {return inv._id});
-      for (const idx in ids) {
-        await sendInvite(res.data.data._id, ids[idx]);
       }
     });
   }

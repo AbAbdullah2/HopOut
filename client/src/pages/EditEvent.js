@@ -9,7 +9,7 @@ import CATEGORIES from "../assets/categories";
 import { getAllUsers } from "../services/api.js";
 import toast, { Toaster } from 'react-hot-toast';
 import uploadImg from '../services/imgbb';
-import { updateEvent, getEvent, sendInvite, unsendInvite } from '../services/api';
+import { updateEvent, getEvent, sendInvite } from '../services/api';
 import { Dropdown } from 'flowbite-react';
 import { Combobox } from '@headlessui/react';
 import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
@@ -54,7 +54,6 @@ function EditEvent(props) {
   const [inviteQuery, setInviteQuery] = useState('');
   const [users, setUsers] = useState([]);
 
-
   useEffect(() => {
     if (curUser === null) navigate('/login');
     getEvent(eventid).then((res) => {
@@ -79,11 +78,11 @@ function EditEvent(props) {
 
   useEffect(() => {
     getAllUsers().then((res) => {
-      const tusers = res.data.data.filter((u) => {return u._id !== curUser._id});
-      setUsers(tusers);      
-      setInvitees(tusers.filter((u) => {return event.invitees.includes(u._id)}));
+      const tusers = res.data.data.filter((u) => {return u._id !== curUser._id && !event.invitees.includes(u._id)});
+      setUsers(tusers);
+      setInvitees([]);
     });
-  }, [event]);
+  }, [event, curUser]);
 
   const filteredPeople =
   inviteQuery === ''
@@ -130,25 +129,26 @@ function EditEvent(props) {
       toast.error('Invalid address');
       return;
     }
+    if (event.capacity < event.attendees.length) {
+      toast.error('Capacity cannot be less than current number of attendees');
+      return;
+    }
     toast.success('Updating event...', {duration: 500});
     const start = new Date(startDate + ' ' + startTime)
     const end = new Date(endDate + ' ' + endTime); 
     const currentEvent = await getEvent(event._id);
     const oldInvitees = currentEvent.data.data.invitees;
+    const newInvitees = invitees.map((inv) => {return inv._id});
+    const theInvitees = oldInvitees.concat(newInvitees);
     if (event.coverId !== COVER_PLACEHOLDER && event.thumbnailId === THUMB_PLACEHOLDER) setEvent({...event, thumbnailId: event.coverId});
-    updateEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then(async (res) => {
+    updateEvent({...event, start: start, end: end, invitees: theInvitees}).then(async (res) => {
       if (res.status === 200) {                
         navigate('/events/' + res.data.data._id);
       } else {
         toast.error('Could not update event ' + event.name);
       }
-      const new_invitee_ids = invitees.map((inv) => {return inv._id}).filter((idd) => {return !oldInvitees.includes(idd)});
-      const removed_invitee_ids = oldInvitees.filter((idd) => {return !invitees.map((inv) => {return inv._id}).includes(idd)});
-      for (const idx in new_invitee_ids) {
-        await sendInvite(res.data.data._id, new_invitee_ids[idx]);
-      }
-      for (const idx in removed_invitee_ids) {
-        await unsendInvite(res.data.data._id, removed_invitee_ids[idx]);
+      for (const idx in newInvitees) {
+        await sendInvite(res.data.data._id, newInvitees[idx]);
       }
     });
   }

@@ -111,15 +111,15 @@ function ChatsList(props) {
           return (
             <div
               key={index}
-              className={`flex flex-row border-b-2 ${
+              className={`flex flex-row overflow-clip border-b-2 ${
                 selected === index ? 'bg-blue-300' : 'bg-stone-100'
               }`}
               onClick={() => changeCurrentChat(index, name)}
             >
-              <div className="m-3 flex h-10 w-10 items-center justify-center rounded-full bg-blue-600">
+              <div className="invisible hidden md:visible md:flex m-3 h-10 w-10 items-center justify-center rounded-full bg-blue-600">
                 <p className="uppercase text-white">{name[0][0]}</p>
               </div>
-              <div className="invisible md:visible grid place-items-center">{name[0]}</div>
+              <div className="grid place-items-center md:mx-0 mx-4">{name[0]}</div>
             </div>
           );
         })}

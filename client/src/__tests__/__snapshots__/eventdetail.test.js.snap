@@ -301,10 +301,10 @@ exports[`matches snapshot 1`] = `
       </div>
     </div>
     <div
-      className="mt-5 w-11/12 flex flex-row flex-nowrap justify-between"
+      className="mt-5 w-11/12 items-center flex flex-row flex-nowrap justify-between"
     >
       <div
-        className="flex flex-row"
+        className="flex flex-row invisible md:visible"
       >
         <button
           aria-checked={false}
