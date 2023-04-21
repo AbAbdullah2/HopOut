@@ -27,6 +27,7 @@ function Login(props) {
     postLogin(loginData).then(data => {
         if (data.status === 200) {
           // Fetch user details based on userID
+          console.log(data);
             getUser(data.data.data._id).then(userData => {
                 setCurUser(userData.data.data);
                 navigate('/events');
@@ -34,6 +35,7 @@ function Login(props) {
         }
     }).catch(err => {
       const error = 'Could not login user ' + loginData.email;
+      console.log("err", err);
       toast.error(error);
       });
   }

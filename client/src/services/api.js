@@ -279,6 +279,65 @@ async function createChat(person1, person2) {
   return response;
 }
 
+// create comment section for event
+async function createCommentSection(eventId) {
+  const response = await axios
+    .post(`${BASE_URL}/commentSection/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// Post comment
+async function createComment(eventId, commentSectionId, sender, message) {
+  const body = {
+    eventId,
+    commentSectionId,
+    sender,
+    message,
+  };
+  const response = await axios
+    .post(`${BASE_URL}/comment/${commentSectionId}`, body)
+    .catch(function (error) {
+      console.log(error);
+  });
+  return response;
+}
+
+// get all of events's comments by eventid
+async function getAllComments(eventId) {
+  const response = await axios
+    .get(`${BASE_URL}/getAllComments/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// delete comment from comment section 
+async function deleteComment(commentSectionId, commentId, senderId) {
+  const body = { senderId, commentId };
+
+  const response = await axios
+    .delete(`${BASE_URL}/deleteComment/${commentSectionId}`, {data: body})
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+// delete entire comment section 
+async function deleteCommentSection(eventId) {
+  const response = await axios
+    .delete(`${BASE_URL}/deleteCommentSection/${eventId}`)
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
+
+
 export {
   sendInvite,
   unsendInvite,
@@ -309,6 +368,11 @@ export {
   getChat,
   sendMessage,
   createChat,
+  createCommentSection,
+  createComment,
+  getAllComments,
+  deleteComment,
+  deleteCommentSection,
 };
 
 export const host = BASE_URL;
