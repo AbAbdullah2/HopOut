@@ -157,7 +157,7 @@ class CommentSectionDao {
 
   async deleteComment({commentSectionId, commentId, senderId}) {
     //validate id
-    const result = validObjectId.safeParse(commentSectionId);
+    let result = validObjectId.safeParse(commentSectionId);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Comment Section ID!');
     }
