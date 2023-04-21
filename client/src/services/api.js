@@ -281,19 +281,16 @@ async function createChat(person1, person2) {
 
 // create comment section for event
 async function createCommentSection(eventId) {
-  console.log("creating comment section: ", eventId);
   const response = await axios
     .post(`${BASE_URL}/commentSection/${eventId}`)
     .catch(function (error) {
       console.log(error);
     });
-  console.log("response", response);
   return response;
 }
 
 // Post comment
 async function createComment(eventId, commentSectionId, sender, message) {
-  console.log("creating comment: ", commentSectionId);
   const body = {
     eventId,
     commentSectionId,
@@ -305,7 +302,6 @@ async function createComment(eventId, commentSectionId, sender, message) {
     .catch(function (error) {
       console.log(error);
   });
-  console.log("response", response);
   return response;
 }
 
