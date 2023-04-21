@@ -208,7 +208,6 @@ describe("Test Message Schema & Chat Schema & Model", () => {
     it("test receiver is empty", async () => {
       try {
         const message = "how are you";
-        console.log("sender", user1)
         const sendMessage = {
           sender: user1,
           receiver: "",

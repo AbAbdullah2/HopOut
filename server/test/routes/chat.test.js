@@ -438,9 +438,7 @@ describe(`Test chat routes`, () => {
       describe('Respond 400', () => {
         it('Empty chatId', async () => {
           try {
-            console.log("trying to delete with empty chatid")
             const chat = await request.delete(`/deleteChat/`);
-            console.log("delete empty", chat.body)
           }
           catch (err) {
             expect(err.message).toBe('Invalid ID!')
