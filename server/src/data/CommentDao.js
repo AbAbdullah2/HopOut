@@ -113,7 +113,7 @@ class CommentSectionDao {
     if (!result.success) {
       throw new ApiError(400, 'Invalid Event ID!');
     }
-    const event = await Event.findById(id);
+    const event = await Event.findById(eventId);
     if (!event) {
       throw new ApiError(404, 'Event not found!');
     }
@@ -132,7 +132,7 @@ class CommentSectionDao {
   // NEED TO CALL BEFORE WE CALL DELETE EVENT
   async deleteCommentSection({commentSectionId, eventId}) {
     //validate id
-    const result = validObjectId.safeParse(commentSectionId);
+    let result = validObjectId.safeParse(commentSectionId.toString());
     if (!result.success) {
       throw new ApiError(400, 'Invalid Comment Section ID!');
     }
@@ -157,7 +157,7 @@ class CommentSectionDao {
 
   async deleteComment({commentSectionId, commentId, senderId}) {
     //validate id
-    const result = validObjectId.safeParse(commentSectionId);
+    let result = validObjectId.safeParse(commentSectionId);
     if (!result.success) {
       throw new ApiError(400, 'Invalid Comment Section ID!');
     }
@@ -190,7 +190,7 @@ class CommentSectionDao {
       throw new ApiError(404, 'Comment not found!');
     }
 
-    const comment = commentSection.comments.splice(commentIndex, commentIndex + 1);
+    const comment = commentSection.comments.splice(commentIndex, 1);
     commentSection.save(function (err) {
       if (err) {
         console.log(err);

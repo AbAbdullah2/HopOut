@@ -77,12 +77,12 @@ router.delete('/deleteCommentSection/:eventId', async (req, res, next) => {
         throw new ApiError(404, 'Resource not found!');
       }
 
-      const commentSection = commentDao.readCommentSection(eventId)
-      if (!commentSection) {
+      const commentSection = await commentDao.readCommentSection(eventId)
+      if (!commentSection || commentSection.length < 0) {
         throw new ApiError(404, 'Resource not found!');
       }
 
-      const deletedCommentSection = commentDao.deleteCommentSection({ commentSectionId: commentSection._id, eventId })
+      const deletedCommentSection = await commentDao.deleteCommentSection({ commentSectionId: commentSection[0]._id, eventId })
   
       res.json({
         status: 200,
@@ -102,7 +102,7 @@ router.delete('/deleteComment/:commentSectionId', async (req, res, next) => {
     throw new ApiError(400, "No commentSectionId")
     }
 
-    const deletedComment = commentDao.deleteComment({ commentSectionId, commentId, senderId})
+    const deletedComment = await commentDao.deleteComment({ commentSectionId, commentId, senderId})
 
     res.json({
       status: 200,
