@@ -190,7 +190,7 @@ class CommentSectionDao {
       throw new ApiError(404, 'Comment not found!');
     }
 
-    const comment = commentSection.comments.splice(commentIndex, commentIndex + 1);
+    const comment = commentSection.comments.splice(commentIndex, 1);
     commentSection.save(function (err) {
       if (err) {
         console.log(err);
