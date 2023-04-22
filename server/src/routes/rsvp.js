@@ -3,10 +3,20 @@ import UserDao from '../data/UserDao.js';
 import EventDao from '../data/EventDao.js';
 import { hidePassword } from './users.js';
 import ApiError from '../models/ApiError.js';
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 const userDao = new UserDao();
 const eventDao = new EventDao();
+
+let transporter = nodemailer.createTransport({
+  pool: true,
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  }
+});
 
 // for sending an rsvp to a public event
 // may need to verify that an event is public - check w frontend
@@ -71,6 +81,17 @@ router.put(`/rsvp/sendInvite`, async (req, res, next) => {
       id: inviteeId,
       invited: userInvited,
     });
+
+    let mailOptions = {
+      from: process.env.SMTP_USER,
+      to: invitee.email,
+      subject: 'You\'re invited to ' + event.name + '!',
+      html: `Hi ${invitee.name}, <br/><br/> You've been invited to ${event.name}! <br/>
+            Visit the <a href='${process.env.DEPLOYED_URL}'> notifications tab </a> to view and RSVP to the invitation. Hope to see you there!<br/><br/>
+            The HopOut Team`
+    };
+
+    await transporter.sendMail(mailOptions);
 
     res.json({
       status: 200,

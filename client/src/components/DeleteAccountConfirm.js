@@ -1,26 +1,23 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { deleteEvent, getUser, deleteCommentSection } from '../services/api';
+import { deleteAccount, getUser } from '../services/api';
 import { Modal } from 'flowbite-react'
 import toast, { Toaster } from 'react-hot-toast';
 
-export default function DeleteEventConfirm(props) {
-    const {curUser, setCurUser, eventid, showConfirm, setShowConfirm} = props;
+export default function DeleteAccountConfirm(props) {
+    const {curUser, setCurUser, showConfirm, setShowConfirm} = props;
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        deleteCommentSection(eventid).then((delCommentRes) => {
-            deleteEvent(eventid).then((deleteRes) => {
-                if (deleteRes.status === 200) {  
-                    getUser(curUser._id).then((res) => {
-                        setCurUser(res.data.data);
-                    }); 
-                    navigate('/events');
-                } else {
-                    toast.error('Could not delete event, please try again later.');
-                };
-            });    
-        })
+        deleteAccount(curUser._id).then((deleteRes) => {
+            if (deleteRes.status === 200) {  
+                navigate('/');
+                setCurUser(null);
+                console.log('deleteres: ', deleteRes);
+            } else {
+                toast.error('Could not delete account, please try again later.');
+            };
+        });
     }
     
     return (<div>
@@ -30,12 +27,12 @@ export default function DeleteEventConfirm(props) {
             onClose={() => setShowConfirm(false)}
         >
             <Modal.Header>
-            Confirm delete event
+            Confirm delete account
             </Modal.Header>
             <Modal.Body>
             <div className="space-y-6">
                 <p className="text-base leading-relaxed text-gray-500 dark:text-gray-400">
-                    Are you sure you'd like to delete this event? This cannot be undone.
+                    Are you sure you'd like to delete your account? This cannot be undone.
                 </p>
             </div>
             </Modal.Body>

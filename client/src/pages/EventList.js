@@ -6,7 +6,8 @@ import { getAllPublicEvents, getAllPrivateEvents } from '../services/api';
 import { useNavigate } from 'react-router-dom';
 import FriendFilter from '../components/FriendFilter';
 import Map from '../components/Map';
-import { Switch } from '@headlessui/react'
+import { Switch } from '@headlessui/react';
+import Datepicker from "react-tailwindcss-datepicker";
 
 export function EventList(props) {
   const { curUser, setCurUser} = props;
@@ -17,6 +18,8 @@ export function EventList(props) {
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [friendFilters, setFriendFilters] = useState([]);
+
+  const [startDate, setStartDate] = useState(new Date(Date.now()));
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -34,8 +37,11 @@ export function EventList(props) {
   }, [curUser, navigate]);
 
   const toDisplayEvent = (ev) => {
+    const eventStartDate = new Date(ev.start).setHours(0, 0, 0, 0);
+    const filteredStartDate = new Date(startDate).setHours(0, 0, 0, 0);
+
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0) {
+    if (selectedFilters.length === 0 && friendFilters.length === 0 && (filteredStartDate < 0 || eventStartDate === filteredStartDate)) {
       return true;
     }
 
@@ -77,15 +83,39 @@ export function EventList(props) {
       }
     }
 
+    if (filtered) {
+      if (filteredStartDate > 0 && eventStartDate != filteredStartDate) {
+        filtered = false;
+      }
+    }
+
     return filtered;
   }
+
+  const checkSize = () => {
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 768) {
+        setListActive(true);
+      }
+    }
+  }
+  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      checkSize();
+      window.addEventListener('resize', checkSize);  
+      return(() => {
+          window.removeEventListener('resize', checkSize);
+      })
+    }
+  }, [listActive]);
 
   return (
     <div className='bg-stone-100 min-h-screen'>
       <div className='mx-auto flex flex-col items-center justify-center h-full'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
-        <div className={'mt-5 w-11/12 flex flex-row flex-nowrap justify-between'}>
-          <div className='flex flex-row'>
+        <div className={'mt-5 w-11/12 items-center flex flex-row flex-nowrap justify-between'}>
+          <div className='flex flex-row invisible md:visible'>
             <Switch
               checked={listActive}
               onChange={setListActive}
@@ -100,6 +130,15 @@ export function EventList(props) {
               />
             </Switch>
             <span className='pl-2'>List View</span>
+          </div>
+          <div className="relative max-w-sm">
+          <Datepicker
+            useRange={false}
+            displayFormat={"MM/DD/YYYY"}
+            asSingle={true}
+            value={{startDate: startDate, endDate: startDate}}
+            onChange={(e) => {setStartDate(e.startDate)}}
+            />
           </div>
           <div className='justify-end content-end items-end right-0'>
             <div className='flex flew-row flex-nowrap'>

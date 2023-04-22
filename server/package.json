@@ -8,7 +8,9 @@
     "test": "vitest --no-threads --no-isolate",
     "start": "node server.js",
     "start-watch": "nodemon server.js",
-    "dev": "dotenv -e .env nodemon server.js"
+    "dev": "dotenv -e .env nodemon server.js",
+    "coverage": "vitest run --coverage --no-threads --no-isolate",
+    "test:ui": "vitest --ui --no-threads --no-isolate"
   },
   "repository": {
     "type": "git",
@@ -36,6 +38,8 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@vitest/coverage-c8": "^0.30.1",
+    "@vitest/ui": "^0.30.1",
     "concurrently": "^7.6.0",
     "dotenv-cli": "^7.0.0",
     "nodemon": "^2.0.20",

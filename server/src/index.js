@@ -4,6 +4,7 @@ import userUrls from './routes/users.js';
 import friendUrls from './routes/friends.js';
 import rsvpUrls from './routes/rsvp.js';
 import chatUrls from './routes/chat.js';
+import commentUrls from './routes/comment.js';
 import cors from 'cors';
 import helmet from 'helmet';
 
@@ -23,6 +24,7 @@ app.use(userUrls);
 app.use(friendUrls);
 app.use(rsvpUrls);
 app.use(chatUrls);
+app.use(commentUrls);
 
 app.use((err, req, res, next) => {
   if (err) {
