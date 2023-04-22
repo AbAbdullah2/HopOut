@@ -58,6 +58,12 @@ useEffect(() => {
   }
 }, [curUser]);
 
+  const eventIsOver = () => {
+    const endDate = new Date(event.end);
+    const now = Date.now();
+    return endDate < now;
+  }
+
   const toShow = (user) => {
     if (!checkedArray[0] && (attendees.includes(user) && invitees.includes(user))) {
       return false;
@@ -109,9 +115,9 @@ useEffect(() => {
        <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
        <div className="relative">
           <img src={event.coverId} alt={event.title} className='w-full object-cover h-80' />
-          { curUser.organizing && curUser.organizing.includes(eventid) ? 
+          { curUser.organizing && curUser.organizing.includes(eventid) && !eventIsOver() ? 
             <EventHostView eventid={eventid} setShowConfirm={setShowConfirm} /> :
-          (event.organizer !== curUser._id ? 
+          (event.organizer !== curUser._id && !eventIsOver() ? 
             <EventAttendeeView event={event} curUser={curUser} rsvp={rsvp} atCapacity={atCapacity} cancelRsvpHelper={cancelRsvpHelper} confirmRsvp={confirmRsvp}  />
           : <></>) }
        </div>
@@ -249,7 +255,7 @@ useEffect(() => {
 
        </div>
        <div>
-        <ReviewList event={event} setEvent={setEvent} curUser={curUser} />
+        { eventIsOver() ? <ReviewList event={event} setEvent={setEvent} curUser={curUser} /> : <div></div>}
        </div>
      </div>
    </div>

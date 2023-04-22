@@ -3,7 +3,8 @@ import { getAllAttendedEvents } from '../services/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import { formatEventDates } from '../helpers/FormatDate';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import RatingOverview from '../components/RatingOverview.js';
 
 export default function MyEventsList(props) {
     const {curUser} = props;    
@@ -75,6 +76,7 @@ export default function MyEventsList(props) {
                     <p className=''>{event.name}</p>
                     <p className='my-2'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(new Date(event.start), new Date(event.end))}</p>
                     <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.locationName ? event.locationName : (event.location.city + ', ' + event.location.state + ' ' + event.location.zip)}</p>
+                    <RatingOverview reviews={event.reviews} />
                 </div>
             </div>
         ) :

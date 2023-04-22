@@ -16,6 +16,7 @@ describe(`Test ${endpoint}`, () => {
   const numEvents = 5;
   let events;
   let uid;
+  let uid2;
 
   beforeAll(async () => {
     db.connect(process.env.TEST_DB);
@@ -26,18 +27,31 @@ describe(`Test ${endpoint}`, () => {
       email: faker.internet.email(),
       password: faker.internet.password(6),
     });
+    const user2 = await userDao.create({
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
     uid = user.id;
+    uid2 = user2.id;
   });
 
   beforeEach(async () => {
     await eventDao.deleteAll();
     await userDao.deleteAll();
+    
     const user = await userDao.create({
       name: faker.name.fullName(),
       email: faker.internet.email(),
       password: faker.internet.password(6),
     });
     uid = user.id;
+    const user2 = await userDao.create({
+      name: faker.name.fullName(),
+      email: faker.internet.email(),
+      password: faker.internet.password(6),
+    });
+    uid2 = user2.id;
 
     events = [];
 
@@ -284,6 +298,24 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.name).toBe(name);
     });
 
+    it('Respond 200 when updating reviews', async () => {
+      const index = Math.floor(Math.random() * numEvents);
+      const event = events[index];
+      const comment = faker.lorem.sentence();
+      const rating = Math.floor(Math.random()*5) + 1;
+      const reviewer = uid2;
+      const review = {comment, rating, reviewer};
+      const reviews = [review];
+      const response = await request.put(`${endpoint}/${event.id}`).send({
+        reviews,
+      });
+      expect(response.status).toBe(200);
+      expect(response.body.data._id).toBe(event.id);
+      expect(response.body.data.reviews[0].comment).toBe(comment);
+      expect(response.body.data.reviews[0].rating).toBe(rating);
+      expect(response.body.data.reviews[0].reviewer).toBe(reviewer);
+    });
+
     describe('Respond 400', () => {
       it('Invalid ID', async () => {
         const response = await request.put(`${endpoint}/invalid}`);
@@ -299,6 +331,138 @@ describe(`Test ${endpoint}`, () => {
         });
         expect(response.status).toBe(400);
       });
+
+      it('Invalid reviewer id', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = mongoose.Types.ObjectId();
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        console.log(response);
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid review comment', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = Math.random();
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid review rating', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = faker.lorem.sentence();
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
+
+      it('Undefined reviewer id', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = undefined;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        console.log(response);
+        expect(response.status).toBe(400);
+      });
+
+      it('Undefined review comment', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = undefined;
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Undefined review rating', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = undefined;
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
+
+      it('Null reviewer id', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = null;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        console.log(response);
+        expect(response.status).toBe(400);
+      });
+
+      it('Null review comment', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = null;
+        const rating = Math.floor(Math.random()*5) + 1;
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Null review rating', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const comment = faker.lorem.sentence();
+        const rating = null;
+        const reviewer = uid2;
+        const review = {comment, rating, reviewer};
+        const reviews = [review];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          reviews,
+        });
+        expect(response.status).toBe(400);
+      });
+
     });
 
     it('Respond 404', async () => {
@@ -340,6 +504,7 @@ describe(`Test ${endpoint}`, () => {
   });
 
   afterAll(async () => {
+    await userDao.deleteAll();
     await eventDao.deleteAll();
   });
 });
