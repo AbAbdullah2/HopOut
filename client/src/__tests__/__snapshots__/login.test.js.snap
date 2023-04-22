@@ -57,11 +57,11 @@ exports[`matches snapshot 1`] = `
           Welcome back!
         </h2>
         <form
-          className="mt-8 space-y-6"
+          className="mt-8 space-y-3"
           onSubmit={[Function]}
         >
           <div
-            className="-space-y-px rounded-md shadow-sm"
+            className="-space-y-px rounded-md"
           >
             <div>
               <label
@@ -101,6 +101,12 @@ exports[`matches snapshot 1`] = `
                 value=""
               />
             </div>
+            <a
+              className="ml-1 text-sm font-medium text-blue-700 hover:text-blue-500"
+              href="/forgot"
+            >
+              Forgot your password?
+            </a>
           </div>
           <div
             className="flex items-center space-x-5"
