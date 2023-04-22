@@ -178,6 +178,34 @@ router.post('/verification', async (req, res, next) => {
   }
 });
 
+router.post('/forgot', async (req, res, next) => {
+  try {
+    let { user, tempPassword } = req.body;
+
+    let mailOptions = {
+      from: process.env.SMTP_USER,
+      to: user.email,
+      subject: 'Your temporary HopOut password',
+      html: `Hi ${user.name}, <br/><br/> You recently requested to reset your HopOut password. <br/>
+            Here is your temporary password: <strong>${tempPassword}</strong><br/>
+            Remember to change your password once you log in!<br/><br/>
+            The HopOut Team`
+    };
+
+    await transporter.sendMail(mailOptions);
+    return res.status(201).json({
+      status: 201,
+      message: `Successfully sent temporary password to ${user.email}!`,
+      data: {
+        email: user.email,
+      },
+    });
+
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post('/login', async (req, res, next) => {
   try {
     const { email, password } = req.body;
