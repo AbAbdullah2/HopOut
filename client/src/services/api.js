@@ -44,6 +44,14 @@ async function deleteAccount(id) {
   return response;
 }
 
+async function forgotPassword(user, tempPassword) {
+  const response = await axios
+    .post(`${BASE_URL}/forgot`, {user, tempPassword})
+    .catch(function (error) {
+      console.log(error);
+    });
+  return response;
+}
 
 async function emailVerification(user) {
   const response = await axios.post(`${BASE_URL}/verification`, user)
@@ -347,6 +355,7 @@ export {
   getUser,
   register,
   deleteAccount,
+  forgotPassword,
   postLogin,
   deleteUser,
   getAllPublicEvents,

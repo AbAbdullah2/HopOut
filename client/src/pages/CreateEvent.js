@@ -103,10 +103,20 @@ function CreateEvent(props) {
       return;
     }
 
-    toast.success('Creating event...', {duration: 10000});
-
     const start = new Date(startDate + ' ' + startTime)
-    const end = new Date(endDate + ' ' + endTime);    
+    const end = new Date(endDate + ' ' + endTime);
+
+    if (start > end) {
+      toast.error('Start time must be before end time');
+      return;
+    }
+
+    if (start < new Date()) {
+      toast.error('Start time must be in the future');
+      return;
+    }
+
+    toast.success('Creating event...', {duration: 10000});
 
     createNewEvent({...event, start: start, end: end, invitees: invitees.map((inv) => {return inv._id})}).then(async (res) => {
       if (res && (res.status === 201 || res.status === 200)) {
