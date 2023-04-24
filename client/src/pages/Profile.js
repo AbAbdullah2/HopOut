@@ -6,8 +6,6 @@ import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriend
 import Header from '../components/Header';
 import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
 import HostedEventsList from '../components/HostedEventsList';
-import FriendsList from '../components/FriendsList';
-
 
 export default function Profile(props) {
   const { userid } = useParams();

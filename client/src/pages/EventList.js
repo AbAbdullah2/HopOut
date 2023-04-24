@@ -41,20 +41,12 @@ export function EventList(props) {
     const eventEndDate = new Date(ev.end);
 
     const filteredDate = new Date(filterDate);
-
-
     const startWithoutTime = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
     const endWithoutTime = new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate());
     const dateWithoutTime = new Date(filteredDate.getFullYear(), filteredDate.getMonth(), filteredDate.getDate());
-    
-    
-    
-    console.log("date without time: ", dateWithoutTime);
-
-  
 
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0 && (filteredDate < 0 || (startWithoutTime >= dateWithoutTime && endWithoutTime <= dateWithoutTime))) {
+    if (selectedFilters.length === 0 && friendFilters.length === 0 && (!filterDate || (startWithoutTime <= dateWithoutTime && endWithoutTime >= dateWithoutTime))) {
       return true;
     }
 
@@ -97,7 +89,7 @@ export function EventList(props) {
     }
 
     if (filtered) {
-      if (!(startWithoutTime >= dateWithoutTime && endWithoutTime <= dateWithoutTime)) {
+      if (filterDate && (startWithoutTime > dateWithoutTime || endWithoutTime < dateWithoutTime)) {
         filtered = false;
       }
     }
@@ -150,7 +142,7 @@ export function EventList(props) {
             displayFormat={"MM/DD/YYYY"}
             asSingle={true}
             value={{startDate: filterDate, endDate: filterDate}}
-            onChange={(e) => {setFilterDate(e.startDate);  console.log("date: ", e.startDate);}}
+            onChange={(e) => {setFilterDate(e.startDate)}}
             />
           </div>
           <div className='justify-end content-end items-end right-0'>
