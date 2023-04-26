@@ -247,14 +247,8 @@ useEffect(() => {
         </div>
         }
 
-        <div className='px-4 py-2 m-2 bg-white rounded-md shadow-md'>
-        <div className="flex items-center justify-center mt-4 w-full">
           <Comments curUser={curUser} event={event} /> 
-          </div>
-        </div>
 
-       </div>
-       <div>
         { eventIsOver() ? <ReviewList event={event} setEvent={setEvent} curUser={curUser} /> : <div></div>}
        </div>
      </div>
