@@ -22,7 +22,7 @@ export default function DisplayReview(props) {
   }, [review]);
 
   return (
-    <div className="ml-10 mr-10 p-2 mb-2 text-base bg-white border-t border-gray-200 dark:border-gray-700 dark:bg-gray-900">
+    <div className=" p-4 mb-2 text-base bg-white border-gray-200 dark:border-gray-700 dark:bg-gray-900 rounded-md shadow-md">
       <EditReview curUser={curUser} event={event} setEvent={setEvent} review={review} showConfirm={showEditReviewConfirm} closeModal={() => setShowEditReviewConfirm(false)} />
       <DeleteReview curUser={curUser} event={event} setEvent={setEvent} review={review} showConfirm={showDeleteReviewConfirm} closeModal={() => setShowDeleteReviewConfirm(false)} />
       <article>
