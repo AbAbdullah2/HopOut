@@ -18,7 +18,7 @@ export default function CreateReview(props) {
       const resp = await updateEvent(ev);
       setEvent(resp.data.data);
     }
-    closeModal();
+    closeThisModal();
   }
 
   const closeThisModal = () => {
