@@ -246,12 +246,8 @@ useEffect(() => {
           </Table>
         </div>
         }
-        <div className='mt-4'>
-          <p className='font-bold text-slate-700 m-2'>Comments</p>
-          <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
-            <Comments curUser={curUser} event={event} /> 
-          </div>
-        </div>
+        
+        <Comments curUser={curUser} event={event} /> 
 
         { eventIsOver() ? 
           <div className='mt-4'>
