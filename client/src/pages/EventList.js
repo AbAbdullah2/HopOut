@@ -19,7 +19,7 @@ export function EventList(props) {
 
   const [friendFilters, setFriendFilters] = useState([]);
 
-  const [startDate, setStartDate] = useState(new Date(Date.now()));
+  const [filterDate, setFilterDate] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -37,11 +37,16 @@ export function EventList(props) {
   }, [curUser, navigate]);
 
   const toDisplayEvent = (ev) => {
-    const eventStartDate = new Date(ev.start).setHours(0, 0, 0, 0);
-    const filteredStartDate = new Date(startDate).setHours(0, 0, 0, 0);
+    const eventStartDate = new Date(ev.start);
+    const eventEndDate = new Date(ev.end);
+
+    const filteredDate = new Date(filterDate);
+    const startWithoutTime = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
+    const endWithoutTime = new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate());
+    const dateWithoutTime = new Date(filteredDate.getFullYear(), filteredDate.getMonth(), filteredDate.getDate());
 
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0 && (filteredStartDate < 0 || eventStartDate === filteredStartDate)) {
+    if (selectedFilters.length === 0 && friendFilters.length === 0 && (!filterDate || (startWithoutTime <= dateWithoutTime && endWithoutTime >= dateWithoutTime))) {
       return true;
     }
 
@@ -84,7 +89,7 @@ export function EventList(props) {
     }
 
     if (filtered) {
-      if (filteredStartDate > 0 && eventStartDate != filteredStartDate) {
+      if (filterDate && (startWithoutTime > dateWithoutTime || endWithoutTime < dateWithoutTime)) {
         filtered = false;
       }
     }
@@ -136,8 +141,8 @@ export function EventList(props) {
             useRange={false}
             displayFormat={"MM/DD/YYYY"}
             asSingle={true}
-            value={{startDate: startDate, endDate: startDate}}
-            onChange={(e) => {setStartDate(e.startDate)}}
+            value={{startDate: filterDate, endDate: filterDate}}
+            onChange={(e) => {setFilterDate(e.startDate)}}
             />
           </div>
           <div className='justify-end content-end items-end right-0'>

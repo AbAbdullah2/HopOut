@@ -24,8 +24,8 @@ export default function ReviewList(props) {
       <ReviewBreakdown event={event} />
       <div>{ canCreateReview() ?
         <div>
-          <p className={"ml-10 text-slate-700"}>Add Your Review</p>
-          <button><FontAwesomeIcon icon={solid('plus')} className={"ml-10 mb-2 text-2xl bg-blue-400 p-2 rounded-md"} onClick={() => {setShowAddReviewConfirm(true)}}/></button>
+          <p className={"ml-2 text-slate-700 font-bold"}>Add Your Review</p>
+          <button><FontAwesomeIcon icon={solid('plus')} className={"ml-2 mt-1 mb-2 text-2l bg-blue-400 p-2 rounded-md"} onClick={() => {setShowAddReviewConfirm(true)}}/></button>
         </div>
         : <span></span> }</div>
       {event.reviews.map((rev) => {

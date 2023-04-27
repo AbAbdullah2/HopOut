@@ -16,7 +16,7 @@ function CreateAccount(props) {
 
   const [verify, setVerify] = useState("verify");
 
-  const verification = (e) => {
+  const verification = async (e) => {
     e.preventDefault();
 
     const [jhed, emailSite] = email.split("@");
@@ -42,14 +42,15 @@ function CreateAccount(props) {
     };
 
     // Check if account already exists
-    getAllUsers().then((userData) => {
-      let users = userData.data.data;
-      users.forEach((user) => {
-        if (jhed === user["email"].split("@")[0]) {
-          toast.error("Email already associated with an account.");
-        }
-      });
-    });
+    const userData = await getAllUsers();
+    let users = userData.data.data;
+    for (const u in users) {
+      const user = users[u];
+      if (jhed === user["email"].split("@")[0]) {
+        toast.error("Email already associated with an account.");
+        return;
+      }
+    }
 
     // send verification email
     emailVerification({ name: signupData.name, email: signupData.email }).then(
