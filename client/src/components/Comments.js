@@ -11,8 +11,6 @@ function Comments(props) {
   const [commentText, setCommentText] = useState("");
   const [commentSection, setCommentSection] = useState(null);
 
-  console.log('test');
-
   useEffect(() => {
     getAllUsers().then((res) => {
       setAllUsers(res.data.data);
