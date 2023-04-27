@@ -14,8 +14,7 @@ export default function CategoryFilter(props) {
   }
 
   return (
-    <div className="mr-4">
-      <Dropdown
+    <Dropdown
         label={"Categories"}
         dismissOnClick={false}
       >
@@ -26,6 +25,5 @@ export default function CategoryFilter(props) {
         </Dropdown.Item>
       ))}
     </Dropdown>
-    </div>
   );
 }

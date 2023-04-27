@@ -23,7 +23,6 @@ export default function ReviewBreakdown(props) {
 
   return (
     <div className='mx-2 mt-4'>       
-    <p className='font-bold text-slate-700 my-2'>Reviews</p>
       
     <div className="mb-5">
       <div className="flex items-center mb-3">

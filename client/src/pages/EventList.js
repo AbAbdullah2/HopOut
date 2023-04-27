@@ -136,17 +136,17 @@ export function EventList(props) {
             </Switch>
             <span className='pl-2'>List View</span>
           </div>
-          <div className="relative max-w-sm">
-          <Datepicker
-            useRange={false}
-            displayFormat={"MM/DD/YYYY"}
-            asSingle={true}
-            value={{startDate: filterDate, endDate: filterDate}}
-            onChange={(e) => {setFilterDate(e.startDate)}}
-            />
-          </div>
           <div className='justify-end content-end items-end right-0'>
-            <div className='flex flew-row flex-nowrap'>
+            <div className='flex flew-row flex-nowrap space-x-3'>
+              <div className="relative w-48">
+                <Datepicker
+                  useRange={false}
+                  displayFormat={"MM/DD/YYYY"}
+                  asSingle={true}
+                  value={{startDate: filterDate, endDate: filterDate}}
+                  onChange={(e) => {setFilterDate(e.startDate)}}
+                />
+              </div>
               <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
               <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
             </div>

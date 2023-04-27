@@ -144,7 +144,7 @@ useEffect(() => {
         <p className='m-2 font-bold text-slate-700'>Event description</p>  
         <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
           <p className='my-2'>{event.description}</p>  
-        </div> 
+        </div>
         {event.organizer !== curUser._id ? 
         <div className='mt-4 mx-2'>
           <p className='font-bold text-slate-700 my-2'>Attendees</p>
@@ -246,10 +246,21 @@ useEffect(() => {
           </Table>
         </div>
         }
+        <div className='mt-4'>
+          <p className='font-bold text-slate-700 m-2'>Comments</p>
+          <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
+            <Comments curUser={curUser} event={event} /> 
+          </div>
+        </div>
 
-          <Comments curUser={curUser} event={event} /> 
-
-        { eventIsOver() ? <ReviewList event={event} setEvent={setEvent} curUser={curUser} /> : <div></div>}
+        { eventIsOver() ? 
+          <div className='mt-4'>
+            <p className='font-bold text-slate-700 m-2'>Reviews</p>
+            <div className='px-4 py-2 m-2 bg-white bg-opacity-50 rounded-md shadow-md'>
+              <ReviewList event={event} setEvent={setEvent} curUser={curUser} /> 
+            </div>
+          </div>
+        : <div></div>}
        </div>
      </div>
    </div>
