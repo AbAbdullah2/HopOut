@@ -329,561 +329,569 @@ exports[`matches snapshot 1`] = `
         </span>
       </div>
       <div
-        className="relative max-w-sm"
+        className="justify-end content-end items-end right-0"
       >
         <div
-          className="relative w-full text-gray-700 null"
+          className="flex flew-row flex-nowrap space-x-3"
         >
-          <input
-            autoComplete="off"
-            className="relative transition-all duration-300 py-2.5 pl-4 pr-14 w-full border-gray-300 dark:bg-slate-800 dark:text-white/80 dark:border-slate-600 rounded-lg tracking-wide font-light text-sm placeholder-gray-400 bg-white focus:ring disabled:opacity-40 disabled:cursor-not-allowed focus:border-blue-500 focus:ring-blue-500/20 "
-            disabled={false}
-            onChange={[Function]}
-            placeholder="MM/DD/YYYY"
-            readOnly={false}
-            role="presentation"
-            type="text"
-            value=""
-          />
-          <button
-            className="absolute right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed null"
-            disabled={false}
-            type="button"
-          >
-            <svg
-              className="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={1.5}
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
           <div
-            className="transition-all ease-out duration-300 absolute z-10 mt-[1px] text-sm lg:text-xs 2xl:text-sm translate-y-4 opacity-0 hidden"
+            className="relative w-48"
           >
             <div
-              className="absolute z-20 h-4 w-4 rotate-45 mt-0.5 ml-[1.2rem] border-l border-t border-gray-300 bg-white dark:bg-slate-800 dark:border-slate-600"
-            />
-            <div
-              className="mt-2.5 shadow-sm border border-gray-300 px-1 py-0.5 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-600 rounded-lg"
+              className="relative w-full text-gray-700 null"
             >
+              <input
+                autoComplete="off"
+                className="relative transition-all duration-300 py-2.5 pl-4 pr-14 w-full border-gray-300 dark:bg-slate-800 dark:text-white/80 dark:border-slate-600 rounded-lg tracking-wide font-light text-sm placeholder-gray-400 bg-white focus:ring disabled:opacity-40 disabled:cursor-not-allowed focus:border-blue-500 focus:ring-blue-500/20 "
+                disabled={false}
+                onChange={[Function]}
+                placeholder="MM/DD/YYYY"
+                readOnly={false}
+                role="presentation"
+                type="text"
+                value=""
+              />
+              <button
+                className="absolute right-0 h-full px-3 text-gray-400 focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed null"
+                disabled={false}
+                type="button"
+              >
+                <svg
+                  className="h-5 w-5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
               <div
-                className="flex flex-col lg:flex-row py-2"
+                className="transition-all ease-out duration-300 absolute z-10 mt-[1px] text-sm lg:text-xs 2xl:text-sm translate-y-4 opacity-0 hidden"
               >
                 <div
-                  className="flex items-stretch flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-1.5 md:pl-1 pr-2 lg:pr-1"
+                  className="absolute z-20 h-4 w-4 rotate-45 mt-0.5 ml-[1.2rem] border-l border-t border-gray-300 bg-white dark:bg-slate-800 dark:border-slate-600"
+                />
+                <div
+                  className="mt-2.5 shadow-sm border border-gray-300 px-1 py-0.5 bg-white dark:bg-slate-800 dark:text-white dark:border-slate-600 rounded-lg"
                 >
                   <div
-                    className="w-full md:w-[297px] md:min-w-[297px]"
+                    className="flex flex-col lg:flex-row py-2"
                   >
                     <div
-                      className="flex items-center space-x-1.5 border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5"
+                      className="flex items-stretch flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-1.5 md:pl-1 pr-2 lg:pr-1"
                     >
                       <div
-                        className="flex-none"
+                        className="w-full md:w-[297px] md:min-w-[297px]"
                       >
-                        <button
-                          className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-gray-100 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                          onClick={[Function]}
-                          type="button"
+                        <div
+                          className="flex items-center space-x-1.5 border border-gray-300 dark:border-gray-700 rounded-md px-2 py-1.5"
                         >
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={1.5}
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <div
+                            className="flex-none"
                           >
-                            <path
-                              d="M15.75 19.5L8.25 12l7.5-7.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                      <div
-                        className="flex flex-1 items-center space-x-1.5"
-                      >
-                        <div
-                          className="w-1/2"
-                        >
-                          <button
-                            className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-gray-100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                            onClick={[Function]}
-                            type="button"
+                            <button
+                              className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-gray-100 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                              onClick={[Function]}
+                              type="button"
+                            >
+                              <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={1.5}
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M15.75 19.5L8.25 12l7.5-7.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                          <div
+                            className="flex flex-1 items-center space-x-1.5"
                           >
-                            Apr
-                          </button>
-                        </div>
-                        <div
-                          className="w-1/2"
-                        >
-                          <button
-                            className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-gray-100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                            onClick={[Function]}
-                            type="button"
+                            <div
+                              className="w-1/2"
+                            >
+                              <button
+                                className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-gray-100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                                onClick={[Function]}
+                                type="button"
+                              >
+                                Apr
+                              </button>
+                            </div>
+                            <div
+                              className="w-1/2"
+                            >
+                              <button
+                                className="w-full tracking-wide dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 px-3 py-[0.55rem] uppercase hover:bg-gray-100 rounded-md focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                                onClick={[Function]}
+                                type="button"
+                              >
+                                2023
+                              </button>
+                            </div>
+                          </div>
+                          <div
+                            className="flex-none"
                           >
-                            2023
-                          </button>
+                            <button
+                              className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-gray-100 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
+                              onClick={[Function]}
+                              type="button"
+                            >
+                              <svg
+                                className="h-5 w-5"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth={1.5}
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                      <div
-                        className="flex-none"
-                      >
-                        <button
-                          className="dark:text-white/70 dark:hover:bg-white/10 dark:focus:bg-white/10 transition-all duration-300 hover:bg-gray-100 rounded-full p-[0.45rem] focus:ring-1 focus:ring-blue-500/50 focus:bg-blue-100/50"
-                          onClick={[Function]}
-                          type="button"
+                        <div
+                          className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]"
                         >
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth={1.5}
-                            viewBox="0 0 24 24"
-                            xmlns="http://www.w3.org/2000/svg"
+                          <div
+                            className="grid grid-cols-7 border-b border-gray-300 dark:border-gray-700 py-2"
                           >
-                            <path
-                              d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                    <div
-                      className="px-0.5 sm:px-2 mt-0.5 min-h-[285px]"
-                    >
-                      <div
-                        className="grid grid-cols-7 border-b border-gray-300 dark:border-gray-700 py-2"
-                      >
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Sun
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Sun
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Mon
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Tue
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Wed
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Thu
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Fri
+                            </div>
+                            <div
+                              className="tracking-wide text-gray-500 text-center"
+                            >
+                              Sat
+                            </div>
+                          </div>
+                          <div
+                            className="grid grid-cols-7 gap-y-0.5 my-1"
+                          >
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              26
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              27
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              28
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              29
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              30
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              31
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              1
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              2
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              3
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              4
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              5
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              6
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              7
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              8
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              9
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              10
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              11
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              12
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              13
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              14
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              15
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              16
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              17
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              18
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              19
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              20
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              21
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              22
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              23
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              24
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              25
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              26
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10 text-blue-500"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              27
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              28
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              29
+                            </button>
+                            <button
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              30
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              1
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              2
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              3
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              4
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              5
+                            </button>
+                            <button
+                              className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
+                              disabled={false}
+                              onClick={[Function]}
+                              onMouseOver={[Function]}
+                              type="button"
+                            >
+                              6
+                            </button>
+                          </div>
                         </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Mon
-                        </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Tue
-                        </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Wed
-                        </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Thu
-                        </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Fri
-                        </div>
-                        <div
-                          className="tracking-wide text-gray-500 text-center"
-                        >
-                          Sat
-                        </div>
-                      </div>
-                      <div
-                        className="grid grid-cols-7 gap-y-0.5 my-1"
-                      >
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          26
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          27
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          28
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          29
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          30
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          31
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          1
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          2
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          3
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          4
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          5
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          6
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          7
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          8
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          9
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          10
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          11
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          12
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          13
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          14
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          15
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          16
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          17
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          18
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          19
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          20
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          21
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10 text-blue-500"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          22
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          23
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          24
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          25
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          26
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          27
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          28
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          29
-                        </button>
-                        <button
-                          className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          30
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          1
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          2
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          3
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          4
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          5
-                        </button>
-                        <button
-                          className="flex items-center justify-center text-gray-400 h-12 w-12 lg:w-10 lg:h-10"
-                          disabled={false}
-                          onClick={[Function]}
-                          onMouseOver={[Function]}
-                          type="button"
-                        >
-                          6
-                        </button>
                       </div>
                     </div>
                   </div>
@@ -891,294 +899,278 @@ exports[`matches snapshot 1`] = `
               </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div
-        className="justify-end content-end items-end right-0"
-      >
-        <div
-          className="flex flew-row flex-nowrap"
-        >
           <div
-            className="mr-4"
+            className="w-fit"
+            data-testid="flowbite-tooltip-target"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onPointerDown={[Function]}
+          >
+            <button
+              className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
+              disabled={false}
+              type="button"
+            >
+              <span
+                className="flex items-center rounded-md text-sm px-4 py-2"
+              >
+                Categories
+                <svg
+                  aria-hidden="true"
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+            data-testid="flowbite-tooltip"
+            id=":r5:"
+            role="tooltip"
+            style={
+              Object {
+                "left": " ",
+                "position": "absolute",
+                "top": " ",
+              }
+            }
+            tabIndex={-1}
           >
             <div
-              className="w-fit"
-              data-testid="flowbite-tooltip-target"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onPointerDown={[Function]}
+              className="py-1 text-sm text-gray-700 dark:text-gray-200"
             >
-              <button
-                className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
-                disabled={false}
-                type="button"
+              <ul
+                className="py-1"
               >
-                <span
-                  className="flex items-center rounded-md text-sm px-4 py-2"
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
                 >
-                  Categories
-                  <svg
-                    aria-hidden="true"
-                    className="ml-2 h-4 w-4"
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    style={
-                      Object {
-                        "color": undefined,
-                      }
-                    }
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <path
-                      d="M19 9l-7 7-7-7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-            <div
-              className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
-              data-testid="flowbite-tooltip"
-              id=":r5:"
-              role="tooltip"
-              style={
-                Object {
-                  "left": " ",
-                  "position": "absolute",
-                  "top": " ",
-                }
-              }
-              tabIndex={-1}
-            >
-              <div
-                className="py-1 text-sm text-gray-700 dark:text-gray-200"
-              >
-                <ul
-                  className="py-1"
+                    academics
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
                 >
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      academics
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                    sports
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
+                >
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      sports
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                    arts
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
+                >
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      arts
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                    fun
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
+                >
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      fun
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
-                  >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      other
-                    </span>
-                  </li>
-                </ul>
-              </div>
+                    other
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
           <div
-            className="mr-2"
+            className="w-fit"
+            data-testid="flowbite-tooltip-target"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onPointerDown={[Function]}
+          >
+            <button
+              className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
+              disabled={false}
+              type="button"
+            >
+              <span
+                className="flex items-center rounded-md text-sm px-4 py-2"
+              >
+                Event Status
+                <svg
+                  aria-hidden="true"
+                  className="ml-2 h-4 w-4"
+                  fill="none"
+                  height="1em"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={
+                    Object {
+                      "color": undefined,
+                    }
+                  }
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M19 9l-7 7-7-7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div
+            className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
+            data-testid="flowbite-tooltip"
+            id=":r7:"
+            role="tooltip"
+            style={
+              Object {
+                "left": " ",
+                "position": "absolute",
+                "top": " ",
+              }
+            }
+            tabIndex={-1}
           >
             <div
-              className="w-fit"
-              data-testid="flowbite-tooltip-target"
-              onBlur={[Function]}
-              onClick={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              onMouseDown={[Function]}
-              onMouseLeave={[Function]}
-              onPointerDown={[Function]}
+              className="py-1 text-sm text-gray-700 dark:text-gray-200"
             >
-              <button
-                className="text-white bg-blue-700 border border-transparent hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 disabled:hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 dark:disabled:hover:bg-blue-600 focus:!ring-2 group flex h-min items-center justify-center p-0.5 text-center font-medium focus:z-10 rounded-lg"
-                disabled={false}
-                type="button"
+              <ul
+                className="py-1"
               >
-                <span
-                  className="flex items-center rounded-md text-sm px-4 py-2"
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
                 >
-                  Event Status
-                  <svg
-                    aria-hidden="true"
-                    className="ml-2 h-4 w-4"
-                    fill="none"
-                    height="1em"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    style={
-                      Object {
-                        "color": undefined,
-                      }
-                    }
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <path
-                      d="M19 9l-7 7-7-7"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </button>
-            </div>
-            <div
-              className="z-10 w-fit rounded divide-y divide-gray-100 shadow transition-opacity duration-100 invisible opacity-0 border border-gray-200 bg-white text-gray-900 dark:border-none dark:bg-gray-700 dark:text-white"
-              data-testid="flowbite-tooltip"
-              id=":r7:"
-              role="tooltip"
-              style={
-                Object {
-                  "left": " ",
-                  "position": "absolute",
-                  "top": " ",
-                }
-              }
-              tabIndex={-1}
-            >
-              <div
-                className="py-1 text-sm text-gray-700 dark:text-gray-200"
-              >
-                <ul
-                  className="py-1"
+                    attending
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
                 >
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      attending
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
+                    invited
+                  </span>
+                </li>
+                <li
+                  className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
+                  onClick={[Function]}
+                >
+                  <input
+                    checked={false}
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
+                    id="checkbox-item-1"
+                    onChange={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="pl-2"
                   >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      invited
-                    </span>
-                  </li>
-                  <li
-                    className="flex items-center justify-start py-2 px-4 text-sm text-gray-700 cursor-pointer hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white"
-                    onClick={[Function]}
-                  >
-                    <input
-                      checked={false}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500 p-2"
-                      id="checkbox-item-1"
-                      onChange={[Function]}
-                      type="checkbox"
-                    />
-                    <span
-                      className="pl-2"
-                    >
-                      friend's event
-                    </span>
-                  </li>
-                </ul>
-              </div>
+                    friend's event
+                  </span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
