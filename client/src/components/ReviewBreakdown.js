@@ -14,7 +14,7 @@ export default function ReviewBreakdown(props) {
 
   const percentReviewsWithRating = (number) => {
     const count = event.reviews.map((rev) => {return rev.rating}).reduce((acc, curr) => {return curr === number ? acc + 1 : acc}, 0);
-    return event.reviews.length === 0 ? 0 : (count / event.reviews.length) * 100;
+    return event.reviews.length === 0 ? 0 : Math.round((count / event.reviews.length) * 10000) / 100;
   }
 
   const rating = computeRating();
