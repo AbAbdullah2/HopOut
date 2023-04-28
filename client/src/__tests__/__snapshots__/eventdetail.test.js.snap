@@ -34,7 +34,7 @@ exports[`matches snapshot 1`] = `
       >
         <a
           className="hover:text-blue-400"
-          href="/addFriends"
+          href="/searchUsers"
         >
           <svg
             aria-hidden="true"
@@ -801,7 +801,7 @@ exports[`matches snapshot 1`] = `
                               26
                             </button>
                             <button
-                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10 text-blue-500"
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
                               disabled={false}
                               onClick={[Function]}
                               onMouseOver={[Function]}
@@ -810,7 +810,7 @@ exports[`matches snapshot 1`] = `
                               27
                             </button>
                             <button
-                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10"
+                              className="flex items-center justify-center w-12 h-12 lg:w-10 lg:h-10 text-blue-500"
                               disabled={false}
                               onClick={[Function]}
                               onMouseOver={[Function]}
