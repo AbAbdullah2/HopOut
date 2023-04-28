@@ -6,8 +6,6 @@ import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriend
 import Header from '../components/Header';
 import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
 import HostedEventsList from '../components/HostedEventsList';
-import FriendsList from '../components/FriendsList';
-
 
 export default function Profile(props) {
   const { userid } = useParams();
@@ -117,17 +115,15 @@ export default function Profile(props) {
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
       <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={closeModal} unfriended={user}/> 
-      <div className='mx-auto flex flex-col h-full'>
+      <div className='mx-auto h-full flex flex-col justify-center items-center'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className='m-5 flex flex-col items-center'>
           <p className='text-4xl font-extrabold text-center'>{user.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {user.email}</p>
           {renderSwitch()}
         </div>
-        <div className=" align-top w-11/12 md:grid md:grid-cols-4 overflow-hidden break-all"> 
-          <div className="m-auto col-span-3 p-2 align-top w-full h-full">
-            <HostedEventsList curUser={user} self={false}/>
-          </div>
+        <div className="w-11/12 overflow-hidden"> 
+          <HostedEventsList curUser={user} self={false}/>
         </div>
       </div>
     </div>
