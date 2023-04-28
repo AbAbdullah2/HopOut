@@ -14,8 +14,7 @@ export default function FriendFilter(props) {
   }
 
   return (
-    <div className="mr-2">
-      <Dropdown
+    <Dropdown
         label={"Event Status"}
         dismissOnClick={false}
       >
@@ -26,6 +25,5 @@ export default function FriendFilter(props) {
         </Dropdown.Item>
       ))}
     </Dropdown>
-    </div>
   );
 }

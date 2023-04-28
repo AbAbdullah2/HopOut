@@ -4,6 +4,7 @@ import { Card } from 'flowbite-react';
 import { formatEventDates } from '../helpers/FormatDate';
 import { useNavigate } from 'react-router-dom';
 import RatingOverview from "../components/RatingOverview";
+import GuestOverview from "../components/GuestOverview";
 
 export default function EventCard({event}) {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function EventCard({event}) {
   }
 
   return ( 
-    <Card className='m-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center'
+    <Card className='m-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center h-[600px]'
     onClick={()=> navigate('/events/'+ event._id)}
     >
       <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-96 h-96' />
@@ -25,11 +26,9 @@ export default function EventCard({event}) {
         <p className='text-2xl'>{event.name}</p>
         <p className='my-2'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(start, end)}</p>
         <p><FontAwesomeIcon icon={solid('location-dot')} /> {event.locationName ? event.locationName : (event.location.city + ', ' + event.location.state + ' ' + event.location.zip)}</p>
-        <div>
-          { eventIsOver() ?
-            <RatingOverview reviews={event.reviews} />
-          : <div></div> }
-        </div>
+        { eventIsOver() ?
+          <RatingOverview reviews={event.reviews} />
+        : <GuestOverview guests={event.attendees} /> }
       </div>
     </Card>
   );
