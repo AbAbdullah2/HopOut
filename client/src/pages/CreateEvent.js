@@ -16,8 +16,8 @@ import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
-const COVER_PLACEHOLDER = "https://picsum.photos/1920/1080";
-const THUMB_PLACEHOLDER = "https://picsum.photos/1000/1000";
+const COVER_PLACEHOLDER = "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg";
+const THUMB_PLACEHOLDER = "https://images.pexels.com/photos/1078981/pexels-photo-1078981.jpeg";
 
 function CreateEvent(props) {
   const navigate = useNavigate();
