@@ -17,6 +17,7 @@ export default function FriendFilter(props) {
     <Dropdown
         label={"Event Status"}
         dismissOnClick={false}
+        placement="left-start"
       >
       {friendCategories.map((f) => (
         <Dropdown.Item key={f.key}>
