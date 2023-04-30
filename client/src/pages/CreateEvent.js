@@ -183,7 +183,7 @@ function CreateEvent(props) {
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                    Title
+                    Title <span className='text-red-700'>(required)</span>
                   </label>
                   <div className="mt-3 flex rounded-md shadow-sm">
                     <input
@@ -207,7 +207,7 @@ function CreateEvent(props) {
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
                     <label htmlFor="starttime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
-                      Start Date/Time
+                      Start Date/Time <span className='text-red-700'>(required)</span>
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
                       <Datepicker 
@@ -234,7 +234,7 @@ function CreateEvent(props) {
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
                     <label htmlFor="endtime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
-                      End Date/Time
+                      End Date/Time <span className='text-red-700'>(required)</span>
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
                       <Datepicker 
@@ -262,7 +262,7 @@ function CreateEvent(props) {
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Location
+                    Location <span className='text-red-700'>(required)</span>
                   </label>
                   <div className="mt-3 flex rounded-md shadow-sm">
                     <input
@@ -374,7 +374,7 @@ function CreateEvent(props) {
               </div>
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                  Description
+                  Description <span className='text-red-700'>(required)</span>
                 </label>
                 <div className="mt-1">
                   <textarea
