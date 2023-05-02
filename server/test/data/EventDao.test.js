@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, expect, it, afterAll } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, afterEach, afterAll } from "vitest";
 import EventDao from "../../src/data/EventDao.js";
 import { faker } from "@faker-js/faker";
 import Event from "../../src/models/Event.js";
@@ -19,17 +19,19 @@ describe("Test EventDao", () => {
     let user;
 
     beforeAll(async () => {
-        db.connect(process.env.TEST_DB);
-        await eventDao.deleteAll();
+      db.connect(process.env.TEST_DB);
+      await eventDao.deleteAll();
+      await userDao.deleteAll();
     });
 
     beforeEach(async () => {
       await eventDao.deleteAll();
+      await userDao.deleteAll();
       events = [];
+      user = await userDao.create({name: "test", email: "testingtesting12@gmail.com", password: "1234567"});
     });
 
     it("test create()", async () => {
-      const user = await userDao.create({name: "test", email: "testingtesting12@gmail.com", password: "1234567"});
       const name = faker.lorem.words(3);
       const start = "2023-06-29T15:45:26.193Z";
       const end = "2023-06-30T15:45:26.193Z";
@@ -76,7 +78,7 @@ describe("Test EventDao", () => {
           const zip = faker.address.zipCode();
           const description = faker.lorem.paragraph();
           const visibility = "private";
-          const organizer = mongoose.Types.ObjectId();
+          const organizer = user.id;
           const capacity = faker.datatype.number({ min: 1 });
           const categories = ["Sports"];
           await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -96,7 +98,7 @@ describe("Test EventDao", () => {
           const zip = faker.address.zipCode();
           const description = faker.lorem.paragraph();
           const visibility = "private";
-          const organizer = mongoose.Types.ObjectId();
+          const organizer = user.id;
           const capacity = faker.datatype.number({ min: 1 });
           const categories = ["Sports"];
           await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -116,7 +118,7 @@ describe("Test EventDao", () => {
           const zip = faker.address.zipCode();
           const description = faker.lorem.paragraph();
           const visibility = "private";
-          const organizer = mongoose.Types.ObjectId();
+          const organizer = user.id;
           const capacity = faker.datatype.number({ min: 1 });
           const categories = ["Sports"];
           await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -136,7 +138,7 @@ describe("Test EventDao", () => {
           const zip = faker.address.zipCode();
           const description = faker.lorem.paragraph();
           const visibility = "private";
-          const organizer = mongoose.Types.ObjectId();
+          const organizer = user.id;
           const capacity = faker.datatype.number({ min: 1 });
           const categories = ["Sports"];
           await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -146,23 +148,23 @@ describe("Test EventDao", () => {
       });
 
       it("empty start", async () => {
-          try {
-            const name = faker.lorem.words(3);
-            const start = "";
-            const end = "2023-06-30T15:45:26.193Z";
-            const address = faker.address.streetAddress();
-            const city = faker.address.cityName();
-            const state = faker.address.countryCode();
-            const zip = faker.address.zipCode();
-            const description = faker.lorem.paragraph();
-            const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
-            const capacity = faker.datatype.number({ min: 1 });
-            const categories = ["Sports"];
-            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
-          } catch (err) {
-            expect(err.status).toBe(400);
-          }
+        try {
+          const name = faker.lorem.words(3);
+          const start = "";
+          const end = "2023-06-30T15:45:26.193Z";
+          const address = faker.address.streetAddress();
+          const city = faker.address.cityName();
+          const state = faker.address.countryCode();
+          const zip = faker.address.zipCode();
+          const description = faker.lorem.paragraph();
+          const visibility = "private";
+          const organizer = user.id;
+          const capacity = faker.datatype.number({ min: 1 });
+          const categories = ["Sports"];
+          await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+        } catch (err) {
+          expect(err.status).toBe(400);
+        }
         });
     
         it("null start", async () => {
@@ -176,7 +178,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -196,7 +198,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -216,7 +218,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -236,7 +238,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -256,7 +258,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -276,7 +278,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -296,7 +298,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -316,7 +318,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -336,7 +338,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -356,7 +358,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -376,7 +378,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -396,7 +398,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = "";
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -416,7 +418,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = null;
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -436,7 +438,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = undefined;
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -456,7 +458,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.date.soon(1, start);
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -476,7 +478,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -496,7 +498,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = null;
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -516,7 +518,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = undefined;
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -536,7 +538,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = faker.lorem.words(3);
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -545,7 +547,7 @@ describe("Test EventDao", () => {
           }
         });
 
-        it("empty organizer", async () => {
+        it("empty organizer id", async () => {
           try {
             const name = faker.lorem.words(3);
             const start = "2023-06-29T15:45:26.193Z";
@@ -565,7 +567,7 @@ describe("Test EventDao", () => {
           }
         });
     
-        it("null organizer", async () => {
+        it("null organizer id", async () => {
           try {
             const name = faker.lorem.words(3);
             const start = "2023-06-29T15:45:26.193Z";
@@ -585,7 +587,7 @@ describe("Test EventDao", () => {
           }
         });
     
-        it("undefined organizer", async () => {
+        it("undefined organizer id", async () => {
           try {
             const name = faker.lorem.words(3);
             const start = "2023-06-29T15:45:26.193Z";
@@ -605,7 +607,7 @@ describe("Test EventDao", () => {
           }
         });
 
-        it("invalid organizer", async () => {
+        it("invalid organizer id", async () => {
           try {
             const name = faker.lorem.words(3);
             const start = "2023-06-29T15:45:26.193Z";
@@ -625,6 +627,26 @@ describe("Test EventDao", () => {
           }
         });
 
+        it("invalid organizer", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = mongoose.Types.ObjectId();
+            const capacity = faker.datatype.number({ min: 1 });
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
         it("empty address", async () => {
           try {
             const name = faker.lorem.words(3);
@@ -636,7 +658,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -656,7 +678,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -676,7 +698,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -696,7 +718,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -716,7 +738,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -856,7 +878,7 @@ describe("Test EventDao", () => {
             const zip = faker.address.zipCode();
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -876,7 +898,7 @@ describe("Test EventDao", () => {
             const zip = "";
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -896,7 +918,7 @@ describe("Test EventDao", () => {
             const zip = null;
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -916,7 +938,7 @@ describe("Test EventDao", () => {
             const zip = undefined;
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -936,7 +958,7 @@ describe("Test EventDao", () => {
             const zip = faker.date.soon(1, start);
             const description = faker.lorem.paragraph();
             const visibility = "private";
-            const organizer = mongoose.Types.ObjectId();
+            const organizer = user.id;
             const capacity = faker.datatype.number({ min: 1 });
             const categories = ["Sports"];
             await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
@@ -944,7 +966,152 @@ describe("Test EventDao", () => {
             expect(err.status).toBe(400);
           }
         });
+
+        it("null capacity", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = null;
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("undefined capacity", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = undefined;
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("invalid capacity", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = faker.date.soon(1, start);
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("empty category", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = faker.datatype.number({ min: 1 });
+            const categories = [""];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("null category", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = faker.datatype.number({ min: 1 });
+            const categories = [null];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("undefined category", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = faker.datatype.number({ min: 1 });
+            const categories = [undefined];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("invalid category", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = faker.datatype.number({ min: 1 });
+            const categories = [faker.date.soon(1, start)];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
     });
+
+    afterEach(async () => {
+      await eventDao.deleteAll();
+      await userDao.deleteAll();
+    })
     
     afterAll(async () => {
       await eventDao.deleteAll();
