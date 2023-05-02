@@ -80,6 +80,8 @@ class EventDao {
     if (!org) {
       throw new ApiError(400, "Invalid Organizer!");
     }
+
+    // check capacity is valid
     result = validNumber.safeParse(capacity);
     if (!result.success) {
       throw new ApiError(400, 'Invalid capacity!');
@@ -97,7 +99,7 @@ class EventDao {
 
     //create event
     const event = await Event.create({ name, start, end, locationName, location, addressLine2, description, visibility, organizer, capacity, categories, 
-        attendees: attendees, invitees: invitees, coverId, thumbnailId, reviews});
+        attendees: attendees, invitees: invitees, coverId, thumbnailId, reviews });
     return event;
   }
 
