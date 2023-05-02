@@ -69,13 +69,13 @@ class EventDao {
       throw new ApiError(400, "Invalid visibility!");
     }
 
-    //check organizer ID is valid
+    //check organizer id is valid
     result = validObjectId.safeParse(organizer);
     if (!result.success) {
       throw new ApiError(400, "Invalid Organizer ID!");
     }
 
-    //check Organizer is valid
+    //check organizer is valid
     const org = await User.findById(organizer);
     if (!org) {
       throw new ApiError(400, "Invalid Organizer!");

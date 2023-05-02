@@ -47,8 +47,38 @@ describe("Test EventDao", () => {
       const capacity = faker.datatype.number({ min: 1 });
       const categories = ["Sports"];
       const _event = await eventDao.create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, organizer, capacity, categories });
-      
-      await userDao.delete(user.id);
+
+      expect(_event.name).toBe(name);
+      expect(_event.start).toBe(start);
+      expect(_event.locationName).toBe(locationName);
+      expect(_event.location.address).toBe(address);
+      expect(_event.location.city).toBe(city);
+      expect(_event.location.state).toBe(state);
+      expect(_event.location.zip).toBe(zip);
+      expect(_event.addressLine2).toBe(addressLine2);
+      expect(_event.description).toBe(description);
+      expect(_event.visibility).toBe(visibility);
+      expect(_event.organizer.toString()).toBe(organizer);
+      expect(_event.capacity).toBe(capacity);
+      expect(_event.categories).toStrictEqual(categories);
+      expect(_event.id).toBeDefined();
+    });
+
+    it("test create() with empty categories", async () => {
+      const name = faker.lorem.words(3);
+      const start = "2023-06-29T15:45:26.193Z";
+      const end = "2023-06-30T15:45:26.193Z";
+      const locationName = faker.lorem.words(2);
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
+      const description = faker.lorem.paragraph();
+      const visibility = "private";
+      const organizer = user.id;
+      const capacity = faker.datatype.number({ min: 1 });
+      const _event = await eventDao.create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, organizer, capacity });
 
       expect(_event.name).toBe(name);
       expect(_event.start).toBe(start);
