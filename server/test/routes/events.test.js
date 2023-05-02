@@ -432,6 +432,16 @@ describe(`Test ${endpoint}`, () => {
         expect(response.status).toBe(400);
       });
 
+      it('Negative capacity', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const capacity = -1 * faker.datatype.number({ min: 1 });
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          capacity,
+        });
+        expect(response.status).toBe(400);
+      });
+
       it('Invalid categories', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
@@ -484,7 +494,6 @@ describe(`Test ${endpoint}`, () => {
         expect(response.status).toBe(400);
       });
 
-
       it('Undefined reviewer id', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
@@ -526,7 +535,6 @@ describe(`Test ${endpoint}`, () => {
         });
         expect(response.status).toBe(400);
       });
-
 
       it('Null reviewer id', async () => {
         const index = Math.floor(Math.random() * numEvents);

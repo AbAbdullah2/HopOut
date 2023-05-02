@@ -1056,6 +1056,46 @@ describe("Test EventDao", () => {
           }
         });
 
+        it("negative capacity", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = -1 * faker.datatype.number({ min: 1 });
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
+        it("zero capacity", async () => {
+          try {
+            const name = faker.lorem.words(3);
+            const start = "2023-06-29T15:45:26.193Z";
+            const end = "2023-06-30T15:45:26.193Z";
+            const address = faker.address.streetAddress();
+            const city = faker.address.cityName();
+            const state = faker.address.countryCode();
+            const zip = faker.address.zipCode();
+            const description = faker.lorem.paragraph();
+            const visibility = "private";
+            const organizer = user.id;
+            const capacity = 0;
+            const categories = ["Sports"];
+            await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, organizer, capacity, categories });
+          } catch (err) {
+            expect(err.status).toBe(400);
+          }
+        });
+
         it("empty category", async () => {
           try {
             const name = faker.lorem.words(3);

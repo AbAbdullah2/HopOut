@@ -83,7 +83,7 @@ class EventDao {
 
     // check capacity is valid
     result = validNumber.safeParse(capacity);
-    if (!result.success) {
+    if (!result.success || capacity <= 0) {
       throw new ApiError(400, 'Invalid capacity!');
     }
 
