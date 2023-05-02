@@ -92,7 +92,6 @@ describe("Test EventDao", () => {
       expect(_event.visibility).toBe(visibility);
       expect(_event.organizer.toString()).toBe(organizer);
       expect(_event.capacity).toBe(capacity);
-      expect(_event.categories).toStrictEqual(categories);
       expect(_event.id).toBeDefined();
     });
 

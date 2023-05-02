@@ -124,20 +124,18 @@ router.put(`/events/:id`, async (req, res, next) => {
       coverId, 
       thumbnailId
     } = req.body;
-    // call read, get capacity if original capity is undefined
+    // call read, get capacity if original capacity is undefined
     const eventBefore = await eventDao.read(id);
     const readCapacity = eventBefore.capacity;
     let updatedCapacity = capacity || readCapacity;
+    const location = { address, city, state, zip };
     const event = await eventDao.update({
       id,
       name,
       start,
       end,
       locationName,
-      address,
-      city,
-      state,
-      zip,
+      location,
       addressLine2,
       description,
       visibility,
