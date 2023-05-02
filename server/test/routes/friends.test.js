@@ -43,6 +43,7 @@ describe(`Test ${endpoint}`, () => {
       const response = await request
         .put(`${endpoint}/sendRequest`)
         .send({ senderId, receiverId });
+      console.log("finished")
       expect(response.status).toBe(200);
       expect(response.body.data._id).toBe(senderId);
       expect(response.body.data.sentFriends[0].user).toBe(receiverId);
