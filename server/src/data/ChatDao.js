@@ -54,9 +54,7 @@ class ChatDao {
       },
     });
 
-    console.log("chat Exists", chatExists[0])
     if (chatExists[0]) {
-      console.log("throwing chat exist error")
       throw new ApiError(400, 'Chat already exists between users!');
     }
 

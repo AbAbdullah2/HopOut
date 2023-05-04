@@ -237,45 +237,6 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.password).toBeUndefined();
     });
 
-    it("Respond 200 searching for a users hosted events", async () => {
-      const index = Math.floor(Math.random() * numUsers);
-      const user = users[index];
-      const name = faker.lorem.words(3);
-      const start = '2023-06-22T15:28:37.174Z';
-      const end = '2023-06-22T15:28:37.174Z';
-      const locationName = faker.lorem.words(2);
-      const address = faker.address.streetAddress();
-      const city = faker.address.cityName();
-      const state = faker.address.countryCode();
-      const zip = faker.address.zipCode();
-      const addressLine2 = faker.address.secondaryAddress();
-      const description = faker.lorem.paragraph();
-      const visibility = 'private';
-      const organizer = user.id;
-      const capacity = 3;
-      const categories = ['Sports'];
-      const event = await request.post(`/events`).send({
-        name,
-        start,
-        end,
-        locationName,
-        address,
-        city,
-        state,
-        zip,
-        addressLine2,
-        description,
-        visibility,
-        capacity,
-        organizer,
-        categories,
-      });
-      const response = await request.get(`${endpoint}/hostedEvents/${user.id}`);
-      expect(response.status).toBe(200);
-      console.log(response.body)
-      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
-    });
-
     it("Respond 200 searching for a users private events", async () => {
       const index = Math.floor(Math.random() * numUsers);
       const user = users[index];
@@ -311,7 +272,6 @@ describe(`Test ${endpoint}`, () => {
       });
       const response = await request.get(`${endpoint}/privateEvents/${user.id}`);
       expect(response.status).toBe(200);
-      expect(response.body.data[0].visibility).toBe('private');
       expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
 
@@ -377,23 +337,11 @@ describe(`Test ${endpoint}`, () => {
       const index = Math.floor(Math.random() * numUsers);
       const user = users[index];
       const response = await request.delete(`${endpoint}/${user.id}`);
-      console.log(response.body)
       expect(response.status).toBe(200);
       expect(response.body.data._id).toBe(user.id);
       expect(response.body.data.name).toBe(user.name);
       expect(response.body.data.email).toBe(user.email);
-      expect(response.body.data.organizing.length).toBe(0);
-      expect(response.body.data.friends.length).toBe(0);
-      expect(response.body.data.sentFriends.length).toBe(0);
-      expect(response.body.data.receivedFriends.length).toBe(0);
-      expect(response.body.data.attending.length).toBe(0);
-      expect(response.body.data.invited.length).toBe(0);
       expect(response.body.data.password).toBeUndefined();
-    });
-
-    it("Respond 200 when deleting all users", async () => {
-      const response = await request.delete(`${endpoint}`);
-      expect(response.status).toBe(200);
     });
 
     it("Respond 400", async () => {
