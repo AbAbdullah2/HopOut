@@ -101,6 +101,14 @@ describe("Test ChatDao", () => {
           expect(err.message).toBe('Invalid ID!')
         }
       });
+      it("chat already exists", async () => {
+        try {
+          await chatDao.createChat({ person1: user1.id, person2: user2.id });
+        } catch (err) {
+          expect(err.status).toBe(400);
+          expect(err.message).toBe('Invalid ID!')
+        }
+      });
     });
 
     it("test createMessage()", async () => {
