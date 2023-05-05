@@ -15,6 +15,7 @@ const request = new supertest(app);
 describe(`Test ${endpoint}`, () => {
   const numEvents = 5;
   let events;
+  let users;
   let uid;
   let uid2;
 
@@ -53,8 +54,17 @@ describe(`Test ${endpoint}`, () => {
     });
     uid2 = user2.id;
 
-    events = [];
+    users = [];
+    for (let index = 0; index < 4; index++) {
+      const u = await userDao.create({
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(6),
+      });
+      users.push(u.id);
+    }
 
+    events = [];
     for (let index = 0; index < numEvents; index++) {
       const name = faker.lorem.words(3);
       const start = '2023-06-22T15:28:37.174Z';
@@ -448,6 +458,36 @@ describe(`Test ${endpoint}`, () => {
         const categories = [''];
         const response = await request.put(`${endpoint}/${event.id}`).send({
           categories,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Too many attendees', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const attendees = users;
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          attendees,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid attendee', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const attendees = [mongoose.Types.ObjectId()];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          attendees,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid invitee', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const invitees = [mongoose.Types.ObjectId()];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          invitees,
         });
         expect(response.status).toBe(400);
       });
