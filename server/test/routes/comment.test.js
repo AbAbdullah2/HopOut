@@ -342,7 +342,7 @@ describe(`Test comment routes`, () => {
         it('Empty commentSectionId', async () => {
           try {
             console.log("trying to delete with empty chatid")
-            const resp = await request.delete(`/deleteComment/`).send({ senderId: user2._id, commentId: commentId });
+            const resp = await request.delete(`/deleteComment/`).send({ senderId: user1._id, commentId: commentId });
             console.log("delete empty", resp.body)
           }
           catch (err) {
@@ -353,7 +353,7 @@ describe(`Test comment routes`, () => {
         });
         it('Null commentSectionId', async () => {
           try {
-            await request.delete(`/deleteComment/${null}`).send({ senderId: user2._id, commentId: commentId });
+            await request.delete(`/deleteComment/${null}`).send({ senderId: user1._id, commentId: commentId });
           }
           catch (err) {
             expect(err.message).toBe('Invalid ID!')
@@ -362,7 +362,7 @@ describe(`Test comment routes`, () => {
         });
         it('Undefined commentSectionId', async () => {
           try {
-            await request.delete(`/deleteComment/${undefined}`).send({ senderId: user2._id, commentId: commentId });
+            await request.delete(`/deleteComment/${undefined}`).send({ senderId: user1._id, commentId: commentId });
           }
           catch (err) {
             expect(err.message).toBe('Invalid ID!')
@@ -372,7 +372,7 @@ describe(`Test comment routes`, () => {
         });
         it('Invalid commentSection: commentSection doesn\'t exist', async () => {
           try {
-            await request.delete(`/deleteComment/${mongoose.Types.ObjectId()}`).send({senderId: user2._id, commentId: commentId });
+            await request.delete(`/deleteComment/${mongoose.Types.ObjectId()}`).send({senderId: user1._id, commentId: commentId });
           }
           catch (err) {
             expect(err.message).toBe('Resource not found!')
@@ -421,7 +421,7 @@ describe(`Test comment routes`, () => {
         it('Empty commentId', async () => {
           try {
             console.log("trying to delete with empty chatid")
-            const chat = await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user2._id, commentId: "" });
+            const chat = await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user1._id, commentId: "" });
             console.log("delete empty", chat.body)
           }
           catch (err) {
@@ -431,7 +431,7 @@ describe(`Test comment routes`, () => {
         });
         it('Null commentId', async () => {
           try {
-            await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user2._id, commentId: "" });
+            await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user1._id, commentId: "" });
           }
           catch (err) {
             expect(err.message).toBe('Invalid ID!')
@@ -440,7 +440,7 @@ describe(`Test comment routes`, () => {
         });
         it('Undefined commentId', async () => {
           try {
-            await request.delete(`/deleteComment/${commentSectionId}}`).send({ senderId: user2._id, commentId: undefined });
+            await request.delete(`/deleteComment/${commentSectionId}}`).send({ senderId: user1._id, commentId: undefined });
           }
           catch (err) {
             expect(err.message).toBe('Invalid ID!')
