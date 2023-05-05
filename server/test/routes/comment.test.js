@@ -7,6 +7,7 @@ import * as dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { userDao } from '../../src/routes/users.js';
 import { eventDao } from '../../src/routes/events.js';
+import { commentDao } from '../../src/routes/comment.js';
 
 dotenv.config();
 const request = new supertest(app);
@@ -59,7 +60,7 @@ describe(`Test comment routes`, () => {
     describe(`/commentSection/:eventId`, () => {
       it('Respond 201', async () => {
         const response = await request.post(`/commentSection/${event._id}`);
-        commentSectionId = response.body.data._id
+        commentSectionId = response.body.data._id;
         expect(response.status).toBe(201);
         expect(response.body.data.event._id).toBe(event._id.toString())
         expect(commentSectionId).toBeDefined();
@@ -102,7 +103,6 @@ describe(`Test comment routes`, () => {
           }
         });
       });
-
     })
 
     describe('/comment/:commentSectionId', () => {
@@ -111,9 +111,8 @@ describe(`Test comment routes`, () => {
         console.log("RESPONSE", response.body)
         expect(response.status).toBe(201);
         expect(response.body.data.comments).toBeDefined();
-        commentId = response.body.data.comments[0]._id
-        //expect(response.body.data.comments).toContain(message)
-        expect(response.body.data.event).toBe(event._id.toString())
+        commentId = response.body.data.comments[0]._id;
+        expect(response.body.data.event).toBe(event._id.toString());
       });
       describe('Respond 400', () => {
         it('Empty commentSectionId', async () => {
@@ -285,240 +284,241 @@ describe(`Test comment routes`, () => {
     });
   });
 
-  // describe('GET request', () => {
-  //   describe('/getAllComments/:eventId', () => {
-  //     it('Respond 200', async () => {
-  //       const response = await request.get(`/getAllComments/${event._id}`);
-  //       expect(response.status).toBe(200);
-  //       expect(response.body.data).toBeDefined();
-  //       expect(response.body.data[0].messages.length).toBe(1)
-  //     });
+  describe('GET request', () => {
+    describe('/getAllComments/:eventId', () => {
+      it('Respond 200', async () => {
+        const response = await request.get(`/getAllComments/${event._id}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.data[0].comments.length).toBe(1);
+        expect(response.body.data[0].comments[0]._id).toBe(commentId);
+      });
 
-  //     describe('Respond 400', () => {
-  //       it('Empty eventId', async () => {
-  //         try {
-  //           await request.get(`/getAllComments/`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Null eventId', async () => {
-  //         try {
-  //           await request.get(`/getAllComments/${null}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Undefined eventId', async () => {
-  //         try {
-  //           await request.get(`/getAllComments/${undefined}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
+      describe('Respond 400', () => {
+        it('Empty eventId', async () => {
+          try {
+            await request.get(`/getAllComments/`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Null eventId', async () => {
+          try {
+            await request.get(`/getAllComments/${null}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Undefined eventId', async () => {
+          try {
+            await request.get(`/getAllComments/${undefined}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
   
-  //       });
-  //       it('Invalid event: event doesn\'t exist', async () => {
-  //         try {
-  //           await request.get(`/getAllComments/${mongoose.Types.ObjectId()}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid Event!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //     });
-  //   });   
-  // });
+        });
+        it('Invalid event: event doesn\'t exist', async () => {
+          try {
+            await request.get(`/getAllComments/${mongoose.Types.ObjectId()}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid Event!')
+            expect(err.status).toBe(400)
+          }
+        });
+      });
+    });   
+  });
 
-
-
-  // describe('DELETE request', () => {
-  //   describe('/deleteComment/:commentSectionId', () => {
-  //     describe('Respond 400', () => {
-  //       it('Empty commentSectionId', async () => {
-  //         try {
-  //           console.log("trying to delete with empty chatid")
-  //           const chat = await request.delete(`/deleteComment/`, { data: { senderId: user2._id, commentId: commentId }});
-  //           console.log("delete empty", chat.body)
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Null commentSectionId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${null}`, { data: { senderId: user2._id, commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Undefined commentSectionId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${undefined}`, { data: { senderId: user2._id, commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
+  describe('DELETE request', () => {
+    describe('/deleteComment/:commentSectionId', () => {
+      describe('Respond 400', () => {
+        it('Empty commentSectionId', async () => {
+          try {
+            console.log("trying to delete with empty chatid")
+            const resp = await request.delete(`/deleteComment/`).send({ senderId: user2._id, commentId: commentId });
+            console.log("delete empty", resp.body)
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+            expect(commentId).toBeDefined();
+          }
+        });
+        it('Null commentSectionId', async () => {
+          try {
+            await request.delete(`/deleteComment/${null}`).send({ senderId: user2._id, commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Undefined commentSectionId', async () => {
+          try {
+            await request.delete(`/deleteComment/${undefined}`).send({ senderId: user2._id, commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
   
-  //       });
-  //       it('Invalid commentSection: commentSection doesn\'t exist', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${mongoose.Types.ObjectId()}`, {data : { senderId: user2._id, commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Resource not found!')
-  //           expect(err.status).toBe(404)
-  //         }
-  //       });
-  //       it('Empty senderId', async () => {
-  //         try {
-  //           console.log("trying to delete with empty chatid")
-  //           const chat = await request.delete(`/deleteComment/${commentId}`, {data : { senderId: "", commentId: commentId }});
-  //           console.log("delete empty", chat.body)
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Null senderId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}`, {data : { senderId: null, commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Undefined senderId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}`, {data : { senderId: undefined, commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
+        });
+        it('Invalid commentSection: commentSection doesn\'t exist', async () => {
+          try {
+            await request.delete(`/deleteComment/${mongoose.Types.ObjectId()}`).send({senderId: user2._id, commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Resource not found!')
+            expect(err.status).toBe(404)
+          }
+        });
+        it('Empty senderId', async () => {
+          try {
+            console.log("trying to delete with empty chatid")
+            const chat = await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: "", commentId: commentId });
+            console.log("delete empty", chat.body)
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Null senderId', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: null, commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Undefined senderId', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: undefined, commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
   
-  //       });
-  //       it('Invalid sender: user doesn\'t exist', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}}`, {data : { senderId: mongoose.Types.ObjectId(), commentId: commentId }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Resource not found!')
-  //           expect(err.status).toBe(404)
-  //         }
-  //       });
-  //       it('Empty commentId', async () => {
-  //         try {
-  //           console.log("trying to delete with empty chatid")
-  //           const chat = await request.delete(`/deleteComment/${commentId}`, {data : { senderId: user2._id, commentId: "" }});
-  //           console.log("delete empty", chat.body)
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Null commentId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}`, {data : { senderId: user2._id, commentId: "" }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Undefined commentId', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}}`, {data : { senderId: user2._id, commentId: undefined }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
+        });
+        it('Invalid sender: user doesn\'t exist', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}}`).send({ senderId: mongoose.Types.ObjectId(), commentId: commentId });
+          }
+          catch (err) {
+            expect(err.message).toBe('Resource not found!')
+            expect(err.status).toBe(404)
+          }
+        });
+        it('Empty commentId', async () => {
+          try {
+            console.log("trying to delete with empty chatid")
+            const chat = await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user2._id, commentId: "" });
+            console.log("delete empty", chat.body)
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Null commentId', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user2._id, commentId: "" });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Undefined commentId', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}}`).send({ senderId: user2._id, commentId: undefined });
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
   
-  //       });
-  //       it('Invalid comment: comment doesn\'t exist', async () => {
-  //         try {
-  //           await request.delete(`/deleteComment/${commentId}`, {data : { senderId: user2._id, commentId: mongoose.Types.ObjectId() }});
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Resource not found!')
-  //           expect(err.status).toBe(404)
-  //         }
-  //       });
-  //     });
-  //     it('Respond 200', async () => {
-  //       const response = await request.delete(`/deleteComment/${commentId}`, {data : { senderId: user2._id, commentId: commentId }});
-  //       expect(response.status).toBe(200);
-  //       expect(response.body.data).toBeDefined();
-  //       expect(response.body.data.users).toContain(user1._id.toString())
-  //       expect(response.body.data.users).toContain(user2._id.toString())
-  //     });
-  //   });
+        });
+        it('Invalid comment: comment doesn\'t exist', async () => {
+          try {
+            await request.delete(`/deleteComment/${commentSectionId}`).send({data : { senderId: user1._id, commentId: mongoose.Types.ObjectId() }});
+          }
+          catch (err) {
+            expect(err.message).toBe('Resource not found!')
+            expect(err.status).toBe(404)
+          }
+        });
+      });
+      it('Respond 200', async () => {
+        const response = await request.delete(`/deleteComment/${commentSectionId}`).send({ senderId: user1._id, commentId: commentId });
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBeDefined();
+      });
+    });
   
+    describe('/deleteCommentSection/:eventId', () => {
+      describe('Respond 400', () => {
+        it('Empty eventId', async () => {
+          try {
+            console.log("trying to delete with empty chatid")
+            const chat = await request.delete(`/deleteCommentSection/`);
+            console.log("delete empty", chat.body)
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Null eventId', async () => {
+          try {
+            await request.delete(`/deleteCommentSection/${null}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+        });
+        it('Undefined eventId', async () => {
+          try {
+            await request.delete(`/deleteCommentSection/${undefined}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Invalid ID!')
+            expect(err.status).toBe(400)
+          }
+  
+        });
+        it('Invalid event: event doesn\'t exist', async () => {
+          try {
+            await request.delete(`/deleteCommentSection/${mongoose.Types.ObjectId()}`);
+          }
+          catch (err) {
+            expect(err.message).toBe('Resource not found!')
+            expect(err.status).toBe(404)
+          }
+        });
+      });
+      it('Respond 200', async () => {
+        const response = await request.delete(`/deleteCommentSection/${event._id}`);
+        expect(response.status).toBe(200);
+        expect(response.body.data).toBeDefined();
+        expect(response.body.data.event).toBe(event._id.toString());
+      });
+    });
+  });
 
-
-
-  //   describe('/deleteCommentSection/:eventId', () => {
-  //     describe('Respond 400', () => {
-  //       it('Empty eventId', async () => {
-  //         try {
-  //           console.log("trying to delete with empty chatid")
-  //           const chat = await request.delete(`/deleteCommentSection/`);
-  //           console.log("delete empty", chat.body)
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Null eventId', async () => {
-  //         try {
-  //           await request.delete(`/deleteCommentSection/${null}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  //       });
-  //       it('Undefined eventId', async () => {
-  //         try {
-  //           await request.delete(`/deleteCommentSection/${undefined}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Invalid ID!')
-  //           expect(err.status).toBe(400)
-  //         }
-  
-  //       });
-  //       it('Invalid event: event doesn\'t exist', async () => {
-  //         try {
-  //           await request.delete(`/deleteCommentSection/${mongoose.Types.ObjectId()}`);
-  //         }
-  //         catch (err) {
-  //           expect(err.message).toBe('Resource not found!')
-  //           expect(err.status).toBe(404)
-  //         }
-  //       });
-  //     });
-  //     it('Respond 200', async () => {
-  //       const response = await request.delete(`/deleteCommentSection/${event._id}`);
-  //       expect(response.status).toBe(200);
-  //       expect(response.body.data).toBeDefined();
-  //       expect(response.body.data.event).toBe(event._id.toString())
-  //     });
-  //   });
-  // });
+  afterAll(async () => {
+    commentDao.deleteAll();
+    userDao.deleteAll();
+    eventDao.deleteAll();
+  })
 });

@@ -17,7 +17,6 @@ const userDao = new UserDao();
 const eventDao = new EventDao();
 
 describe('Test CommentDao', () => {
-  const numChats = 5;
   let commentSection, user1, text, commentSectionId;
   let name,
     start,
@@ -33,7 +32,7 @@ describe('Test CommentDao', () => {
     capacity,
     organizer,
     categories;
-  let sid, sender, rid, event1;
+  let sender, event1;
 
   beforeAll(async () => {
     db.connect(process.env.TEST_DB);
