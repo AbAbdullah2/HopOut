@@ -178,7 +178,6 @@ router.post('/verification', async (req, res, next) => {
     });
 
   } catch (err) {
-    /* c8 ignore next 2 */
     next(err);
   }
 });
@@ -207,7 +206,6 @@ router.post('/forgot', async (req, res, next) => {
     });
 
   } catch (err) {
-    /* c8 ignore next 2 */
     next(err);
   }
 });
