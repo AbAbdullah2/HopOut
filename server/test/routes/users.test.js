@@ -12,6 +12,8 @@ dotenv.config();
 const endpoint = "/users";
 const request = new supertest(app);
 const eventDao = new EventDao();
+let login_user;
+let user_password;
 
 describe(`Test ${endpoint}`, () => {
   const numUsers = 5;
@@ -27,11 +29,16 @@ describe(`Test ${endpoint}`, () => {
     const u = await userDao.readAll({});
     users = [];
     
+  
     for (let index = 0; index < numUsers; index++) {
       const name = faker.name.fullName();
       const email = faker.internet.email();
       const password = faker.internet.password(6);
       const user = await userDao.create({ name, email, password });
+      if (index == 2) {
+        login_user = user
+        user_password = password;
+      }
       users.push(user);
     }
   });
@@ -51,6 +58,46 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
 
+    it("Respond 200 searching for users attended events", async () => {
+      const user = users[0];
+      const other_user = users[1]
+      const name = faker.lorem.words(3);
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
+      const locationName = faker.lorem.words(2);
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
+      const description = faker.lorem.paragraph();
+      const visibility = 'private';
+      const organizer = other_user.id;
+      const capacity = 3;
+      const categories = ['Sports'];
+      const event = await request.post(`/events`).send({
+        name,
+        start,
+        end,
+        locationName,
+        address,
+        city,
+        state,
+        zip,
+        addressLine2,
+        description,
+        visibility,
+        capacity,
+        organizer,
+        categories,
+      })
+      console.log(event.body.data._id)
+      console.log(user.id)
+      const res1 = await request.put(`/users/${user.id}`).send({ attending : [event.body.data._id]});
+      const response = await request.get(`${endpoint}/attendedEvents/${user.id}`);
+      expect(response.status).toBe(200);
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+    });
   });
 
   describe("POST request", () => {
@@ -69,6 +116,46 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.email).toBe(email.toLowerCase());
       expect(response.body.data.password).toBeUndefined();
     });
+
+    // it("Respond 201 for verification", async () => {
+    //   const name = faker.name.fullName();
+    //   const email = faker.internet.email();
+    //   const response = await request.post("/verification").send({
+    //     email,
+    //     name,
+    //   });
+    //   expect(response.status).toBe(201);
+    //   expect(response.body.data._id).toBeDefined();
+    //   expect(response.body.data.name).toBe(name);
+    //   expect(response.body.data.email).toBe(email.toLowerCase());
+    //   expect(response.body.data.code).toBeDefined();
+    // });
+
+    // it("Respond 201 for forgot", async () => {
+    //   const user = users[3]
+    //   const response = await request.post("/forgot").send({
+    //     user,
+    //     tempPassword : "1234567",
+    //   });
+    //   expect(response.status).toBe(201);
+    //   expect(response.body.data._id).toBeDefined();
+    //   expect(response.body.data.data.email).toBe(email.toLowerCase());
+    // });
+
+    // it("Respond 201 for login", async () => {
+    //   console.log("hello")
+    //   const user = users[2]
+      
+    //   console.log("password", user_password)
+    //   const response = await request.post('/login').send({
+    //     email: login_user.email,
+    //     password : user_password,
+    //   });
+    //   console.log("hello", response.status)
+    //   expect(response.status).toBe(500);
+    //   expect(response.body.data._id).toBeDefined();
+    //   expect(response.body.data.email).toBe(email.toLowerCase());
+    // });
 
     describe("Respond 400", () => {
       it("Null name", async () => {
@@ -237,7 +324,7 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data.password).toBeUndefined();
     });
 
-    it("Respond 200 searching for a users private events", async () => {
+    it("Respond 200 searching for a users hosted events", async () => {
       const index = Math.floor(Math.random() * numUsers);
       const user = users[index];
       const name = faker.lorem.words(3);
@@ -270,8 +357,66 @@ describe(`Test ${endpoint}`, () => {
         organizer,
         categories,
       });
+      const response = await request.get(`${endpoint}/hostedEvents/${user.id}`);
+      expect(response.status).toBe(200);
+      console.log(response.body)
+      expect(response.body.data.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it("Respond 200 searching for a users private events", async () => {
+      const index = Math.floor(Math.random() * numUsers);
+      const user = users[0];
+      const other_user = users[1]
+      const name = faker.lorem.words(3);
+      const start = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-22T15:28:37.174Z';
+      const locationName = faker.lorem.words(2);
+      const address = faker.address.streetAddress();
+      const city = faker.address.cityName();
+      const state = faker.address.countryCode();
+      const zip = faker.address.zipCode();
+      const addressLine2 = faker.address.secondaryAddress();
+      const description = faker.lorem.paragraph();
+      const visibility = 'private';
+      const organizer = user.id;
+      const capacity = 3;
+      const categories = ['Sports'];
+      const event = await request.post(`/events`).send({
+        name,
+        start,
+        end,
+        locationName,
+        address,
+        city,
+        state,
+        zip,
+        addressLine2,
+        description,
+        visibility,
+        capacity,
+        organizer,
+        categories,
+      });
+      const event2 = await request.post(`/events`).send({
+        name,
+        start,
+        end,
+        locationName,
+        address,
+        city,
+        state,
+        zip,
+        addressLine2,
+        description,
+        visibility,
+        capacity,
+        organizer : other_user.id,
+        categories,
+      });
+      const res1 = await request.put(`/users/${user.id}`).send({ invited : [event2.body.data._id]});
       const response = await request.get(`${endpoint}/privateEvents/${user.id}`);
       expect(response.status).toBe(200);
+      expect(response.body.data[0].visibility).toBe('private');
       expect(response.body.data.length).toBeGreaterThanOrEqual(1);
     });
 
@@ -341,9 +486,20 @@ describe(`Test ${endpoint}`, () => {
       expect(response.body.data._id).toBe(user.id);
       expect(response.body.data.name).toBe(user.name);
       expect(response.body.data.email).toBe(user.email);
+      expect(response.body.data.organizing.length).toBe(0);
+      expect(response.body.data.friends.length).toBe(0);
+      expect(response.body.data.sentFriends.length).toBe(0);
+      expect(response.body.data.receivedFriends.length).toBe(0);
+      expect(response.body.data.attending.length).toBe(0);
+      expect(response.body.data.invited.length).toBe(0);
       expect(response.body.data.password).toBeUndefined();
     });
 
+    it("Respond 200 when deleting all users", async () => {
+      const response = await request.delete(`${endpoint}`);
+      expect(response.status).toBe(200);
+    });
+    
     it("Respond 400", async () => {
       const response = await request.delete(`${endpoint}/invalid}`);
       expect(response.status).toBe(400);

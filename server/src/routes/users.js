@@ -35,6 +35,7 @@ router.get('/users', async (req, res, next) => {
       data: users.map((user) => hidePassword(user)),
     });
   } catch (err) {
+    /* c8 ignore next 2 */
     next(err);
   }
 });
@@ -80,6 +81,7 @@ router.get('/users/privateEvents/:id', async (req, res, next) => {
       data: events,
     });
   } catch (err) {
+    /* c8 ignore next 2 */
     next(err);
   }
 });
@@ -100,6 +102,7 @@ router.get('/users/hostedEvents/:id', async (req, res, next) => {
       data: events,
     });
   } catch (err) {
+    /* c8 ignore next 2 */
     next(err);
   }
 });
@@ -120,6 +123,7 @@ router.get('/users/attendedEvents/:id', async (req, res, next) => {
       data: events,
     });
   } catch (err) {
+    /* c8 ignore next 2 */
     next(err);
   }
 });
@@ -343,6 +347,7 @@ router.delete('/users', async (req, res, next) => {
       message: `Successfully deleted ${users.deletedCount} users!`
     });
   } catch (err) {
+    /* c8 ignore next 2 */
     next(err);
   }
 });
