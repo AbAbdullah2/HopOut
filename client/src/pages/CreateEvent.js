@@ -431,7 +431,7 @@ function CreateEvent(props) {
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  min="1"
                   name="capacity"
                   id="capacity"
                   className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"
