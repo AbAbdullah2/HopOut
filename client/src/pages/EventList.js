@@ -8,6 +8,7 @@ import FriendFilter from '../components/FriendFilter';
 import Map from '../components/Map';
 import { Switch } from '@headlessui/react';
 import Datepicker from "react-tailwindcss-datepicker";
+import { Dropdown } from 'flowbite-react';
 
 export function EventList(props) {
   const { curUser, setCurUser} = props;
@@ -15,11 +16,13 @@ export function EventList(props) {
   const [privateEventList, setPrivateEventList] = useState([]);
 
   const [listActive, setListActive] = useState(false);
+  const [showPastEvents, setShowPastEvents] = useState(false);
+
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const [friendFilters, setFriendFilters] = useState([]);
 
-  const [startDate, setStartDate] = useState(new Date(Date.now()));
+  const [filterDate, setFilterDate] = useState(null);
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -37,11 +40,21 @@ export function EventList(props) {
   }, [curUser, navigate]);
 
   const toDisplayEvent = (ev) => {
-    const eventStartDate = new Date(ev.start).setHours(0, 0, 0, 0);
-    const filteredStartDate = new Date(startDate).setHours(0, 0, 0, 0);
+    const eventStartDate = new Date(ev.start);
+    const eventEndDate = new Date(ev.end);
+
+    const filteredDate = new Date(filterDate);
+    const startWithoutTime = new Date(eventStartDate.getFullYear(), eventStartDate.getMonth(), eventStartDate.getDate());
+    const endWithoutTime = new Date(eventEndDate.getFullYear(), eventEndDate.getMonth(), eventEndDate.getDate());
+    const dateWithoutTime = new Date(filteredDate.getFullYear(), filteredDate.getMonth(), filteredDate.getDate());
 
     let filtered = false;
-    if (selectedFilters.length === 0 && friendFilters.length === 0 && (filteredStartDate < 0 || eventStartDate === filteredStartDate)) {
+
+    if (!showPastEvents && eventStartDate < new Date() && eventEndDate < new Date()) {
+      return false;
+    }
+
+    if (selectedFilters.length === 0 && friendFilters.length === 0 && (!filterDate || (startWithoutTime <= dateWithoutTime && endWithoutTime >= dateWithoutTime))) {
       return true;
     }
 
@@ -84,7 +97,13 @@ export function EventList(props) {
     }
 
     if (filtered) {
-      if (filteredStartDate > 0 && eventStartDate != filteredStartDate) {
+      if (filterDate && (startWithoutTime > dateWithoutTime || endWithoutTime < dateWithoutTime)) {
+        filtered = false;
+      }
+    }
+
+    if (filtered && !showPastEvents) {
+      if (eventStartDate < new Date() && eventEndDate < new Date()) {
         filtered = false;
       }
     }
@@ -131,26 +150,55 @@ export function EventList(props) {
             </Switch>
             <span className='pl-2'>List View</span>
           </div>
-          <div className="relative max-w-sm">
-          <Datepicker
-            useRange={false}
-            displayFormat={"MM/DD/YYYY"}
-            asSingle={true}
-            value={{startDate: startDate, endDate: startDate}}
-            onChange={(e) => {setStartDate(e.startDate)}}
-            />
-          </div>
           <div className='justify-end content-end items-end right-0'>
-            <div className='flex flew-row flex-nowrap'>
+            <Dropdown
+              label='Filters'
+              placement='bottom-end'
+            >
+            <div className='flex flex-col m-2 justify-center items-center text-center'>
+              <div className='flex flex-row'>
+                <Switch
+                  checked={showPastEvents}
+                  onChange={setShowPastEvents}
+                  className={`${
+                    showPastEvents ? 'bg-blue-600' : 'bg-gray-400'
+                  } relative inline-flex h-6 w-11 items-center rounded-full align-middle`}
+                >
+                  <span
+                    className={`${
+                      showPastEvents ? 'translate-x-6' : 'translate-x-1'
+                    } inline-block h-4 w-4 transform rounded-full bg-white transition align-middle`}
+                  />
+                </Switch>
+                <span className='pl-2 text-sm font-bold text-gray-700'>Show Past Events</span>
+              </div>
+              <hr className='w-full my-2' />
+              <div className="relative w-48">
+                <p className="text-sm font-bold text-gray-700 mb-1">Date</p>
+                <Datepicker
+                  useRange={false}
+                  displayFormat={"MM/DD/YYYY"}
+                  asSingle={true}
+                  value={{startDate: filterDate, endDate: filterDate}}
+                  onChange={(e) => {setFilterDate(e.startDate)}}
+                />
+              </div>
+              <hr className='w-full my-2' />
               <CategoryFilter selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} />
+              <hr className='w-full my-2' />
               <FriendFilter friendFilters={friendFilters} setFriendFilters={setFriendFilters} />
             </div>
+            </Dropdown>
           </div>
         </div>
         {listActive ? (
           <div className='my-5 w-11/12 md:grid md:grid-cols-3 items-center justify-center'>
             {[...eventList, ...privateEventList].filter((ev) => {
               return toDisplayEvent(ev);
+            }).sort((a, b) => {
+              const aDate = new Date(a.start);
+              const bDate = new Date(b.start);
+              return aDate - bDate;
             })
             .map((event) => {
               return (
@@ -162,7 +210,11 @@ export function EventList(props) {
           <div className='my-3 mb-5 w-11/12 items-center justify-center'>
             <Map events={[...eventList, ...privateEventList].filter((ev) => {
               return toDisplayEvent(ev);
-            })} />
+            }).sort((a, b) => {
+              const aDate = new Date(a.start);
+              const bDate = new Date(b.start);
+              return aDate - bDate;
+            }) }/>
         </div>
         )}
       </div>

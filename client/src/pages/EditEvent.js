@@ -16,8 +16,8 @@ import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
-const COVER_PLACEHOLDER = "https://via.placeholder.com/1920x1080";
-const THUMB_PLACEHOLDER = "https://via.placeholder.com/1000x1000";
+const COVER_PLACEHOLDER = "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg";
+const THUMB_PLACEHOLDER = "https://images.pexels.com/photos/1078981/pexels-photo-1078981.jpeg";
 
 function EditEvent(props) {
   const navigate = useNavigate();
@@ -449,7 +449,7 @@ function EditEvent(props) {
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  min="1"
                   name="capacity"
                   id="capacity"
                   className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"

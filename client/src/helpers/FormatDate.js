@@ -18,3 +18,7 @@ export function formatEventDates(start, end) {
   const endString = (formatDate(end) === formatDate(start) ? ' - ' : ' - ' + formatDate(end) + ' at ') + formatTime(end) + ' ' + AMPM(end);
   return startString + endString;
 }
+
+export function formatSingleDate(date) {
+  return formatDate(date) + ' ' + formatTime(date) + ' ' + AMPM(date);
+}

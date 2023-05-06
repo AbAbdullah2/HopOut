@@ -10,7 +10,7 @@ import NotFound from './pages/NotFound';
 import EventDetail from './pages/EventDetail';
 import Account from './pages/Account';
 import Profile from './pages/Profile';
-import AddFriends from './pages/AddFriends';
+import SearchUsers from './pages/SearchUsers';
 import Chat from './pages/Chat';
 import ForgotPassword from './pages/ForgotPassword';
 
@@ -40,7 +40,7 @@ const App = () => {
           <Route path="account" element={<Account curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="create" element={<CreateEvent curUser={curUser} setCurUser={setCurUser}/>}/>
           <Route path="edit/:eventid" element={<EditEvent curUser={curUser} setCurUser={setCurUser}/>} />
-          <Route path="addFriends" element={<AddFriends curUser={curUser} setCurUser={setCurUser}/>} />
+          <Route path="searchUsers" element={<SearchUsers curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="chat" element={<Chat curUser={curUser} setCurUser={setCurUser}/>} />
           <Route path="*" element={<NotFound />} />
         </Route>

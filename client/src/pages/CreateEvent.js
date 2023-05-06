@@ -16,8 +16,8 @@ import { useJsApiLoader, Autocomplete} from '@react-google-maps/api';
 
 const API_KEY = process.env.REACT_APP_GOOGLE_MAPS_KEY;
 
-const COVER_PLACEHOLDER = "https://via.placeholder.com/1920x1080";
-const THUMB_PLACEHOLDER = "https://via.placeholder.com/1000x1000";
+const COVER_PLACEHOLDER = "https://images.pexels.com/photos/1032650/pexels-photo-1032650.jpeg";
+const THUMB_PLACEHOLDER = "https://images.pexels.com/photos/1078981/pexels-photo-1078981.jpeg";
 
 function CreateEvent(props) {
   const navigate = useNavigate();
@@ -182,7 +182,7 @@ function CreateEvent(props) {
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
                   <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-                    Title
+                    Title <span className='text-red-700'>(required)</span>
                   </label>
                   <div className="mt-3 flex rounded-md shadow-sm">
                     <input
@@ -206,7 +206,7 @@ function CreateEvent(props) {
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
                     <label htmlFor="starttime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
-                      Start Date/Time
+                      Start Date/Time <span className='text-red-700'>(required)</span>
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
                       <Datepicker 
@@ -233,7 +233,7 @@ function CreateEvent(props) {
                 <div className="grid grid-cols-3 gap-6 w-1/2">
                   <div className="col-span-3">
                     <label htmlFor="endtime" className="block text-sm font-medium text-gray-700 border-gray-300 py-2 placeholder-gray-500 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"> 
-                      End Date/Time
+                      End Date/Time <span className='text-red-700'>(required)</span>
                     </label>
                     <div className='flex flex-row space-x-5 w-full'>
                       <Datepicker 
@@ -261,7 +261,7 @@ function CreateEvent(props) {
               <div className="grid grid-cols-3 gap-6">
                 <div className="col-span-3">
                   <label htmlFor="address" className="block text-sm font-medium text-gray-700">
-                    Location
+                    Location <span className='text-red-700'>(required)</span>
                   </label>
                   <div className="mt-3 flex rounded-md shadow-sm">
                     <input
@@ -373,7 +373,7 @@ function CreateEvent(props) {
               </div>
               <div>
                 <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-                  Description
+                  Description <span className='text-red-700'>(required)</span>
                 </label>
                 <div className="mt-1">
                   <textarea
@@ -430,7 +430,7 @@ function CreateEvent(props) {
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  min="1"
                   name="capacity"
                   id="capacity"
                   className="block w-full flex-1 mt-1 rounded border-gray-300 focus:z-10 focus:border-blue-500 focus:outline-none focus:ring-blue-500"

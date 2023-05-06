@@ -18,10 +18,10 @@ export default function EventCard({event}) {
   }
 
   return ( 
-    <Card className='m-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center h-[600px]'
+    <Card className='m-3 overflow-hidden hover:bg-blue-400 items-center justify-center text-center h-[400px]'
     onClick={()=> navigate('/events/'+ event._id)}
     >
-      <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-96 h-96' />
+      <img src={event.thumbnailId} alt={event.name} className='object-cover rounded-md w-80 h-48 place-self-center' />
       <div className=''>
         <p className='text-2xl'>{event.name}</p>
         <p className='my-2'><FontAwesomeIcon icon={solid('calendar')} /> {formatEventDates(start, end)}</p>

@@ -14,10 +14,10 @@ export default function FriendFilter(props) {
   }
 
   return (
-    <div className="mr-2">
-      <Dropdown
+    <Dropdown
         label={"Event Status"}
         dismissOnClick={false}
+        placement="left-start"
       >
       {friendCategories.map((f) => (
         <Dropdown.Item key={f.key}>
@@ -26,6 +26,5 @@ export default function FriendFilter(props) {
         </Dropdown.Item>
       ))}
     </Dropdown>
-    </div>
   );
 }
