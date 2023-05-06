@@ -115,14 +115,14 @@ export default function Profile(props) {
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
       <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={closeModal} unfriended={user}/> 
-      <div className='mx-auto h-full flex flex-col justify-center items-center'>
+      <div className='mx-auto flex flex-col justify-center items-center'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className='m-5 flex flex-col items-center'>
           <p className='text-4xl font-extrabold text-center'>{user.name}</p>
           <p className='text-lg my-2 text-center'><FontAwesomeIcon icon={solid('envelope')} /> {user.email}</p>
           {renderSwitch()}
         </div>
-        <div className="w-11/12 overflow-hidden"> 
+        <div className="w-11/12"> 
           <HostedEventsList curUser={user} self={false}/>
         </div>
       </div>

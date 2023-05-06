@@ -15,6 +15,7 @@ const request = new supertest(app);
 describe(`Test ${endpoint}`, () => {
   const numEvents = 5;
   let events;
+  let users;
   let uid;
   let uid2;
 
@@ -53,12 +54,21 @@ describe(`Test ${endpoint}`, () => {
     });
     uid2 = user2.id;
 
-    events = [];
+    users = [];
+    for (let index = 0; index < 4; index++) {
+      const u = await userDao.create({
+        name: faker.name.fullName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(6),
+      });
+      users.push(u.id);
+    }
 
+    events = [];
     for (let index = 0; index < numEvents; index++) {
       const name = faker.lorem.words(3);
       const start = '2023-06-22T15:28:37.174Z';
-      const end = '2023-06-22T15:28:37.174Z';
+      const end = '2023-06-23T15:28:37.174Z';
       const locationName = faker.lorem.words(2);
       const address = faker.address.streetAddress();
       const city = faker.address.cityName();
@@ -332,6 +342,156 @@ describe(`Test ${endpoint}`, () => {
         expect(response.status).toBe(400);
       });
 
+      it('Invalid start', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const start = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          start,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid end', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const end = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          end,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid location name', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const locationName = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          locationName,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid address', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const address = faker.datatype.number();
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          address,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid city', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const city = faker.datatype.number();
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          city,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid state', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const state = faker.datatype.number();
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          state,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid zip', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const zip = faker.datatype.number();
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          zip,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid description', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const description = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          description,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid visibility', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const visibility = '';
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          visibility,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid capacity', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const capacity = faker.address.streetAddress();
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          capacity,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Negative capacity', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const capacity = -1 * faker.datatype.number({ min: 1 });
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          capacity,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid categories', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const categories = [''];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          categories,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Too many attendees', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const attendees = users;
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          attendees,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid attendee', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const attendees = [mongoose.Types.ObjectId()];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          attendees,
+        });
+        expect(response.status).toBe(400);
+      });
+
+      it('Invalid invitee', async () => {
+        const index = Math.floor(Math.random() * numEvents);
+        const event = events[index];
+        const invitees = [mongoose.Types.ObjectId()];
+        const response = await request.put(`${endpoint}/${event.id}`).send({
+          invitees,
+        });
+        expect(response.status).toBe(400);
+      });
+
       it('Invalid reviewer id', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
@@ -343,7 +503,6 @@ describe(`Test ${endpoint}`, () => {
         const response = await request.put(`${endpoint}/${event.id}`).send({
           reviews,
         });
-        console.log(response);
         expect(response.status).toBe(400);
       });
 
@@ -375,7 +534,6 @@ describe(`Test ${endpoint}`, () => {
         expect(response.status).toBe(400);
       });
 
-
       it('Undefined reviewer id', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
@@ -387,7 +545,6 @@ describe(`Test ${endpoint}`, () => {
         const response = await request.put(`${endpoint}/${event.id}`).send({
           reviews,
         });
-        console.log(response);
         expect(response.status).toBe(400);
       });
 
@@ -419,7 +576,6 @@ describe(`Test ${endpoint}`, () => {
         expect(response.status).toBe(400);
       });
 
-
       it('Null reviewer id', async () => {
         const index = Math.floor(Math.random() * numEvents);
         const event = events[index];
@@ -431,7 +587,6 @@ describe(`Test ${endpoint}`, () => {
         const response = await request.put(`${endpoint}/${event.id}`).send({
           reviews,
         });
-        console.log(response);
         expect(response.status).toBe(400);
       });
 
@@ -467,7 +622,7 @@ describe(`Test ${endpoint}`, () => {
 
     it('Respond 404', async () => {
       const response = await request.put(
-        `${endpoint}/${mongoose.Types.ObjectId().toString()}`
+        `${endpoint}/${mongoose.Types.ObjectId()}`
       );
       expect(response.status).toBe(404);
     });

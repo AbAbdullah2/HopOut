@@ -69,19 +69,21 @@ class EventDao {
       throw new ApiError(400, "Invalid visibility!");
     }
 
-    //check organizer ID is valid
+    //check organizer id is valid
     result = validObjectId.safeParse(organizer);
     if (!result.success) {
       throw new ApiError(400, "Invalid Organizer ID!");
     }
 
-    //check Organizer is valid
+    //check organizer is valid
     const org = await User.findById(organizer);
     if (!org) {
       throw new ApiError(400, "Invalid Organizer!");
     }
+
+    // check capacity is valid
     result = validNumber.safeParse(capacity);
-    if (!result.success) {
+    if (!result.success || capacity <= 0) {
       throw new ApiError(400, 'Invalid capacity!');
     }
 
@@ -97,7 +99,7 @@ class EventDao {
 
     //create event
     const event = await Event.create({ name, start, end, locationName, location, addressLine2, description, visibility, organizer, capacity, categories, 
-        attendees: attendees, invitees: invitees, coverId, thumbnailId, reviews});
+        attendees: attendees, invitees: invitees, coverId, thumbnailId, reviews });
     return event;
   }
 

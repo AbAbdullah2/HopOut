@@ -17,6 +17,7 @@ export default function CategoryFilter(props) {
     <Dropdown
         label={"Categories"}
         dismissOnClick={false}
+        placement="left-start"
       >
       {categories.map((f) => (
         <Dropdown.Item key={f.key}>
