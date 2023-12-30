@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03#readme",
   "dependencies": {
+    "@react-google-maps/api": "^2.19.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
