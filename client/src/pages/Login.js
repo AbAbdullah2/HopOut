@@ -11,7 +11,7 @@ function Login(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (curUser) navigate('/events');
+    if (curUser !== null) navigate('/events');
   });
 
   const [email, setEmail] = useState("");
@@ -27,6 +27,7 @@ function Login(props) {
     postLogin(loginData).then(data => {
         if (data.status === 200) {
           // Fetch user details based on userID
+          console.log(data);
             getUser(data.data.data._id).then(userData => {
                 setCurUser(userData.data.data);
                 navigate('/events');
@@ -34,8 +35,9 @@ function Login(props) {
         }
     }).catch(err => {
       const error = 'Could not login user ' + loginData.email;
+      console.log("err", err);
       toast.error(error);
-      console.log(err)});
+      });
   }
 
   return (
@@ -48,8 +50,8 @@ function Login(props) {
             <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900">
               Welcome back!
             </h2>
-            <form className="mt-8 space-y-6" onSubmit={login}>
-              <div className="-space-y-px rounded-md shadow-sm">
+            <form className="mt-8 space-y-3" onSubmit={login}>
+              <div className="-space-y-px rounded-md">
                 <div>
                     <label htmlFor="email" className="sr-only">
                     Email address
@@ -82,6 +84,9 @@ function Login(props) {
                     onChange={(e) => setPassword(e.target.value)}
                     />
                 </div>
+                <a href='/forgot' className="ml-1 text-sm font-medium text-blue-700 hover:text-blue-500">
+                  Forgot your password?
+                </a>
               </div>
               <div className="flex items-center space-x-5">
                 <button
@@ -93,7 +98,8 @@ function Login(props) {
                     </span>
                     Login
                 </button>
-                <button
+                <button 
+                  type="button"
                   className="group relative flex w-full justify-center rounded-md border border-transparent bg-blue-400 py-2 px-4 text-sm font-medium text-white hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   onClick={(e) => navigate('/signup')}
                 >

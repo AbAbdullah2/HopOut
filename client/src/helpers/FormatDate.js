@@ -9,11 +9,16 @@ export function AMPM(date) {
 }
 
 export function formatDate(date) {
-  return (date.getMonth() + 1) + '/' + date.getDate();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+  return (months[date.getMonth()]) + ' ' + date.getDate();
 }
 
 export function formatEventDates(start, end) {
-  const startString = formatDate(start) + ' ' + formatTime(start) + ' ' + ((AMPM(start) === AMPM(end) && (formatDate(start) === formatDate(end))) ? '' : AMPM(start));
-  const endString = (formatDate(end) === formatDate(start) ? ' - ' : ' - ' + formatDate(end) + ' ') + formatTime(end) + ' ' + AMPM(end);
+  const startString = formatDate(start) + ' at ' + formatTime(start) + ' ' + ((AMPM(start) === AMPM(end) && (formatDate(start) === formatDate(end))) ? '' : AMPM(start));
+  const endString = (formatDate(end) === formatDate(start) ? ' - ' : ' - ' + formatDate(end) + ' at ') + formatTime(end) + ' ' + AMPM(end);
   return startString + endString;
+}
+
+export function formatSingleDate(date) {
+  return formatDate(date) + ' ' + formatTime(date) + ' ' + AMPM(date);
 }

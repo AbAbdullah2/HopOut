@@ -1,10 +1,12 @@
-import express from "express";
-import eventUrls from "./routes/events.js";
-import userUrls from "./routes/users.js";
-import friendUrls from "./routes/friends.js"
-import rsvpUrls from "./routes/rsvp.js"
-import cors from "cors"
-import helmet from "helmet"
+import express from 'express';
+import eventUrls from './routes/events.js';
+import userUrls from './routes/users.js';
+import friendUrls from './routes/friends.js';
+import rsvpUrls from './routes/rsvp.js';
+import chatUrls from './routes/chat.js';
+import commentUrls from './routes/comment.js';
+import cors from 'cors';
+import helmet from 'helmet';
 
 const app = express();
 
@@ -12,15 +14,17 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get('/', (req, res) => {
   console.log(`${req.method} ${req.path} called...`);
-  res.send("Welcome to the HopOut API!");
+  res.send('Welcome to the HopOut API!');
 });
 
 app.use(eventUrls);
 app.use(userUrls);
 app.use(friendUrls);
 app.use(rsvpUrls);
+app.use(chatUrls);
+app.use(commentUrls);
 
 app.use((err, req, res, next) => {
   if (err) {

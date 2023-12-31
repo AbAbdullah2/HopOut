@@ -1,35 +1,30 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom'
-import { deleteEvent, updateUser } from '../services/api';
+import { deleteEvent, getUser, deleteCommentSection } from '../services/api';
 import { Modal } from 'flowbite-react'
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function DeleteEventConfirm(props) {
     const {curUser, setCurUser, eventid, showConfirm, setShowConfirm} = props;
     const navigate = useNavigate();
 
     const handleDelete = () => {
-        let organizing = curUser.organizing
-        const index = organizing.indexOf(5);
-        if (index > -1) { // only splice array when item is found
-            organizing.splice(index, 1); // 2nd parameter means remove one item only
-        }
-
-        setCurUser({...curUser, 
-            organizing: [...curUser.organizing.filter(id =>
-                id !== eventid
-            )]
-        });
-        updateUser(curUser).then(() => {
+        deleteCommentSection(eventid).then((delCommentRes) => {
             deleteEvent(eventid).then((deleteRes) => {
                 if (deleteRes.status === 200) {  
+                    getUser(curUser._id).then((res) => {
+                        setCurUser(res.data.data);
+                    }); 
                     navigate('/events');
-                } else console.log("Could not delete event: ", deleteRes);
-            });
-        });
-      }
+                } else {
+                    toast.error('Could not delete event, please try again later.');
+                };
+            });    
+        })
+    }
     
     return (<div>
+        <Toaster/>
         <Modal
             show={showConfirm}
             onClose={() => setShowConfirm(false)}
@@ -53,8 +48,6 @@ export default function DeleteEventConfirm(props) {
             </button>
             </Modal.Footer>
         </Modal>
-
-
     </div>
     );
 }

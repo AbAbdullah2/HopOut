@@ -8,7 +8,9 @@
     "test": "vitest --no-threads --no-isolate",
     "start": "node server.js",
     "start-watch": "nodemon server.js",
-    "dev": "dotenv -e .env nodemon server.js"
+    "dev": "dotenv -e .env nodemon server.js",
+    "coverage": "vitest run --coverage --no-threads --no-isolate",
+    "test:ui": "vitest --ui --no-threads --no-isolate"
   },
   "repository": {
     "type": "git",
@@ -22,6 +24,7 @@
   },
   "homepage": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03#readme",
   "dependencies": {
+    "@react-google-maps/api": "^2.19.2",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -29,11 +32,15 @@
     "faker": "^6.6.6",
     "helmet": "^6.0.1",
     "mongoose": "^6.9.2",
+    "nodemailer": "^6.9.1",
+    "socket.io": "^4.5.4",
     "supertest": "^6.3.3",
     "zod": "^3.20.6"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
+    "@vitest/coverage-c8": "^0.30.1",
+    "@vitest/ui": "^0.30.1",
     "concurrently": "^7.6.0",
     "dotenv-cli": "^7.0.0",
     "nodemon": "^2.0.20",

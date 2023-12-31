@@ -14,10 +14,10 @@ export default function CategoryFilter(props) {
   }
 
   return (
-    <div className="mr-4">
-      <Dropdown
-        label={"Filters"}
+    <Dropdown
+        label={"Categories"}
         dismissOnClick={false}
+        placement="left-start"
       >
       {categories.map((f) => (
         <Dropdown.Item key={f.key}>
@@ -26,6 +26,5 @@ export default function CategoryFilter(props) {
         </Dropdown.Item>
       ))}
     </Dropdown>
-    </div>
   );
 }

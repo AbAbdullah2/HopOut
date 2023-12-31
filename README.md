@@ -23,10 +23,10 @@ cd server
 yarn test
 ```
 We are using Jest as our frontend testing framework.
-To run backend tests:
+To run frontend tests:
 ```shell
 cd client
 yarn test
 ```
-Our frontend is deployed to [hopout.vercel.app](https://hopout.vercel.app/).
-Our backend is deployed to https://hopout.herokuapp.com/.
+Our frontend is deployed to [hopout.onrender.com](https://hopout.onrender.com/).
+Our backend is deployed to https://hopoutapi.herokuapp.com/.

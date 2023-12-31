@@ -1,32 +1,45 @@
 import { Dropdown } from 'flowbite-react'
-import { useState, useEffect } from 'react';
-import { getAllUsers, getAllEvents } from '../services/api'
+import { useState, useEffect, useCallback } from 'react';
+import { getUser, getAllUsers, getAllPublicEvents } from '../services/api'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { useNavigate } from 'react-router-dom'
 
 export default function Notifications(props) {
-  const {curUser} = props;
+  const {curUser, setCurUser} = props;
   const navigate = useNavigate();
   const [allNotifications, setAllNotifications] = useState([]);
 
   const [friendReqs, setFriendReqs] = useState([]);
   const [eventInvites, setEventInvites] = useState([]);
 
+  const updateCurUser = useCallback((newUser) => {
+    setCurUser(newUser);
+  }, [setCurUser]);  
+
+  useEffect(() => {
+    getUser(curUser._id).then((res) => {
+      updateCurUser(res.data.data);
+    });
+  }, [updateCurUser]);
+
   useEffect(() => {
     getAllUsers().then(userData => {
-        setFriendReqs(userData.data.data.filter(function (user) {
-            return (curUser.receivedFriends.includes(user._id));
-        }));
+      let reqs = [];
+      userData.data.data.forEach((user) => {
+        curUser.receivedFriends.forEach(received => {
+          if(received.user === user._id) reqs.push(user);
+        });
+      });
+      setFriendReqs(reqs);
     });
 
-    getAllEvents().then(eventData => {
+    getAllPublicEvents().then(eventData => {
         setEventInvites(eventData.data.data.filter(function (event) {
-            return (curUser.invited.includes(event._id));
+            return (curUser.invited.includes(event._id) && !curUser.attending.includes(event._id));
         }));
     });
-
-  }, []);
+  }, [curUser]);
 
   useEffect(() => {
     const friendReqsMap = friendReqs.map(obj => ({ ...obj, type: "friend" }));
@@ -46,11 +59,12 @@ export default function Notifications(props) {
         >
           {
             allNotifications.length > 0 ? 
-          allNotifications.map((notif) => { 
-              return (<Dropdown.Item>
-                <div className="flex items-center space-x-4">
-                    {notif.type === "friend" ? 
-                    <div className="min-w-100 px-8" onClick={() => navigate("/profile/" + notif._id)}>
+              allNotifications.map((notif) => { 
+                return (
+                  <Dropdown.Item key={notif._id}>
+                    <div className="flex items-center space-x-4">
+                      {notif.type === "friend" ? 
+                      <div className="min-w-100 px-8" onClick={() => navigate("/profile/" + notif._id)}>
                         <p className="font-bold text-slate-800 truncate dark:text-white">
                             Friend request
                         </p>
@@ -60,9 +74,9 @@ export default function Notifications(props) {
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
                             {notif.email}
                         </p>
-                    </div> : 
-                    <div className="flex" onClick={() => navigate("/events/" + notif._id)}>
-                        <img className="w-9 h-9 mr-2 rounded-full" src={notif.thumbnailId} alt="Event image" />
+                      </div> : 
+                      <div className="flex" onClick={() => navigate("/events/" + notif._id)}>
+                        <img className="w-9 h-9 mr-2 rounded-full" src={notif.thumbnailId} alt="" />
                         <div className="min-w-100">
                         <p className="font-bold text-slate-800 truncate dark:text-white">
                             Event invitation
@@ -71,16 +85,17 @@ export default function Notifications(props) {
                             {notif.name}
                         </p>
                         <p className="text-sm text-gray-500 truncate dark:text-gray-400">
-                            {notif.start}
+                            {(new Date(notif.start)).toDateString()}
                         </p>
                         </div>
-                    </div> 
-                    }
-                </div>
-              </Dropdown.Item>)
-            }
-          ): <Dropdown.Item>No notifications!</Dropdown.Item>}
-              
+                      </div> 
+                      }
+                    </div>
+                  </Dropdown.Item>
+                )
+              }
+            ): <Dropdown.Item>No notifications!</Dropdown.Item>
+          }  
         </Dropdown>
     </div>
     );

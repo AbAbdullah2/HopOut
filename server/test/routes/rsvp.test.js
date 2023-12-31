@@ -14,7 +14,7 @@ const request = new supertest(app);
 
 describe(`Test ${endpoint}`, () => {
     let sid, sender, rid;
-    let event, name, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories;
+    let event, name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, capacity, organizer, categories;
 
     beforeAll(async () => {
         db.connect(process.env.TEST_DB);
@@ -39,16 +39,18 @@ describe(`Test ${endpoint}`, () => {
         name = faker.lorem.words(3);
         start = "2023-06-22T15:28:37.174Z";
         end = "2023-06-22T15:28:37.174Z";
+        locationName = faker.lorem.words(2);
         address = faker.address.streetAddress();
         city = faker.address.cityName();
         state = faker.address.countryCode();
         zip = faker.address.zipCode();
+        addressLine2 = faker.address.secondaryAddress();
         description = faker.lorem.paragraph();
         visibility = "public";
         organizer = sid;
         capacity = 20;
         categories = ["Sports"];
-        event = await eventDao.create({ name, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories });
+        event = await eventDao.create({ name, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, capacity, organizer, categories });
     });
 
     describe("PUT request", () => {
@@ -123,7 +125,7 @@ describe(`Test ${endpoint}`, () => {
                     const senderId = rid;
                     const eventName = "Hope";
                     const visibility = "private";
-                    event = eventDao.create({ name: eventName, start, end, address, city, state, zip, description, visibility, capacity, organizer, categories })
+                    event = eventDao.create({ name: eventName, start, end, locationName, address, city, state, zip, addressLine2, description, visibility, capacity, organizer, categories })
                     const eventId = event._id;
                     const response = await request.put(`${endpoint}/sendRSVP`).send({ senderId, eventId });
                     expect(response.status).toBe(400);

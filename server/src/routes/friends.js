@@ -2,9 +2,19 @@ import express from 'express';
 import UserDao from '../data/UserDao.js';
 import { hidePassword } from './users.js';
 import ApiError from '../models/ApiError.js';
+import nodemailer from "nodemailer";
 
 const router = express.Router();
 export const userDao = new UserDao();
+
+let transporter = nodemailer.createTransport({
+  pool: true,
+  service: 'gmail',
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  }
+});
 
 router.put(`/friends/sendRequest`, async (req, res, next) => {
   try {
@@ -18,6 +28,12 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
     let sender2 = false;
     let receiver1 = false;
     let receiver2 = false;
+
+    sender.friends.forEach((e) => {
+      if (e.user.toString() === receiverId) {
+        sender1 = true;
+      }
+    });
 
     sender.sentFriends.forEach((e) => {
       if (e.user.toString() === receiverId) {
@@ -63,6 +79,17 @@ router.put(`/friends/sendRequest`, async (req, res, next) => {
       id: receiverId,
       receivedFriends: receiverReceivedFriends,
     });
+
+    let mailOptions = {
+      from: process.env.SMTP_USER,
+      to: receiver.email,
+      subject: sender.name + ' has sent you a friend request' + '!',
+      html: `Hi ${receiver.name}, <br/><br/> ${sender.name} sent you a friend request! <br/>
+            Visit the <a href='${process.env.DEPLOYED_URL}'> notifications tab </a> to view and accept/decline the invitation.<br/><br/>
+            The HopOut Team`
+    };
+
+    await transporter.sendMail(mailOptions);
 
     res.json({
       status: 200,
