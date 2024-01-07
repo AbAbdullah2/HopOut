@@ -108,10 +108,7 @@ router.put(`/events/:id`, async (req, res, next) => {
       start,
       end,
       locationName,
-      address,
-      city,
-      state,
-      zip,
+      location,
       addressLine2,
       description,
       visibility,
@@ -128,7 +125,7 @@ router.put(`/events/:id`, async (req, res, next) => {
     const eventBefore = await eventDao.read(id);
     const readCapacity = eventBefore.capacity;
     let updatedCapacity = capacity || readCapacity;
-    const location = { address, city, state, zip };
+    // const location = { address, city, state, zip };
     const event = await eventDao.update({
       id,
       name,

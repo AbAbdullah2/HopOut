@@ -187,12 +187,12 @@ class EventDao {
       }
     }
 
-    if (locationName !== undefined) {
-      result = validString.safeParse(locationName);
-      if (!result.success) {
-        throw new ApiError(400, "Invalid Location Name!");
-      }
-    }
+    // if (locationName !== undefined) {
+    //   result = validString.safeParse(locationName);
+    //   if (!result.success) {
+    //     throw new ApiError(400, "Invalid Location Name!");
+    //   }
+    // }
 
     //check location is valid
     // MAY HAVE TO VALIDATE A DIFFERENT WAY LATER
