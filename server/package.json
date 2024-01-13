@@ -14,15 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cs421sp23-homework/sp23-oose-project-team-03.git"
+    "url": "git+https://github.com/AbAbdullah2/HopOut.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03/issues"
+    "url": "https://github.com/AbAbdullah2/HopOut.git/issues"
   },
-  "homepage": "https://github.com/cs421sp23-homework/sp23-oose-project-team-03#readme",
+  "homepage": "https://github.com/AbAbdullah2/HopOut.git#readme",
   "dependencies": {
     "@react-google-maps/api": "^2.19.2",
     "bcryptjs": "^2.4.3",
