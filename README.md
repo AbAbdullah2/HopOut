@@ -31,5 +31,8 @@ yarn test
 Our frontend is deployed to [hopout.onrender.com](https://hopout.onrender.com/).
 Our backend is deployed to https://hopoutapi.herokuapp.com/.
 
-#BACKEND DEPOLUTED
+# FRONTEND Deployed
+1/14/2024: https://hopout.netlify.app/
+
+# BACKEND Deployed
 1/13/2024: https://hop-out-api-5ced6a082730.herokuapp.com/
