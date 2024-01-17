@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import { useNavigate, useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro';
 import { getUser, sendFriendReq, acceptFriendReq, declineFriendReq, removeFriendReq} from '../services/api';
 import Header from '../components/Header';
 import RemoveFriendConfirm from '../components/RemoveFriendConfirm';
@@ -9,7 +9,7 @@ import HostedEventsList from '../components/HostedEventsList';
 
 export default function Profile(props) {
   const { userid } = useParams();
-  const { curUser, setCurUser} = props
+  const { curUser, setCurUser} = props;
   const [user, setUser] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
   
@@ -17,7 +17,7 @@ export default function Profile(props) {
 
   if (userid === curUser._id) navigate("/account");
 
-  const [friendStatus, setFriendStatus] = useState("none");  
+  const [friendStatus, setFriendStatus] = useState("none");
 
   const renderSwitch = () => {
     switch(friendStatus) {
@@ -110,11 +110,14 @@ export default function Profile(props) {
 
   }, [userid, navigate, curUser, updateCurUser]);
 
+  const handleFriendRemoved = () => {
+    setFriendStatus("none");
+  };
 
 
   return user === null ? <></> : (
     <div className='bg-stone-100 min-h-screen'>
-      <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={closeModal} unfriended={user}/> 
+      <RemoveFriendConfirm curUser={curUser} setCurUser={setCurUser} showConfirm={showConfirm} closeModal={closeModal} unfriended={user} onFriendRemoved={handleFriendRemoved}/> 
       <div className='mx-auto flex flex-col justify-center items-center'>
         <Header icons={true} curUser={curUser} setCurUser={setCurUser}/>
         <div className='m-5 flex flex-col items-center'>

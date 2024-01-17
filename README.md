@@ -36,3 +36,15 @@ Our backend is deployed to https://hopoutapi.herokuapp.com/.
 
 # BACKEND Deployed
 1/13/2024: https://hop-out-api-5ced6a082730.herokuapp.com/
+
+
+Map - done
+Ratings and reviews - done
+routes - done
+see the github - done
+friend button doesnt change on a user's profile when user unfriends someone
+adding invitees does not work
+have to refresh to receive notifcation
+no alerts that you got notification
+routes are not secure
+Fix Chat

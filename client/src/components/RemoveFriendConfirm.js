@@ -3,13 +3,14 @@ import { removeFriend } from '../services/api';
 
 
 export default function RemoveFriendConfirm(props) {
-    const {curUser, setCurUser, showConfirm, closeModal, unfriended} = props;
+    const {curUser, setCurUser, showConfirm, closeModal, unfriended, onFriendRemoved} = props;
 
     const handleUnfriend = () => {
         if (unfriended) {
           removeFriend(curUser._id, unfriended._id).then((res) => {
               if (res.status === 201 || res.status === 200) {
                   setCurUser(res.data.data);
+                  onFriendRemoved();
               } else {
                 console.log('Could not unfriend user ' + unfriended.name);
               }
@@ -17,6 +18,7 @@ export default function RemoveFriendConfirm(props) {
         }
         closeModal();
       }
+
     
     return (
         <Modal
